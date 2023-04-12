@@ -26,6 +26,7 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
         // ============ OVERVIEW ====================
         Route::prefix('overview')->namespace('Overview')->name('overview.')->group(function () {
             Route::get('/', IndexController::class)->name('index');
+            Route::get('/create', CreateController::class)->name('create');
         });
         // ============ END OVERVIEW ====================
 
