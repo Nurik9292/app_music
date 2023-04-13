@@ -13,9 +13,9 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{route('main')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{route('user.index')}}">Users</a></li>
-              <li class="breadcrumb-item active">Create</li>
+                <li class="breadcrumb-item"><a href="{{route('main')}}">Главная</a></li>
+              <li class="breadcrumb-item"><a href="{{route('user.index')}}">Пользователи</a></li>
+              <li class="breadcrumb-item active">Создание</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="block_one">
-                  <label for="password">Password</label>
+                  <label for="password">Пароль</label>
                   <input type="text" class="form-control" id="password" placeholder="Введите пароль" name="password">
                   @error('password')
                   {{$message}}
@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="block_two">
-                  <label for="role">Ролиь</label>
+                  <label for="role">Роли</label>
                     <select name="role" class="form-control" >
                       <option selected value="">все</option>
                       @foreach ($roles as $id => $role)

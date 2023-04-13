@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\MainController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,10 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
+
+// Route::middleware('admin', 'auth')->get('/', MainController::class)->name('main');
 Route::get('/', MainController::class)->name('main');
 
-
+// Route::middleware('admin', 'auth')->namespace('App\Http\Controllers\Admin')->group(function () {
 Route::namespace('App\Http\Controllers\Admin')->group(function () {
+
 
     // =========== BLOCK =======================
     Route::namespace('Block')->group(function () {
@@ -53,4 +59,7 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
     // ========== END USERS =====================
 });
 
+
+Route::get('/login', [LoginController::class, 'index'])->name('login.index');
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
