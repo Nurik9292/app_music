@@ -10,10 +10,7 @@ import routet from './router';
 
 import Index from './components/view/User/Index.vue';
 
-
-
 const app = createApp({components:{Index}});
-
 
 app.use(routet);
 app.mount('#app');

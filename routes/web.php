@@ -57,6 +57,13 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
         Route::post('/store', StoreController::class)->name('store');
     });
     // ========== END USERS =====================
+
+    //============= ALBUM========================
+    Route::prefix('albums')->namespace('Album')->name('album.')->group(function () {
+        Route::get('/', IndexController::class)->name('index');
+        Route::get('/create', CreateController::class)->name("create");
+        Route::post('/', StoreController::class)->name('store');
+    });
 });
 
 

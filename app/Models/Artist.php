@@ -9,6 +9,7 @@ class Artist extends Model
 {
     use HasFactory;
 
+
     /**
      * The attributes that are mass assignable.
      *

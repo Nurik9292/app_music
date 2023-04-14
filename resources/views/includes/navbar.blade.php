@@ -10,7 +10,8 @@
     </ul>
 
     <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto mr-3">
+    <ul class="navbar-nav ml-auto mr-3" >
+
         <li class="nav-item d-none d-sm-inline-block">
             <a href="#" class="nav-link">Выход</a>
           </li>

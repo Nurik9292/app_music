@@ -56,7 +56,7 @@
               </li>
 
               <li class="nav-item">
-                <a href="pages/widgets.html" class="nav-link">
+                <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-user-circle"></i>
                   <p>
                     Артисты
@@ -65,7 +65,7 @@
               </li>
               <i class="fas fa-music-slash"></i>
               <li class="nav-item">
-                <a href="pages/widgets.html" class="nav-link">
+                <a href="{{route('album.index')}}" class="nav-link">
                     <i class="nav-icon fas fa-record-vinyl"></i>
                   <p>
                     Альбомы

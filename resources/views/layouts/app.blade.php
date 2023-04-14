@@ -13,18 +13,10 @@
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="{{asset('admins/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="{{asset('admins/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
-  <!-- JQVMap -->
-  {{-- <link rel="stylesheet" href="{{asset('admins/plugins/jqvmap/jqvmap.min.css')}}"> --}}
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('admins/dist/css/adminlte.min.css')}}">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{asset('admins/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="{{asset('admins/plugins/daterangepicker/daterangepicker.css')}}">
-  <!-- summernote -->
-  <link rel="stylesheet" href="{{asset('admins/plugins/summernote/summernote-bs4.min.css')}}">
 
  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -72,30 +64,33 @@
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)
+
+  $(function () {
+      //Date and time picker
+      $('#date_release').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+      $('#date_added').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+      $("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch('state', $(this).prop('checked'));
+    })
+
+      bsCustomFileInput.init();
+    })
+
 </script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<!-- ChartJS -->
-<script src="{{asset('admins/plugins/chart.js/Chart.min.js')}}"></script>
-<!-- Sparkline -->
-<script src="{{asset('admins/plugins/sparklines/sparkline.js')}}"></script>
-<!-- JQVMap -->
-{{-- <script src="{{asset('admins/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
-<script src="{{asset('admins/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script> --}}
-<!-- jQuery Knob Chart -->
-<script src="{{asset('admins/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
 <!-- daterangepicker -->
 <script src="{{asset('admins/plugins/moment/moment.min.js')}}"></script>
 <script src="{{asset('admins/plugins/daterangepicker/daterangepicker.js')}}"></script>
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{asset('admins/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-<!-- Summernote -->
-<script src="{{asset('admins/plugins/summernote/summernote-bs4.min.js')}}"></script>
-<!-- overlayScrollbars -->
-<script src="{{asset('admins/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('admins/dist/js/adminlte.js')}}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-{{-- <script src="{{asset('admins/dist/js/pages/dashboard.js')}}"></script> --}}
+<!-- bs-custom-file-input -->
+<script src="{{asset('admins/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
+<!-- Bootstrap Switch -->
+<script src="{{asset('admins/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
 </body>
 </html>

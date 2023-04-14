@@ -30,6 +30,6 @@ class ImportHeadPhoneCommand extends Command
 
         $response = $import->headphones->request('GET', 'get_data');
 
-        dd($response);
+        dd($response->getBody()->getContents());
     }
 }

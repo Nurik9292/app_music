@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Album extends Model
 {
     use HasFactory;
+
+    protected $connection = 'pgsql_prod';
+
+    protected $guarded = false;
 }
