@@ -17,6 +17,9 @@
   <link rel="stylesheet" href="{{asset('admins/dist/css/adminlte.min.css')}}">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="{{asset('admins/plugins/daterangepicker/daterangepicker.css')}}">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{{asset('admins/plugins/select2/css/select2.min.css')}}">
+
 
  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -61,24 +64,6 @@
 <script src= "{{asset('admins/plugins/jquery/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src= "{{asset('admins/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button)
-
-  $(function () {
-      //Date and time picker
-      $('#date_release').datetimepicker({ icons: { time: 'far fa-clock' } });
-
-      $('#date_added').datetimepicker({ icons: { time: 'far fa-clock' } });
-
-      $("input[data-bootstrap-switch]").each(function(){
-      $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    })
-
-      bsCustomFileInput.init();
-    })
-
-</script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- daterangepicker -->
@@ -92,5 +77,29 @@
 <script src="{{asset('admins/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
 <!-- Bootstrap Switch -->
 <script src="{{asset('admins/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
+<!-- Select2 -->
+<script src="{{asset('admins/plugins/select2/js/select2.full.min.js')}}"></script>
+
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+
+    $(function () {
+
+      //Initialize Select2 Elements
+      $('.select2').select2()
+
+        //Date and time picker
+        $('#date_release').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+        $('#date_added').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+        $("input[data-bootstrap-switch]").each(function(){
+        $(this).bootstrapSwitch('state', $(this).prop('checked'));
+      })
+
+        bsCustomFileInput.init();
+      })
+
+  </script>
 </body>
 </html>

@@ -58,11 +58,18 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
     });
     // ========== END USERS =====================
 
-    //============= ALBUM========================
+    //============= ALBUM ========================
     Route::prefix('albums')->namespace('Album')->name('album.')->group(function () {
         Route::get('/', IndexController::class)->name('index');
         Route::get('/create', CreateController::class)->name("create");
         Route::post('/', StoreController::class)->name('store');
+    });
+    // ========== END ALBUM =====================
+
+    //============= TRACK ========================
+    Route::prefix('tracks')->namespace('Track')->name('track.')->group(function () {
+        Route::get('/', IndexController::class)->name('index');
+        Route::get('/create', CreateController::class)->name('create');
     });
 });
 

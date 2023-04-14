@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="{{route('main')}}" class="brand-link">
       <img src="{{asset('admins/dist/img/AdminLTELogo.png')}}" alt="Admin Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">Sanly Mukam</span>
     </a>
@@ -47,7 +47,7 @@
               </li>
 
               <li class="nav-item">
-                <a href="pages/widgets.html" class="nav-link">
+                <a href="{{route('track.index')}}" class="nav-link">
                   <i class="nav-icon fas fa-music"></i>
                   <p>
                     Треки

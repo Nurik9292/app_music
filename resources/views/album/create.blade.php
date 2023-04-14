@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Пользователи')
+@section('title', 'Альбом')
 
 @section('content')
 <div class="content-wrapper">
@@ -9,12 +9,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Создание нового пользователя</h1>
+            <h1 class="m-0">Создание Альбоам</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{route('main')}}">Главная</a></li>
-              <li class="breadcrumb-item"><a href="{{route('album.index')}}">Альбомы</a></li>
+              <li class="breadcrumb-item"><a href="{{route('track.index')}}">Альбом</a></li>
               <li class="breadcrumb-item active">Создание</li>
             </ol>
           </div><!-- /.col -->
@@ -49,7 +49,7 @@
                     <div class="row">
                         <div class="block_one">
                             <label for="description">Содержание</label>
-                            <textarea class="form-control" id="description" name="description" placeholder="Введите описание" rows="6"></textarea>
+                            <textarea class="form-control" id="description" name="description" placeholder="Введите текст" rows="6"></textarea>
                             @error('description')
                             {{$message}}
                           @enderror
