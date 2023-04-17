@@ -13,7 +13,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{route('main')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('main')}}">Главная</a></li>
               <li class="breadcrumb-item active">Артисты</li>
             </ol>
           </div><!-- /.col -->
@@ -23,44 +23,51 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="mb-3">
-            <button type="button" class="btn btn-block btn-primary btn-lg">Create</button>
-        </div>
-        <!-- Main row -->
-        <div class="mb-3">
-            <input type="button" value="Create">
-        </div>
-        <!-- Main row -->
-        <div class="row">
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                </tbody>
-              </table>
-        </div>
+    <section class="content" >
 
-        <div>
-            <input type="button" value="Send">
-        </div>
-    <!-- /.row (main row) -->
+        <div class="container-fluid">
+            <div class="d-flex justify-content-end mb-3">
+                <a class="btn btn-primary btn-lg" href="{{route('artist.create')}}">Добавить</a>
+            </div>
+            <!-- Main row -->
+            <div class="row" >
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Описание</th>
+                        <th scope="col">Тип</th>
+                        <th scope="col">Статус</th>
+                        <th scope="col">Выпуск</th>
+                        <th scope="col">Добавлен</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="row">{{1}}</th>
+                        <td>@</td>
+                        <td>@</td>
+                        <td>@</td>
+                        <td>@</td>
+                        <td>@</td>
+                        <td>@</td>
+                        <td>@</td>
+                        <td>@</td>
+                    </tr>
+
+                    </tbody>
+                  </table>
+            </div>
+
+          </div>
+
     </section>
     <!-- /.content -->
   </div>
 @endsection
+
+
+

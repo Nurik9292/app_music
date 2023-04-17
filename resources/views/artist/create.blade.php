@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Альбом')
+@section('title', 'Артисты')
 
 @section('content')
 <div class="content-wrapper">
@@ -9,12 +9,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Создание Альбома</h1>
+            <h1 class="m-0">Добавление Артиста</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{route('main')}}">Главная</a></li>
-              <li class="breadcrumb-item"><a href="{{route('track.index')}}">Альбом</a></li>
+              <li class="breadcrumb-item"><a href="{{route('track.index')}}">Артисты</a></li>
               <li class="breadcrumb-item active">Создание</li>
             </ol>
           </div><!-- /.col -->
@@ -38,8 +38,8 @@
 
                 <div class="row">
                     <div class="block_one">
-                        <label for="name">Название</label>
-                        <input type="text" class="form-control" id="name" placeholder="Введите Название" name="title">
+                        <label for="name">Имя</label>
+                        <input type="text" class="form-control" id="name" placeholder="Введите Название" name="name">
                         @error('title')
                           {{$message}}
                         @enderror
@@ -48,44 +48,22 @@
 
                     <div class="row">
                         <div class="block_one">
-                            <label for="description">Содержание</label>
-                            <textarea class="form-control" id="description" name="description" placeholder="Введите текст" rows="6"></textarea>
-                            @error('description')
+                            <label for="bio_tk">Tm биография</label>
+                            <textarea class="form-control" id="bio_tk" name="bio_tk" placeholder="Введите текст" rows="6"></textarea>
+                            @error('bio_tk')
+                            {{$message}}
+                          @enderror
+                          </div>
+
+                          <div class="block_one">
+                            <label for="bio_ru">Ru биография</label>
+                            <textarea class="form-control" id="bio_ru" name="bio_ru" placeholder="Введите текст" rows="6"></textarea>
+                            @error('bio_ru')
                             {{$message}}
                           @enderror
                           </div>
                         </div>
 
-
-
-                <div class="row">
-                    <div class="block_one">
-                            <label>Дата выпуска:</label>
-                              <div class="input-group date" id="date_release" data-target-input="nearest">
-                                  <input type="text" class="form-control datetimepicker-input" data-target="#date_release" placeholder="Нажми ---->" name="release_date">
-                                  <div class="input-group-append" data-target="#date_release" data-toggle="datetimepicker">
-                                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                  </div>
-                              </div>
-                        @error('release_date')
-                        {{$message}}
-                      @enderror
-                      </div>
-
-                      <div class="block_one">
-                        <label>Дата добавления:</label>
-                          <div class="input-group date" id="date_added" data-target-input="nearest">
-                              <input type="text" class="form-control datetimepicker-input" data-target="#date_added" placeholder="Нажми ---->" name="added_date">
-                              <div class="input-group-append" data-target="#date_added" data-toggle="datetimepicker">
-                                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                              </div>
-                          </div>
-                    @error('added_date')
-                    {{$message}}
-                  @enderror
-                  </div>
-
-                </div>
 
                 <div class="row">
                     <div class="block_one">
@@ -103,8 +81,8 @@
 
                         <!-- select -->
                         <div class="block_one">
-                            <label>Тип альбома</label>
-                            <select class="form-control" name="type">
+                            <label>Страна</label>
+                            <select class="form-control" name="country_id">
                               <option>option 1</option>
                               <option>option 2</option>
                               <option>option 3</option>

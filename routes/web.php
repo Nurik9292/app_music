@@ -71,6 +71,14 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
         Route::get('/', IndexController::class)->name('index');
         Route::get('/create', CreateController::class)->name('create');
     });
+    // ========== END TRACK =====================
+
+    //============= ARTIST ========================
+    Route::prefix('artists')->namespace('Artist')->name('artist.')->group(function () {
+        Route::get('/', IndexController::class)->name('index');
+        Route::get('/create', CreateController::class)->name('create');
+    });
+    // ========== END ARTIST =====================
 });
 
 
