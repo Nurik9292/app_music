@@ -6,11 +6,14 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
-import routet from './router';
+import router from './router';
 
-import Index from './components/view/User/Index.vue';
+import UserIndex from './components/view/User/UserIndex.vue';
+import OverviewIndex from './components/view/Overview/OverviewIndex.vue';
 
-const app = createApp({components:{Index}});
+const app = createApp({components:{UserIndex}});
+const ovr = createApp({components:{OverviewIndex}});
 
-app.use(routet);
+app.use(router);
 app.mount('#app');
+ovr.mount('#ovr');

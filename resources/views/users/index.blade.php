@@ -30,7 +30,7 @@
             </div>
             <!-- Main row -->
             <div class="row" id="app">
-                <Index></Index>
+                <user-index></user-index>
             </div>
 
           </div>

@@ -29,29 +29,8 @@
             <a href="{{route('overview.create')}}" class="btn btn-primary btn-lg">Создаоть</a>
         </div>
         <!-- Main row -->
-        <div class="row">я
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">RU-название</th>
-                    <th scope="col">TM-название</th>
-                    <th scope="col">EN-название</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                  </tr>
-                </tbody>
-              </table>
+        <div class="row" id="ovr">
+            <overview-index></overview-index>
         </div>
 
         <div class="d-flex justify-content-end mb-3">
