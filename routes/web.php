@@ -77,6 +77,10 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
     Route::prefix('artists')->namespace('Artist')->name('artist.')->group(function () {
         Route::get('/', IndexController::class)->name('index');
         Route::get('/create', CreateController::class)->name('create');
+        Route::post('/', StoreController::class)->name('store');
+        Route::get('/{artist}/edit', EditController::class)->name('edit');
+        Route::patch('/{artist}', UpdateController::class)->name('update');
+        Route::delete('/{artist}', DestroyController::class)->name('destroy');
     });
     // ========== END ARTIST =====================
 });

@@ -101,8 +101,8 @@
         $(this).bootstrapSwitch('state', $(this).prop('checked'));
 
         // Summernote
-        $('#bio_tm').summernote()
-        $('#bio_ru').summernote()
+        $('#bio_tm').summernote({  height: 300 })
+        $('#bio_ru').summernote({  height: 300 })
       })
 
         bsCustomFileInput.init();

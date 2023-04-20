@@ -35,28 +35,36 @@
                     <thead class="table-dark">
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Название</th>
-                        <th scope="col">Описание</th>
-                        <th scope="col">Тип</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Биография Tm</th>
+                        <th scope="col">Биография Ru</th>
+                        <th scope="col">Страна</th>
                         <th scope="col">Статус</th>
-                        <th scope="col">Выпуск</th>
                         <th scope="col">Добавлен</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                       </tr>
                     </thead>
                     <tbody>
+                        @foreach ($artists as $num => $artist)
+
                         <tr>
-                        <th scope="row">{{1}}</th>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                    </tr>
+                            <th scope="row">{{$num + 1}}</th>
+                            <td>{{$artist->name}}</td>
+                            <td>{!!$artist->bio_tk!!}</td>
+                            <td>{!!$artist->bio_ru!!}</td>
+                            <td>{{$artist->country->name}}</td>
+                            <td><b class="text-{{$artist->status == 'on' ? 'green' : 'danger'}}">{{$artist->status}}</b></td>
+                            <td>{{$dates[$artist->id]}}</td>
+
+                            <td><a href="{{route('artist.edit', $artist)}}" class="btn btn-outline-success">Edit</a></td>
+                            <form action="{{route('artist.destroy', $artist)}}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <td><input type="submit" class="btn btn-outline-danger" value="Delete"></td>
+                            </form>
+                            </tr>
+                        @endforeach
 
                     </tbody>
                   </table>

@@ -16,9 +16,17 @@ class Artist extends Model
      */
     protected $fillable = [
         'name',
-        'type',
-        'begin_day',
-        'end_day',
-        ''
+        'bio_tk',
+        'bio_ru',
+        'artwork_url',
+        'thumb_url',
+        'country_id',
+        'status'
     ];
+
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id', 'id');
+    }
 }

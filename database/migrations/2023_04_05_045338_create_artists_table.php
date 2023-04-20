@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('artists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('bio')->default('');
+            $table->string('bio_tk')->default('');
+            $table->string('bio_ru')->default('');
             $table->timestamp('added_date')->nullable();
             $table->timestamp('last_update')->nullable();
             $table->string('artwork_url')->default('');
             $table->string('thumb_url')->default('');
-            $table->boolean('status')->default(false);
+            $table->boolean('status');
             $table->unsignedBigInteger('country_id')->nullable();
             $table->timestamps();
 

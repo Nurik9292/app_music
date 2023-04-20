@@ -2,11 +2,23 @@
 
 namespace App\Http\Controllers\Admin\Artist;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Artist\StoreRequest;
+use App\Models\Artist;
 
-class StoreController extends Controller
+class StoreController extends BaseController
 {
-    public function __invoke()
+    public function __invoke(StoreRequest $request)
     {
+        $data = $request->validated();
+
+        $data = $this->service->resize($data);
+
+        $data['status'] = $this->service->status($data);
+
+        // dd($data);
+
+        Artist::create($data);
+
+        return redirect()->route('artist.index');
     }
 }

@@ -24,6 +24,6 @@ Route::prefix('users')->namespace('App\Http\Controllers\Admin\User\Api')->name('
     Route::delete('/{user}', DestroyController::class)->name('destroy');
 });
 
-Route::prefix('overviews')->name('App\Http\Controllers\Admin\Overview\Api')->name('api.overview')->group(function () {
+Route::prefix('overviews')->namespace('App\Http\Controllers\Admin\Block\Overview\Api')->name('api.overview')->group(function () {
     Route::get('/', IndexController::class)->name('index');
 });
