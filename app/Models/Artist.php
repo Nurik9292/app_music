@@ -9,7 +9,6 @@ class Artist extends Model
 {
     use HasFactory;
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -20,5 +19,6 @@ class Artist extends Model
         'type',
         'begin_day',
         'end_day',
+        ''
     ];
 }

@@ -23,3 +23,7 @@ Route::prefix('users')->namespace('App\Http\Controllers\Admin\User\Api')->name('
     Route::patch('/{user}', UpdateController::class)->name('update');
     Route::delete('/{user}', DestroyController::class)->name('destroy');
 });
+
+Route::prefix('overviews')->name('App\Http\Controllers\Admin\Overview\Api')->name('api.overview')->group(function () {
+    Route::get('/', IndexController::class)->name('index');
+});
