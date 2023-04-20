@@ -17,7 +17,6 @@ class UpdateController extends Controller
         foreach ($user->getRoles() as $key => $role)
             if ($data['role'] == $role) $data['role'] = $key;
 
-
         $user->update($data);
 
         return new UserResource($user);
