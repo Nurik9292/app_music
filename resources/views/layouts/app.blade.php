@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="{{asset('admins/plugins/daterangepicker/daterangepicker.css')}}">
   <!-- Select2 -->
   <link rel="stylesheet" href="{{asset('admins/plugins/select2/css/select2.min.css')}}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{{asset('admins/plugins/summernote/summernote-bs4.min.css')}}">
 
 
  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -79,6 +81,8 @@
 <script src="{{asset('admins/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
 <!-- Select2 -->
 <script src="{{asset('admins/plugins/select2/js/select2.full.min.js')}}"></script>
+<!-- Summernote -->
+<script src="{{asset('admins/plugins/summernote/summernote-bs4.min.js')}}"></script>
 
 <script>
     $.widget.bridge('uibutton', $.ui.button)
@@ -95,6 +99,10 @@
 
         $("input[data-bootstrap-switch]").each(function(){
         $(this).bootstrapSwitch('state', $(this).prop('checked'));
+
+        // Summernote
+        $('#bio_tm').summernote()
+        $('#bio_ru').summernote()
       })
 
         bsCustomFileInput.init();

@@ -47,15 +47,16 @@
                 </div>
 
                     <div class="row">
-                        <div class="block_one">
+                        <div class="text">
                             <label for="bio_tk">Tm биография</label>
-                            <textarea class="form-control" id="bio_tk" name="bio_tk" placeholder="Введите текст" rows="6"></textarea>
+                            <textarea class="form-control" id="bio_tm" name="bio_tk" placeholder="Введите текст" rows="6"></textarea>
                             @error('bio_tk')
                             {{$message}}
                           @enderror
                           </div>
 
-                          <div class="block_one">
+
+                          <div class="text">
                             <label for="bio_ru">Ru биография</label>
                             <textarea class="form-control" id="bio_ru" name="bio_ru" placeholder="Введите текст" rows="6"></textarea>
                             @error('bio_ru')
@@ -83,11 +84,9 @@
                         <div class="block_one">
                             <label>Страна</label>
                             <select class="form-control" name="country_id">
-                              <option>option 1</option>
-                              <option>option 2</option>
-                              <option>option 3</option>
-                              <option>option 4</option>
-                              <option>option 5</option>
+                                @foreach ($countries as $country)
+                                <option value="{{$country->id}}">{{$country->name}}</option>
+                                @endforeach
                             </select>
                             @error('type')
                             {{$message}}
@@ -132,6 +131,14 @@
     .block_one {
         float: left;
         width: 320px;
+        margin-right: 50px;
+        margin-bottom: 40px;
+   }
+
+   .text {
+    float: left;
+        width: 500px;
+        height: 200px;
         margin-right: 50px;
         margin-bottom: 40px;
    }

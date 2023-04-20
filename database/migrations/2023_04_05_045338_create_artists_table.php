@@ -20,9 +20,12 @@ return new class extends Migration
             $table->string('artwork_url')->default('');
             $table->string('thumb_url')->default('');
             $table->boolean('status')->default(false);
+            $table->unsignedBigInteger('country_id')->nullable();
             $table->timestamps();
 
             $table->index('name', 'idx_artist_name');
+            $table->index('country_id', 'artist_cauntry_idx');
+            $table->foreign('country_id', 'arists_countries_fk')->on('countries')->references('id');
         });
     }
 
