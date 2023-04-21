@@ -74,7 +74,7 @@
                         <div class="input-group">
                           <div class="custom-file">
                               <label class="custom-file-label" for="inputFile">Выберите изображение</label>
-                            <input type="file" class="custom-file-input" id="inputFile" name="artwork_url">
+                            <input type="file" class="custom-file-input" id="inputFile" name="artwork_url"  accept="image/png, image/jpg, image/jpeg">
                             @error('artwork_url')
                             <p class="text-danger">{{$message}}</p>
                           @enderror

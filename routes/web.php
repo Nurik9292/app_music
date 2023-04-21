@@ -70,6 +70,7 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
     Route::prefix('tracks')->namespace('Track')->name('track.')->group(function () {
         Route::get('/', IndexController::class)->name('index');
         Route::get('/create', CreateController::class)->name('create');
+        Route::post('/', StoreController::class)->name('store');
     });
     // ========== END TRACK =====================
 

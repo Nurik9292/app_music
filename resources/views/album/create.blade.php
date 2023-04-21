@@ -125,15 +125,15 @@
 
 
 
+
+
+
+            </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer d-flex justify-content-end mb-3">
+                    <button type="submit" class="btn btn-primary btn-lg" >Создать</button>
                 </div>
-                  </div>
-
-
-              <!-- /.card-body -->
-
-              <div class="card-footer d-flex justify-content-end mb-3">
-                <button type="submit" class="btn btn-primary btn-lg" >Создать</button>
-              </div>
             </form>
           </div>
 

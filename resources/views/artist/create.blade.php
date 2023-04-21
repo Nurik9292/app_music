@@ -72,7 +72,7 @@
                         <div class="input-group">
                           <div class="custom-file">
                               <label class="custom-file-label" for="inputFile">Выберите изображение</label>
-                            <input type="file" class="custom-file-input" id="inputFile" name="artwork_url">
+                            <input type="file" class="custom-file-input" id="inputFile" name="artwork_url" accept="image/png, image/jpg, image/jpeg">
                             @error('artwork_url')
                             <p class="text-danger">{{$message}}</p>
                           @enderror
@@ -83,7 +83,7 @@
                         <!-- select -->
                         <div class="block_one">
                             <label>Страна</label>
-                            <select class="form-control" name="country_id">
+                            <select class="form-control" name="country_id"  >
                                 <option>все</option>
                                 @foreach ($countries as $country)
                                 <option value="{{$country->id}}">{{$country->name}}</option>
@@ -94,27 +94,28 @@
                           @enderror
                           </div>
 
-                          {{-- checked --}}
-                          <div>
-                              <input type="checkbox" name="status" data-bootstrap-switch>
-                              @error('status')
-                              <p class="text-danger">{{$message}}</p>
-                            @enderror
-                          </div>
+                </div>
+
+                    {{-- checked --}}
+                    <div>
+                        <label for="status">Статуc</label>
+                          <input type="checkbox" name="status" id="status" data-bootstrap-switch>
+                          @error('status')
+                          <p class="text-danger">{{$message}}</p>
+                        @enderror
+                      </div>
+
+
 
                 </div>
 
-
-
-                </div>
-                  </div>
 
 
               <!-- /.card-body -->
 
-              <div class="card-footer d-flex justify-content-start mb-3 ">
+              <div class="card-footer ">
                 <a href="{{route('artist.index')}}" class="btn btn-primary btn-lg mr-3" >Отмена</a>
-                <button type="submit" class="btn btn-primary btn-lg" >Добавить</button>
+                <button type="submit" class="btn btn-primary btn-lg " >Добавить</button>
                </div>
             </form>
           </div>
@@ -149,7 +150,10 @@
 
    .text textarea {
     height: 300px;
+   }
 
+   label {
+    display: block;
    }
 
   </style>

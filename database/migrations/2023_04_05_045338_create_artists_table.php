@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('thumb_url')->default('');
             $table->boolean('status');
             $table->unsignedBigInteger('country_id')->nullable();
+            $table->string('mbind', 200)->default('');
             $table->timestamps();
 
             $table->index('name', 'idx_artist_name');

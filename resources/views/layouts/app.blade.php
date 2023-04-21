@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="{{asset('admins/plugins/daterangepicker/daterangepicker.css')}}">
   <!-- Select2 -->
   <link rel="stylesheet" href="{{asset('admins/plugins/select2/css/select2.min.css')}}">
+  <link rel="stylesheet" href="{{asset('admins/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{asset('admins/plugins/summernote/summernote-bs4.min.css')}}">
 
@@ -91,6 +92,7 @@
 
       //Initialize Select2 Elements
       $('.select2').select2()
+      $('.single').select2(  {theme: 'bootstrap4'})
 
         //Date and time picker
         $('#date_release').datetimepicker({ icons: { time: 'far fa-clock' } });
@@ -103,6 +105,9 @@
         // Summernote
         $('#bio_tm').summernote({  height: 300 })
         $('#bio_ru').summernote({  height: 300 })
+        $('#lyrics').summernote({  height: 300 })
+
+
       })
 
         bsCustomFileInput.init();
