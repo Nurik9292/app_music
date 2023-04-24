@@ -11,13 +11,7 @@ class StoreController extends BaseController
     {
         $data = $request->validated();
 
-        $data = $this->service->resize($data);
-
-        $data['status'] = $this->service->status($data);
-
-        // dd($data);
-
-        Artist::create($data);
+        $this->service->store($data);
 
         return redirect()->route('artist.index');
     }

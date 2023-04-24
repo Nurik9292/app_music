@@ -45,15 +45,22 @@
                       </tr>
                     </thead>
                     <tbody>
-                        <th scope="row">{{1}}</th>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
+                        @foreach ($tracks as $num => $track)
+
+                        <th scope="row">{{$num + 1}}</th>
+                        <td>{{$track->title}}</td>
+                        <td>{!!substr($track->lyrics, 0, 50)!!}</td>
+                        <td>{{gmdate("i:s", $track->duration)}}</td>
+                        <td><b class="text-{{$track->status == 'on' ? 'green' : 'danger'}}">{{$track->status}}</b></td>
+                        <td>{{$track->track_number}}</td>
+                        <td><a href="{{route('track.edit', $track)}}" class="btn btn-outline-success">Edit</a></td>
+                        <form action="{{route('track.destroy', $track)}}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <td><input type="submit" class="btn btn-outline-danger" value="Delete"></td>
+                        </form>
                     </tr>
+                    @endforeach
 
                     </tbody>
                   </table>

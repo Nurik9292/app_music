@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin\Track;
 
 use App\Http\Requests\Admin\Track\StoreRequest;
+use App\Models\ArtistTrack;
+use App\Models\GenreTrack;
+use App\Models\Track;
 
 class StoreController extends BaseController
 {
@@ -10,8 +13,8 @@ class StoreController extends BaseController
     {
         $data = $request->validated();
 
-        // dd($data['audio_url']);
+        $this->service->store($data);
 
-        $data = $this->service->track($data);
+        return redirect()->route('track.index');
     }
 }

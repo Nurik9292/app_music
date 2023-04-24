@@ -51,8 +51,8 @@
                         <tr>
                             <th scope="row">{{$num + 1}}</th>
                             <td>{{$artist->name}}</td>
-                            <td>{!!$artist->bio_tk!!}</td>
-                            <td>{!!$artist->bio_ru!!}</td>
+                            <td>{!!substr($artist->bio_tk, 0, 50)!!}</td>
+                            <td>{!!substr($artist->bio_ru, 0, 50)!!}</td>
                             <td>{{$artist->country->name}}</td>
                             <td><b class="text-{{$artist->status == 'on' ? 'green' : 'danger'}}">{{$artist->status}}</b></td>
                             <td>{{$dates[$artist->id]}}</td>

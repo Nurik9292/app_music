@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('lyrics')->nullable();
             $table->string('audio_url')->default('');
             $table->boolean('is_national')->default('false');
+            $table->boolean('status')->default('false');
             $table->string('thumb_url')->default('');
             $table->unsignedBigInteger('listen_count')->default(0);
             $table->string('mbind', 200)->default('');

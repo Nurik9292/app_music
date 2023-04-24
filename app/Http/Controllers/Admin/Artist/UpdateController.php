@@ -11,10 +11,7 @@ class UpdateController extends BaseController
     {
         $data = $requeset->validated();
 
-        if ($data['artwork_url'])
-            $data = $this->service->resize($data, $artist);
-
-        $artist->update($data);
+        $this->service->update($data, $artist);
 
         return redirect()->route('artist.index');
     }

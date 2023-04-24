@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin\Artist;
 
+use App\Models\Artist;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -9,6 +10,25 @@ use Intervention\Image\Facades\Image;
 
 class Service
 {
+
+    public function store($data)
+    {
+        $data = $this->resize($data);
+
+        $data['status'] = $this->status($data);
+
+        Artist::create($data);
+    }
+
+    public function update($data, $artist)
+    {
+        if ($data['artwork_url'])
+            $data = $this->resize($data, $artist);
+
+        $artist->update($data);
+    }
+
+
     public function resize($data, $artist = null)
     {
 

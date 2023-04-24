@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Admin\Track;
 
-use App\Http\Controllers\Controller;
+use App\Models\Track;
 
-class IndexController extends Controller
+class IndexController extends BaseController
 {
     public function __invoke()
     {
-        return view('track.index');
+        $tracks = Track::orderByDesc('created_at')->get();
+
+        $this->service->statusChangetoString($tracks);
+
+        return view('track.index', compact('tracks'));
     }
 }

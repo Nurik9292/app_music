@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\Track;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +22,13 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string'],
-            'lyrics' => ['required', 'string'],
-            'artists' => ['required'],
-            'genre_id' => ['required'],
-            'album_id' => ['required', 'numeric'],
-            'thumb_url' => ['required', 'image'],
-            'audio_url' => ['required', 'file', 'mimes:mp3,mpeg'],
+            'title' => ['nullable', 'string'],
+            'lyrics' => ['nullable', 'string'],
+            'artists' => ['nullable'],
+            'genre_id' => ['nullable'],
+            'album_id' => ['nullable', 'numeric'],
+            'thumb_url' => ['nullable', 'image'],
+            'audio_url' => ['nullable', 'file', 'mimes:mp3,mpeg'],
             'status' => ['nullable'],
             'is_national' => ['nullable'],
             'track_number' => ['nullable', 'numeric'],

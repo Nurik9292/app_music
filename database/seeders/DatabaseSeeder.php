@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Artist;
 use App\Models\Country;
 use Illuminate\Database\Seeder;
 
@@ -22,5 +23,7 @@ class DatabaseSeeder extends Seeder
                 'name' => $name,
                 'code' => $code
             ]);
+
+        Artist::factory(10)->create();
     }
 }
