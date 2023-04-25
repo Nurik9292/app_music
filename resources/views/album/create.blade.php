@@ -32,7 +32,7 @@
         <div class="card card-white">
 
             <!-- form start -->
-            <form action="{{route('album.store')}}" method="POST">
+            <form action="{{route('album.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
               <div class="card-body">
 
@@ -41,7 +41,7 @@
                         <label for="name">Название</label>
                         <input type="text" class="form-control" id="name" placeholder="Введите Название" name="title">
                         @error('title')
-                          {{$message}}
+                        <p class="text-danger">{{$message}}</p>
                         @enderror
                       </div>
                 </div>
@@ -51,7 +51,7 @@
                             <label for="description">Содержание</label>
                             <textarea class="form-control" id="description" name="description" placeholder="Введите текст" rows="6"></textarea>
                             @error('description')
-                            {{$message}}
+                            <p class="text-danger">{{$message}}</p>
                           @enderror
                           </div>
                         </div>
@@ -68,7 +68,7 @@
                                   </div>
                               </div>
                         @error('release_date')
-                        {{$message}}
+                        <p class="text-danger">{{$message}}</p>
                       @enderror
                       </div>
 
@@ -81,7 +81,7 @@
                               </div>
                           </div>
                     @error('added_date')
-                    {{$message}}
+                    <p class="text-danger">{{$message}}</p>
                   @enderror
                   </div>
 
@@ -90,29 +90,27 @@
                 <div class="row">
                     <div class="block_one">
                         <label for="inputFile">Изображение</label>
-                        <div class="input-group">
+
                           <div class="custom-file">
                               <label class="custom-file-label" for="inputFile">Выберите изображение</label>
-                            <input type="file" class="custom-file-input" id="inputFile" name="artwork_url">
+                            <input type="file" class="custom-file-input" id="inputFile" name="artwork_url" accept="image/png, image/jpg, image/jpeg">
                             @error('artwork_url')
-                            {{$message}}
+                            <p class="text-danger">{{$message}}</p>
                           @enderror
                           </div>
-                        </div>
                       </div>
 
                         <!-- select -->
                         <div class="block_one">
                             <label>Тип альбома</label>
                             <select class="form-control" name="type">
-                              <option>option 1</option>
-                              <option>option 2</option>
-                              <option>option 3</option>
-                              <option>option 4</option>
-                              <option>option 5</option>
+                                <option>все</option>
+                                @foreach ($types as $num => $type)
+                                <option value="{{$num}}">{{$type}}</option>
+                                @endforeach
                             </select>
                             @error('type')
-                            {{$message}}
+                            <p class="text-danger">{{$message}}</p>
                           @enderror
                           </div>
 
@@ -131,9 +129,10 @@
             </div>
                 <!-- /.card-body -->
 
-                <div class="card-footer d-flex justify-content-end mb-3">
-                    <button type="submit" class="btn btn-primary btn-lg" >Создать</button>
-                </div>
+                <div class="card-footer ">
+                    <a href="{{route('artist.index')}}" class="btn btn-primary btn-lg mr-3" >Отмена</a>
+                    <button type="submit" class="btn btn-primary btn-lg " >Создать</button>
+                   </div>
             </form>
           </div>
 

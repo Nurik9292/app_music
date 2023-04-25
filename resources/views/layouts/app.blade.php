@@ -95,9 +95,9 @@
       $('.single').select2(  {theme: 'bootstrap4'})
 
         //Date and time picker
-        $('#date_release').datetimepicker({ icons: { time: 'far fa-clock' } });
+        $('#date_release').datetimepicker({ format: 'YYYY/M/D h:m A', icons: { time: 'far fa-clock' } });
 
-        $('#date_added').datetimepicker({ icons: { time: 'far fa-clock' } });
+        $('#date_added').datetimepicker({ format: 'YYYY/M/D h:m A', icons: { time: 'far fa-clock' } });
 
         $("input[data-bootstrap-switch]").each(function(){
         $(this).bootstrapSwitch('state', $(this).prop('checked'));

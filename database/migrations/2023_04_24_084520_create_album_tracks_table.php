@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Grammars\Grammar;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -17,7 +18,7 @@ return new class extends Migration
 
             $table->primary(['album_id', 'track_id']);
 
-            $table->index('album_id', 'genre_track_idx');
+            $table->index('album_id', 'album_track_idx');
             $table->index('track_id', 'track_album_idx');
 
             $table->foreign('album_id', 'album_track_fk')->on('albums')->references('id');

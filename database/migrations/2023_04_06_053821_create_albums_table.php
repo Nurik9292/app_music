@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\PostgresConnection;
+use Illuminate\Database\Schema\PostgresBuilder;
+use Illuminate\Support\Facades\DB;
+use Nette\Schema\Elements\Type;
 
 return new class extends Migration
 {
@@ -11,19 +15,40 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('albums', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->timestamp('release_date')->default(now());
-            $table->timestamp('added_date')->default(now());
-            $table->unsignedBigInteger('artist_id')->nullable();
-            $table->boolean('status')->default(false);
-            $table->string('artwork_url')->default('');
-            $table->string('thumb_url')->default('');
-            $table->string('release_country', 3);
-            $table->text('description')->default('');
-            $table->timestamps();
-        });
+
+
+        DB::statement("
+        CREATE TABLE albums (
+            id bigserial PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            release_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            status BOOL DEFAULT false,
+            artwork_url VARCHAR(255) DEFAULT '',
+            thumb_url VARCHAR(255) DEFAULT '',
+            description TEXT DEFAULT '',
+            type album_type NOT NULL DEFAULT 'album',
+            mbid VARCHAR(200) DEFAULT '',
+            is_national BOOL DEFAULT false,
+            show_count INT DEFAULT 0
+          );
+        ");
+
+        // Schema::create('albums', function (Blueprint $table) {
+
+        //     $table->id();
+        //     $table->string('title');
+        //     $table->timestamp('release_date')->default(now());
+        //     $table->timestamp('added_date')->default(now());
+        //     $table->boolean('status')->default(false);
+        //     $table->string('artwork_url')->default('');
+        //     $table->string('thumb_url')->default('');
+        //     $table->string('mbind')->default('');
+        //     $table->boolean('is_national')->default(false);
+        //     $table->text('description');
+        //     $table->unsignedBigInteger('show_count')->default(0);
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -31,6 +56,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('albums');
+        DB::statement("DROP TABLE albums CASCADE");
+        // Schema::dropIfExists('albums');
     }
 };

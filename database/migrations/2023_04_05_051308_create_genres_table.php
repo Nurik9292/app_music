@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('genres', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
             $table->string('name_tm');
             $table->string('name_ru');
             $table->unsignedBigInteger('parent_id')->default(0);
-            $table->timestamps();
 
             $table->index('name_tm', 'idx_genre_name_tm');
             $table->index('name_ru', 'idx_genre_name_ru');

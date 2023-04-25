@@ -22,13 +22,13 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => [],
-            'description' => [],
-            'release_date' => [],
-            'added_date' => [],
-            'artwork_url' => [],
-            'type' => [],
-            'status' => []
+            'title' => ['required', 'string'],
+            'description' => ['required', 'string'],
+            'release_date' => ['required',],
+            'added_date' => ['required',],
+            'artwork_url' => ['required', 'image'],
+            'type' => ['required', 'numeric'],
+            'status' => ['nullable']
         ];
     }
 }
