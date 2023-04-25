@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\Album;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,17 +17,17 @@ class StoreRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string'],
-            'description' => ['required', 'string'],
-            'release_date' => ['required', 'date'],
-            'added_date' => ['required', 'date'],
-            'artwork_url' => ['required', 'image'],
-            'type' => ['required', 'numeric'],
+            'title' => ['nullable', 'string'],
+            'description' => ['nullable', 'string'],
+            'release_date' => ['nullable', 'date'],
+            'added_date' => ['nullable', 'date'],
+            'artwork_url' => ['nullable', 'image'],
+            'type' => ['nullable', 'numeric'],
             'status' => ['nullable'],
             'is_national' => ['nullable'],
         ];

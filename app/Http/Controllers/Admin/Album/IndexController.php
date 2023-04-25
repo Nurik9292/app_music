@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\Admin\Album;
 
-use App\Http\Controllers\Controller;
+use App\Models\Album;
 
-class IndexController extends Controller
+class IndexController extends BaseController
 {
     public function __invoke()
     {
-        return view('album.index');
+        $albums = Album::orderByDesc('title')->get();
+
+        $this->service->statusChangetoString($albums);
+
+        [$added_dates, $release_dates] = array_values($this->service->dateFormateForIndex($albums));
+
+        return view('album.index', compact('albums', 'added_dates', 'release_dates'));
     }
 }

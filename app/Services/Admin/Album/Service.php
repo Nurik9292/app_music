@@ -19,7 +19,25 @@ class Service
 
         $data = $this->type($data);
 
+        $data = $this->dateFormat($data);
+
         Album::create($data);
+    }
+
+
+    public function update($data, $album)
+    {
+        if (isset($data['artwokr_url']))
+            $data = $this->resize($data);
+
+        if (isset($data['added_date']) || isset($data['release_date']))
+            $data = $this->dateFormat($data);
+
+        $data['status'] = $this->status($data);
+
+        $data = $this->type($data);
+
+        $album->update($data);
     }
 
 
@@ -77,6 +95,35 @@ class Service
 
         if (isset($data['type']))
             $data['type'] = $album->getTypes()[$data['type']];
+
+        return $data;
+    }
+
+
+
+    public function dateFormateForIndex($albums)
+    {
+        $added_dates = [];
+        $release_dates = [];
+
+        foreach ($albums as $album)
+            $added_dates[$album->id] = Carbon::parse($album->added_date)->format('d-m-Y');
+
+        foreach ($albums as $album)
+            $release_dates[$album->id] = Carbon::parse($album->release_date)->format('d-m-Y');
+
+
+        return [$added_dates, $release_dates];
+    }
+
+    public function dateFormat($data)
+    {
+        if (isset($data['added_date']))
+            $data['added_date'] = Carbon::parse($data['added_date'])->format('Y/m/d h:m A');
+        else $data['added_date'] = Carbon::now();
+        if (isset($data['release_date']))
+            $data['release_date'] = Carbon::parse($data['release_date'])->format('Y/m/d h:m A');
+        else $data['release_date'] = Carbon::now();
 
         return $data;
     }

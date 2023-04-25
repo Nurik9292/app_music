@@ -88,13 +88,10 @@
                         <label>Альбомы</label>
                         <div >
                             <select class="form-control single" name="album_id">
-                                <option value="1" selected="selected">Alabama</option>
-                                <option value="1">Alaska</option>
-                                <option value="1">California</option>
-                                <option value="1">Delaware</option>
-                                <option value="1">Tennessee</option>
-                                <option value="1">Texas</option>
-                                <option value="1">Washington</option>
+                                <option>все</option>
+                                @foreach ($albums as $album)
+                                <option value="{{$album->id}}">{{$album->title}}</option>
+                                @endforeach
                               </select>
                             @error('album_id')
                             <p class="text-danger">{{$message}}</p>
@@ -150,7 +147,7 @@
                       </div>
 
                         <div class="block_one">
-                            <label for="number">Название</label>
+                            <label for="number">Номер трека </label>
                             <input type="number" class="form-control" id="number" placeholder="Введите номер трекв" name="track_number">
                             @error('track_number')
                             <p class="text-danger">{{$message}}</p>

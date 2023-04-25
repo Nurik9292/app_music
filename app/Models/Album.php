@@ -33,4 +33,10 @@ class Album extends Model
             self::REMIX => 'remix',
         ];
     }
+
+
+    public function tracks()
+    {
+        return $this->belongsToMany(Track::class, 'album_track', 'album_id', 'track_id');
+    }
 }

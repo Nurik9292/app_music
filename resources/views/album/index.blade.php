@@ -46,18 +46,23 @@
                       </tr>
                     </thead>
                     <tbody>
+                        @foreach ($albums as $num => $album)
                         <tr>
-                        <th scope="row">{{1}}</th>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
-                        <td>@</td>
+                            <th scope="row">{{$num + 1}}</th>
+                        <td>{{$album->title}}</td>
+                        <td>{!!substr($album->description, 0, 50)!!}</td>
+                        <td>{{$album->type}}</td>
+                        <td><b class="text-{{$album->status == 'on' ? 'green' : 'danger'}}">{{$album->status}}</b></td>
+                        <td>{{$added_dates[$album->id]}}</td>
+                        <td>{{$release_dates[$album->id]}}</td>
+                        <td><a href="{{route('album.edit', $album)}}" class="btn btn-outline-success">Edit</a></td>
+                        <form action="{{route('album.destroy', $album)}}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <td><input type="submit" class="btn btn-outline-danger" value="Delete"></td>
+                        </form>
                     </tr>
-
+                    @endforeach
                     </tbody>
                   </table>
             </div>
