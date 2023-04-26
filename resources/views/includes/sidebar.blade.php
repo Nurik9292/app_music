@@ -75,7 +75,7 @@
 
 
               <li class="nav-item">
-                <a href="pages/widgets.html" class="nav-link">
+                <a href="{{route('playlist.index')}}" class="nav-link">
                   <i class="nav-icon far fa-file-audio"></i>
                   <p>
                     Плейлисты

@@ -69,6 +69,17 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
     });
     // ========== END ALBUM =====================
 
+    //============= ALBUM ========================
+    Route::prefix('playlists')->namespace('Playlist')->name('playlist.')->group(function () {
+        Route::get('/', IndexController::class)->name('index');
+        Route::get('/create', CreateController::class)->name("create");
+        Route::post('/', StoreController::class)->name('store');
+        Route::get('/{playlist}/edit', EditController::class)->name('edit');
+        Route::patch('/{playlist}', UpdateController::class)->name('update');
+        Route::delete('/{playlist}', DestroyController::class)->name('destroy');
+    });
+    // ========== END ALBUM =====================
+
     //============= TRACK ========================
     Route::prefix('tracks')->namespace('Track')->name('track.')->group(function () {
         Route::get('/', IndexController::class)->name('index');

@@ -63,7 +63,6 @@
                           <div class="block_one">
                             <div class="select2-purple">
                               <select class="form-control select2" multiple="multiple" name=artists[]" data-placeholder="Выберите испольнителя" data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                <option>все</option>
                                 @foreach ($artists as $artist)
                                 <option value="{{$artist->id}}">{{$artist->name}}</option>
                                 @endforeach
@@ -104,13 +103,12 @@
                         <label>Жанры</label>
                         <div class="select2-purple">
                             <select class="select2" multiple="multiple" name="genres[]" data-placeholder="Выберите жанры" data-dropdown-css-class="select2-purple" style="width: 100%;">
-                              <option>все</option>
                               @foreach ($genres as $genre)
                               <option value="{{$genre->id}}">{{$genre->name_ru}}</option>
                               @endforeach
                             </select>
                           </div>
-                    @error('genre_id')
+                    @error('genres')
                     <p class="text-danger">{{$message}}</p>
                   @enderror
                   </div>
