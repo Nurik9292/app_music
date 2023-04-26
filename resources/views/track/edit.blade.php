@@ -93,13 +93,14 @@
                         <label>Альбомы</label>
                         <div >
                             <select class="form-control single" name="album">
-                                <option value="1" selected="selected">Alabama</option>
-                                <option value="1">Alaska</option>
-                                <option value="1">California</option>
-                                <option value="1">Delaware</option>
-                                <option value="1">Tennessee</option>
-                                <option value="1">Texas</option>
-                                <option value="1">Washington</option>
+                                <option>все</option>
+                                @foreach ($albums as $album)
+                                <option @foreach ($track->album as $al)
+                                    {{$al->id == $album->id ? 'selected' : ''}}
+                                @endforeach
+                                 value="{{$album->id}}">{{$album->title}}
+                                </option>
+                                @endforeach
                               </select>
                             @error('album')
                             <p class="text-danger">{{$message}}</p>
@@ -111,17 +112,17 @@
                       <div class="block_one">
                         <label>Жанры</label>
                         <div class="select2-purple">
-                            <select class="select2" multiple="multiple" name="genre_id" data-placeholder="Выберите жанры" data-dropdown-css-class="select2-purple" style="width: 100%;">
-                              <option value="1">Alabama</option>
-                              <option value="1">Alaska</option>
-                              <option value="1">California</option>
-                              <option value="1">Delaware</option>
-                              <option value="1">Tennessee</option>
-                              <option value="1">Texas</option>
-                              <option value="1">Washington</option>
+                            <select class="select2" multiple="multiple" name="genres[]" data-placeholder="Выберите жанры" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                              @foreach ($genres as $genre)
+                              <option @foreach ($track->genres as $gr)
+                                  {{$gr->id == $genre->id ? 'selected' : ''}}
+                              @endforeach
+                               value="{{$genre->id}}">{{$genre->name_ru}}
+                                </option>
+                              @endforeach
                             </select>
                           </div>
-                    @error('genre_id')
+                    @error('genres')
                     <p class="text-danger">{{$message}}</p>
                   @enderror
                   </div>
