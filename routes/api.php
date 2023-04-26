@@ -32,4 +32,5 @@ Route::prefix('genres')->namespace('App\Http\Controllers\Admin\Genre\Api')->name
 
 Route::prefix('overviews')->namespace('App\Http\Controllers\Admin\Block\Overview\Api')->name('api.overview')->group(function () {
     Route::get('/', IndexController::class)->name('index');
+    Route::get('/show', ShowController::class)->name('show');
 });

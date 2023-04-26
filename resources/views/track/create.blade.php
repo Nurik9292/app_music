@@ -87,13 +87,13 @@
                     <div class="block_one">
                         <label>Альбомы</label>
                         <div >
-                            <select class="form-control single" name="album_id">
+                            <select class="form-control single" name="album">
                                 <option>все</option>
                                 @foreach ($albums as $album)
                                 <option value="{{$album->id}}">{{$album->title}}</option>
                                 @endforeach
                               </select>
-                            @error('album_id')
+                            @error('album')
                             <p class="text-danger">{{$message}}</p>
                           @enderror
                           </div>
@@ -103,14 +103,11 @@
                       <div class="block_one">
                         <label>Жанры</label>
                         <div class="select2-purple">
-                            <select class="select2" multiple="multiple" name="genre_id" data-placeholder="Выберите жанры" data-dropdown-css-class="select2-purple" style="width: 100%;">
-                              <option value="1">Alabama</option>
-                              <option value="1">Alaska</option>
-                              <option value="1">California</option>
-                              <option value="1">Delaware</option>
-                              <option value="1">Tennessee</option>
-                              <option value="1">Texas</option>
-                              <option value="1">Washington</option>
+                            <select class="select2" multiple="multiple" name="genres[]" data-placeholder="Выберите жанры" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                              <option>все</option>
+                              @foreach ($genres as $genre)
+                              <option value="{{$genre->id}}">{{$genre->name_ru}}</option>
+                              @endforeach
                             </select>
                           </div>
                     @error('genre_id')

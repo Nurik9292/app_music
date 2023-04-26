@@ -19,15 +19,17 @@ class Service
         $artists = $data['artists'];
         unset($data['artists']);
 
-        $albumTrack['album_id'] = $data['album_id'];
-        unset($data['album_id']);
+        $genres = $data['genres'];
+        unset($data['genres']);
 
-        $genreTrack['genre_id'] = $data['genre_id'];
-        unset($data['genre_id']);
+        $album = $data['album'];
+        unset($data['album']);
 
         $track = Track::create($data);
 
         $track->artists()->attach($artists);
+        $track->genres()->attach($genres);
+        $track->album()->attach($album);
     }
 
 

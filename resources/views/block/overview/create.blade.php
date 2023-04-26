@@ -25,11 +25,11 @@
 
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid">
+      <div class="container-fluid" id="ovr">
 
         <!-- Main row -->
-
-        <div class="card card-white">
+        <overview-create></overview-create>
+        {{-- <div class="card card-white">
 
             <!-- form start -->
             <form action="{{route('user.store')}}" method="POST">
@@ -70,7 +70,7 @@
                 <button type="submit" class="btn btn-primary btn-lg" >Создать</button>
               </div>
             </form>
-          </div>
+          </div> --}}
 
 
       </div>

@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('album_tracks', function (Blueprint $table) {
+        Schema::create('album_track', function (Blueprint $table) {
             $table->unsignedBigInteger('album_id')->nullable();
             $table->unsignedBigInteger('track_id')->nullable();
 

@@ -13,6 +13,8 @@ class DestroyController extends Controller
         Storage::disk('public')->delete([$track->audio_url, $track->thumb_url]);
 
         $track->artists()->detach();
+        $track->genres()->detach();
+        $track->album()->detach();
 
         $track->delete();
 

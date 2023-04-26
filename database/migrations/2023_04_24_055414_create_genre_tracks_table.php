@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('genre_tracks', function (Blueprint $table) {
+        Schema::create('genre_track', function (Blueprint $table) {
             $table->unsignedBigInteger('genre_id')->nullable();
             $table->unsignedBigInteger('track_id')->nullable();
 

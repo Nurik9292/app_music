@@ -92,7 +92,7 @@
                     <div class="block_one">
                         <label>Альбомы</label>
                         <div >
-                            <select class="form-control single" name="album_id">
+                            <select class="form-control single" name="album">
                                 <option value="1" selected="selected">Alabama</option>
                                 <option value="1">Alaska</option>
                                 <option value="1">California</option>
@@ -101,7 +101,7 @@
                                 <option value="1">Texas</option>
                                 <option value="1">Washington</option>
                               </select>
-                            @error('album_id')
+                            @error('album')
                             <p class="text-danger">{{$message}}</p>
                           @enderror
                           </div>

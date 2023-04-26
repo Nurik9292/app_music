@@ -11,7 +11,8 @@
                         <th scope="col">Delete</th>
                       </tr>
                     </thead>
-                    <draggable v-model="items" tag="tbody" item-key="id" @change="update()" >
+                    <draggable v-model="items" tag="tbody" item-key="id" @change="update()"  >
+
                         <template #item="{element}">
                             <tr >
                                 <th scope="row">{{ element.id }}</th>
@@ -68,5 +69,12 @@ import draggable from "vuedraggable";
 <style scoped>
 .buttons {
   margin-top: 35px;
+}
+
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
 }
 </style>

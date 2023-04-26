@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Country;
 use App\Models\Genre;
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
                 'code' => $code
             ]);
 
+        Album::factory(5)->create();
         Artist::factory(10)->create();
         Genre::factory(10)->create();
     }
