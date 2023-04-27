@@ -83,19 +83,24 @@ class Service
 
     public function resize($image, $track = null)
     {
-        if (isset($track))
-            Storage::disk('public')->delete($track->thumb_url);
-
         $image_name = $image->getClientOriginalName();
 
+
+        if (isset($track))
+            Storage::disk('public')->delete([$track->thumb_url]);
+
+
         $thumb =  Image::make($image);
+        $webp = Image::make($image)->encode('webp');
 
         $path_thumb = "/app/public/images/track/";
 
         if (!file_exists(storage_path($path_thumb)))
             mkdir(storage_path($path_thumb), 0777, true);
 
+
         $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
+        $webp->fit(142, 166)->save(storage_path($path_thumb) . $webp->basename . '.webp');
 
         $image = "images/track/$image_name";
 
