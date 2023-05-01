@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Resources\Admin\AlbumResource;
+use App\Http\Resources\Admin\BlockResource;
+use App\Http\Resources\Admin\PlaylistResource;
+use App\Models\Album;
+use App\Models\BlockName;
+use App\Models\Playlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +36,24 @@ Route::prefix('genres')->namespace('App\Http\Controllers\Admin\Genre\Api')->name
     Route::delete('/{genre}', DestroyController::class)->name('destroy');
 });
 
-Route::prefix('overviews')->namespace('App\Http\Controllers\Admin\Block\Overview\Api')->name('api.overview')->group(function () {
+Route::prefix('overviews')->namespace('App\Http\Controllers\Admin\Block\Overview\Api')->name('api.overview.')->group(function () {
     Route::get('/', IndexController::class)->name('index');
-    Route::get('/show', ShowController::class)->name('show');
+    Route::post('/', StoreController::class)->name('store');
+    Route::get('/show/{block}', ShowController::class)->name('show');
+    Route::patch('/{blockShema}', UpdateController::class)->name('update');
+    Route::delete('/{blockShema}', DestroyController::class)->name('destroy');
+
+    Route::get('/blocks', function () {
+        $blocks = BlockName::orderBy('name')->get();
+        return BlockResource::collection($blocks);
+    })->name('block');
+
+    Route::get('/playlists', function () {
+        $playlists = Playlist::orderByDesc('title_ru')->get();
+        return new PlaylistResource($playlists);
+    })->name('playlist');
+    Route::get('/albums', function () {
+        $playlists = Album::orderByDesc('title')->get();
+        return new AlbumResource($playlists);
+    })->name('album');
 });

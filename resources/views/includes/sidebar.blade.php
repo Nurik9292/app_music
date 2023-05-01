@@ -32,7 +32,8 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{route('overview.index')}}" class="nav-link">
+                    {{-- <a href="#" class="nav-link"> --}}
+                        <a href="{{route('overview.index', 'index')}}" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Обзор</p>
                     </a>

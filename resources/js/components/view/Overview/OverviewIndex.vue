@@ -1,39 +1,70 @@
 <template>
-    <div class="container">
-        <table class="table table-hover">
+<div>
+    <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Обзор</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><router-link :to="{name: 'overview.index'}">Главная</router-link></li>
+              <li class="breadcrumb-item active">Обзор</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-end mb-3">
+            <router-link :to="{name: 'overview.create'}" class="btn btn-primary btn-lg">Создаоть</router-link>
+        </div>
+    <table class="table table-hover">
                     <thead class="table-dark">
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Role</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Статус</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                       </tr>
                     </thead>
-                    <draggable v-model="items" tag="tbody" item-key="id" @change="update()"  >
+                    <draggable v-model="blocks" tag="tbody" item-key="id">
 
                         <template #item="{element}">
-                            <tr >
-                                <th scope="row">{{ element.id }}</th>
+                            <tr>
+                                <th scope="row">{{ element.order_number }}</th>
                                 <td>{{element.name}}</td>
-                                <td>{{element.email}}</td>
-                                <td>{{element.role}}</td>
-                                <td>{{element.edit}}</td>
-                                <td>{{element.delete}}</td>
+                                <td><InputSwitch  v-model="status[element.id]" @change="update(element.id)"/></td>
+                                <td>
+                                   <router-link :to="{name: 'overview.edit', params: {id: element.id}}" class="btn btn-outline-success">Edit</router-link>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-outline-danger" @click.prevent="deleteBlock(element.id)" >Delete</a>
+                                </td>
                             </tr>
                         </template>
-
                     </draggable>
-                  </table>
+     </table>
+                <div class="d-flex justify-content-end mb-3">
+                     <input type="submit" class="btn btn-primary btn-lg" value="Отправить">
+                 </div>
+      </div>
+    </section>
+    <!-- /.content -->
+    </div>
+    <rawDisplayer class="col-3" :value="items" title="Items" />
+ </div>
 
-                  <rawDisplayer class="col-3" :value="items" title="Items" />
-                </div>
 </template>
 
 <script>
 import draggable from "vuedraggable";
-
+import { RouterLink, RouterView } from 'vue-router'
 
     export default {
         name: "OverviewIndex",
@@ -44,29 +75,63 @@ import draggable from "vuedraggable";
 
         data(){
            return {
-                items: [
-                {id:1, name: '@1', email: '@1', role: '@1', edit: '@1', delete: '@1',},
-                {id:2, name: '@2', email: '@2', role: '@2', edit: '@2', delete: '@2',},
-                {id:3, name: '@3', email: '@3', role: '@3', edit: '@3', delete: '@3',},
-                ],
+               blocks: null,
+               status: [],
                 dragging: false
            }
         },
 
-        mounted() {
+        computed:{
 
+        },
+
+        mounted() {
+            this.getBlocks()
         },
 
         methods: {
-                update(){
-                    console.log('update');
+            getBlocks() {
+                axios.get("/api/overviews").then(res => {
+                    console.log(res);
+                    this.blocks = res.data.data;
+                    this.addStatus();
+                });
+            },
+
+            addStatus(){
+                for(let block in this.blocks){
+                   this.status[this.blocks[block].id] = this.blocks[block].status;
                 }
+            },
+
+            update(id){
+                let updateStatus = false;
+
+                for(let block in this.blocks){
+                    updateStatus = this.status[this.blocks[block].id];
+                }
+
+                axios.patch(`/api/overviews/${id}`, {status: updateStatus}).then(res => { this.getBlocks()});
         },
+
+            deleteBlock(id){
+                axios.delete(`/api/overviews/${id}`).then(res => { this.getBlocks() })
+            },
+
+            goEdit(){
+                this.$router.push({name: 'overview.edit'});
+            }
+
+        },
+
+
     }
 </script>
 
 
 <style scoped>
+
+
 .buttons {
   margin-top: 35px;
 }

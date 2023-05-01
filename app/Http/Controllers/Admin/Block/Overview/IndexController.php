@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin\Block\Overview;
 
 use App\Http\Controllers\Controller;
-use GuzzleHttp\Client;
 
 class IndexController extends Controller
 {

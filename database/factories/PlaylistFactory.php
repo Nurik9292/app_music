@@ -17,7 +17,9 @@ class PlaylistFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "title_tm" => $this->faker->jobTitle(),
+            "title_ru" => $this->faker->jobTitle(),
+            "status" => true,
         ];
     }
 }

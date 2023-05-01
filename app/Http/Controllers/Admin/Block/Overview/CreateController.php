@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Block\Overview;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\URL;
 
 class CreateController extends Controller
 {
@@ -11,6 +12,8 @@ class CreateController extends Controller
      */
     public function __invoke()
     {
-        return view('block.overview.create');
+        $data = URL::previous();
+
+        return view('block.overview.create', compact('data'));
     }
 }

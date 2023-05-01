@@ -30,9 +30,9 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
     Route::namespace('Block')->group(function () {
 
         // ============ OVERVIEW ====================
-        Route::prefix('overview')->namespace('Overview')->name('overview.')->group(function () {
-            Route::get('/', IndexController::class)->name('index');
-            Route::get('/create', CreateController::class)->name('create');
+        Route::prefix('overviews')->namespace('Overview')->name('overview.')->group(function () {
+            Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
+            // Route::get('/create', CreateController::class)->name('create');
         });
         // ============ END OVERVIEW ====================
 

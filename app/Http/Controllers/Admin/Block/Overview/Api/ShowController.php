@@ -3,24 +3,33 @@
 namespace App\Http\Controllers\Admin\Block\Overview\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\OverviewResource;
-use Illuminate\Http\Request;
+use App\Http\Resources\Admin\BlockResource;
+use App\Models\Album;
+use App\Models\BlockShema;
+use App\Models\Playlist;
+use Illuminate\Support\Facades\Log;
 
 class ShowController extends Controller
 {
-    public function __invoke()
+    public function __invoke(BlockShema $block)
     {
-        $blocks = [
-            'Новинки и обновленияНовинки и обновления',
-            'Рекомендуем послушать',
-            'Новая музыка',
-            'Лучшие новые песни',
-            'Чарты',
-            'Жанры и Категории',
-            'Для детей',
-            'Настроение',
-        ];
+        $albums = [];
+        $newPlaylists = [];
+        $updatePlaylists = [];
 
-        return new OverviewResource($blocks);
+
+        foreach ($block->blockAlbums as $al) {
+            $albums[] = Album::where('id', $al->id)->get()[0];
+        }
+
+        foreach ($block->blockPlaylists as $pl) {
+            $newPlaylists[] = Playlist::where('id', $pl->id)->get()[0];
+        }
+
+        foreach ($block->blockUpdatedPlaylists as $pl) {
+            $updatePlaylists[] = Playlist::where('id', $pl->id)->get()[0];
+        }
+
+        return new BlockResource(['block' => $block, 'albums' => $albums, 'newPlaylists' => $newPlaylists, 'updatePlaylists' => $updatePlaylists]);
     }
 }

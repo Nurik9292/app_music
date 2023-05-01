@@ -28,7 +28,7 @@
       <div class="container-fluid" id="ovr">
 
         <!-- Main row -->
-        <overview-create></overview-create>
+        <overview-create :data='{!!json_encode($data)!!}'></overview-create>
         {{-- <div class="card card-white">
 
             <!-- form start -->

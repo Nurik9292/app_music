@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{asset('admins/plugins/fontawesome-free/css/all.min.css')}}">
+     <!-- iCheck for checkboxes and radio inputs -->
+     <link rel="stylesheet" href="{{asset('admins/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Tempusdominus Bootstrap 4 -->
@@ -20,8 +22,12 @@
   <!-- Select2 -->
   <link rel="stylesheet" href="{{asset('admins/plugins/select2/css/select2.min.css')}}">
   <link rel="stylesheet" href="{{asset('admins/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
-    <!-- summernote -->
-    <link rel="stylesheet" href="{{asset('admins/plugins/summernote/summernote-bs4.min.css')}}">
+ <!-- summernote -->
+ <link rel="stylesheet" href="{{asset('admins/plugins/summernote/summernote-bs4.min.css')}}">
+
+
+
+   {{-- <link rel="stylesheet" href="{{asset('admins/dist/css/adminlte.css')}}"> --}}
 
 
  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -69,6 +75,8 @@
 <script src= "{{asset('admins/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<!-- Select2 -->
+<script src="{{asset('admins/plugins/select2/js/select2.full.min.js')}}"></script>
 <!-- daterangepicker -->
 <script src="{{asset('admins/plugins/moment/moment.min.js')}}"></script>
 <script src="{{asset('admins/plugins/daterangepicker/daterangepicker.js')}}"></script>
@@ -80,10 +88,9 @@
 <script src="{{asset('admins/plugins/bs-custom-file-input/bs-custom-file-input.min.js')}}"></script>
 <!-- Bootstrap Switch -->
 <script src="{{asset('admins/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
-<!-- Select2 -->
-<script src="{{asset('admins/plugins/select2/js/select2.full.min.js')}}"></script>
 <!-- Summernote -->
 <script src="{{asset('admins/plugins/summernote/summernote-bs4.min.js')}}"></script>
+
 
 <script>
     $.widget.bridge('uibutton', $.ui.button)
@@ -93,6 +100,7 @@
       //Initialize Select2 Elements
       $('.select2').select2()
       $('.single').select2(  {theme: 'bootstrap4'})
+
 
         //Date and time picker format: 'YYYY/M/D h:m A'
         $('#date_release').datetimepicker({icons: { time: 'far fa-clock' } });
@@ -112,6 +120,8 @@
 
         bsCustomFileInput.init();
       })
+
+
 
   </script>
 </body>

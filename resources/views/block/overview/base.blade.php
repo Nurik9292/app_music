@@ -3,7 +3,7 @@
 @section('title', 'Обзор')
 
 @section('content')
-{{-- <div class="content-wrapper">
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
@@ -23,7 +23,7 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <section class="content">
+    {{-- <section class="content">
       <div class="container-fluid">
         <div class="d-flex justify-content-end mb-3">
             <a href="{{route('overview.create')}}" class="btn btn-primary btn-lg">Создаоть</a>
