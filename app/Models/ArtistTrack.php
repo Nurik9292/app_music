@@ -10,4 +10,6 @@ class ArtistTrack extends Model
     use HasFactory;
 
     protected $guarded = false;
+
+    public $timestamps = false;
 }

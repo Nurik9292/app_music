@@ -11,11 +11,7 @@ class Playlist extends Model
 
     protected $guarded = false;
 
-
-    public function getUpdatedAtColumn()
-    {
-        return null;
-    }
+    public $timestamps = false;
 
     public function tracks()
     {

@@ -13,6 +13,8 @@ class Track extends Model
 
     protected $guarded = false;
 
+    public $timestamps = false;
+
 
     public function artists()
     {

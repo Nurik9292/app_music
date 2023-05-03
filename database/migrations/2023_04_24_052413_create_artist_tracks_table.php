@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,18 +12,31 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('artist_track', function (Blueprint $table) {
-            $table->unsignedBigInteger('artist_id')->nullable();
-            $table->unsignedBigInteger('track_id')->nullable();
 
-            $table->primary(['artist_id', 'track_id']);
+        DB::statement("
+        CREATE TABLE artist_track (
+            artist_id integer,
+            track_id bigint,
+            PRIMARY KEY (artist_id, track_id),
+            FOREIGN KEY (artist_id) REFERENCES artists(id),
+            FOREIGN KEY (track_id) REFERENCES tracks(id)
+          );");
 
-            $table->index('artist_id', 'artist_track_idx');
-            $table->index('track_id', 'track_artist_idx');
+        DB::statement("CREATE INDEX idx_artist_track_track_id ON artist_track (track_id);");
+        DB::statement("CREATE INDEX idx_artist_track_artist_id ON artist_track (artist_id);");
 
-            $table->foreign('artist_id', 'artist_track_fk')->on('artists')->references('id');
-            $table->foreign('track_id', 'track_artist_fk')->on('tracks')->references('id');
-        });
+        // Schema::create('artist_track', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('artist_id')->nullable();
+        //     $table->unsignedBigInteger('track_id')->nullable();
+
+        //     $table->primary(['artist_id', 'track_id']);
+
+        //     $table->index('artist_id', 'artist_track_idx');
+        //     $table->index('track_id', 'track_artist_idx');
+
+        //     $table->foreign('artist_id', 'artist_track_fk')->on('artists')->references('id');
+        //     $table->foreign('track_id', 'track_artist_fk')->on('tracks')->references('id');
+        // });
     }
 
     /**
@@ -30,6 +44,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('artist_tracks');
+        DB::statement("DROP TABLE artist_track CASCADE");
+        // Schema::dropIfExists('artist_track');
     }
 };

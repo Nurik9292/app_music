@@ -33,12 +33,14 @@ class DatabaseSeeder extends Seeder
             'name' => 'Super',
             'email' => 'super@example.com',
             'password' => 'super123!',
+            'role' => 1,
         ]);
 
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => 'admin123!',
+            'role' => 2,
         ]);
 
         Album::factory(5)->create();

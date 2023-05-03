@@ -15,8 +15,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-
         DB::statement("
         CREATE TABLE albums (
             id bigserial PRIMARY KEY,
@@ -31,8 +29,9 @@ return new class extends Migration
             mbid VARCHAR(200) DEFAULT '',
             is_national BOOL DEFAULT false,
             show_count INT DEFAULT 0
-          );
-        ");
+          );");
+
+        DB::statement("CREATE INDEX idx_album_title ON albums (title);");
 
         // Schema::create('albums', function (Blueprint $table) {
 
@@ -47,7 +46,6 @@ return new class extends Migration
         //     $table->boolean('is_national')->default(false);
         //     $table->text('description');
         //     $table->unsignedBigInteger('show_count')->default(0);
-        //     $table->timestamps();
         // });
     }
 

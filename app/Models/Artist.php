@@ -24,6 +24,8 @@ class Artist extends Model
         'status'
     ];
 
+    public $timestamps = false;
+
 
     public function country()
     {

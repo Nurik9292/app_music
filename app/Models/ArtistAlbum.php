@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ArtistAlbum extends Model
 {
     use HasFactory;
+
+    protected $guarded = false;
+
+    public $timestamps = false;
 }

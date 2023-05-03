@@ -26,6 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // DB::statement("DROP TABLE album_track CASCADE");
         Schema::dropIfExists('block_shema');
     }
 };
