@@ -6,6 +6,7 @@ use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Track;
 use GuzzleHttp\Client;
+use Illuminate\Http\UploadedFile;
 use Owenoj\LaravelGetId3\GetId3;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -23,17 +24,24 @@ class Service
         $artists = $data['artists'];
         unset($data['artists']);
 
-        $genres = $data['genres'];
-        unset($data['genres']);
+        if (isset($data['genres']) && $data['genres'] != null) {
+            $genres = $data['genres'];
+            unset($data['genres']);
+        }
 
-        $album = $data['album'];
-        unset($data['album']);
+        if (isset($data['album']) && $data['album'] != null) {
+            $album = $data['album'];
+            unset($data['album']);
+        }
 
         $track = Track::create($data);
 
-        $track->artists()->attach($artists);
-        $track->genres()->attach($genres);
-        $track->album()->attach($album);
+        if (isset($data['artists']) && $data['artists'] != null)
+            $track->artists()->attach($artists);
+        if (isset($data['genres']) && $data['genres'] != null)
+            $track->genres()->attach($genres);
+        if (isset($data['album']) && $data['album'] != null)
+            $track->album()->attach($album);
     }
 
 
@@ -61,11 +69,21 @@ class Service
 
     public function saveTrack($data, $track = null)
     {
-        $artist = Artist::where('id', $data['artists'][0])->get();
-        if (isset($artist))
-            $name_artist = $artist[0]->name;
+
+        if (is_array($data['artists']))
+            $artist = Artist::where('id', $data['artists'][0])->get();
         else
-            $name_artist = $data['artists'][0];
+            $artist = Artist::where('name', 'like', $data['artists'])->get();
+
+
+        if ($artist != null && count($artist) > 0)
+            $name_artist = $artist[0]->name;
+        else {
+            if (is_array($data['artists']))
+                $name_artist = $data['artists'][0];
+            else
+                $name_artist = $data['artists'];
+        }
 
         if (!isset($data['is_national'])) {
             $album = Album::where('id', $data['album'])->get();
@@ -83,12 +101,13 @@ class Service
 
         $audio = $res->getBody()->getContents();
 
-        if (!isset($data['is_national'])) {
-            $path = "tracks/{$name_artist}/{$type_album}/{$name_album}/"  . $data['title'] . '.mp3';
-            $this->path = "tracks/{$name_artist}/{$type_album}/{$name_album}/";
-        } else {
+
+        if (isset($data['is_national'])) {
             $path = "tm_tracks/{$name_artist}/" . $data['title'] . '.mp3';
             $this->path = "tm_tracks/{$name_artist}/";
+        } else {
+            $path = "tracks/{$name_artist}/{$type_album}/{$name_album}/"  . $data['title'] . '.mp3';
+            $this->path = "tracks/{$name_artist}/{$type_album}/{$name_album}/";
         }
 
         Storage::disk('public')->put($path, $audio);
@@ -100,7 +119,7 @@ class Service
 
         $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
 
-        if (empty($data['track_number']))
+        if (empty($data['track_number']) && $track->getTrackNumber() != null)
             $data['track_number'] = $track->getTrackNumber();
 
         $data['audio_url'] = $path;
@@ -138,22 +157,35 @@ class Service
 
     public function resize($image, $track = null)
     {
-        $image_name = $image->getClientOriginalName();
+        if (is_string($image)) {
+            $image_name = basename($image);
+
+            $client = new Client();
+            $res = $client->get($image);
+            $image = $res->getBody()->getContents();
+        } else
+            $image_name = $image->getClientOriginalName();
 
         if (isset($track))
             Storage::disk('public')->delete([$track->thumb_url]);
 
-        $thumb =  Image::make($image);
-        $webp = Image::make($image)->encode('webp');
+
+        $thumb = Image::make($image)->encode('jpg');
+        $webp =  Image::make($image)->encode('webp');
 
         $path_thumb = "/app/public/{$this->path}";
 
         if (!file_exists(storage_path($path_thumb)))
             mkdir(storage_path($path_thumb), 0777, true);
 
+        if (is_string($image)) {
+            $webp->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
+            $thumb->fit(142, 166)->save(storage_path($path_thumb) . $webp->basename . '.jpg');
+        } else {
+            $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
+            $webp->fit(142, 166)->save(storage_path($path_thumb) . $webp->basename . '.webp');
+        }
 
-        $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
-        $webp->fit(142, 166)->save(storage_path($path_thumb) . $webp->basename . '.webp');
 
         $image = $this->path . $image_name;
 

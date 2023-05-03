@@ -8,17 +8,20 @@
 
     <!-- Main content -->
     <section class="block">
-
-
-                <div class="block_one">
-                    <label for="file">Название</label>
-                    <input type="file" class="form-control" id="name" placeholder="Выберите файл" name="file">
-                    @error('file')
-                    <p class="text-danger">{{$message}}</p>
-                    @enderror
-                </div>
-
-
+        <form action="{{route('track.store.file')}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="block_one">
+                <label for="file">Название</label>
+                <input type="file" class="form-control" id="name" placeholder="Выберите файл" name="file">
+                @error('file')
+                <p class="text-danger">{{$message}}</p>
+                @enderror
+            </div>
+            <div >
+                <a href="{{route('track.index')}}" class="btn btn-primary btn-lg mr-3" >Отмена</a>
+                <button type="submit" class="btn btn-primary btn-lg " >Добавить</button>
+               </div>
+        </form>
     </section>
     <!-- /.content -->
 </div>

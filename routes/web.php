@@ -87,6 +87,7 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
         Route::get('/create', CreateController::class)->name('create');
         Route::get('/create/file', FileCreateController::class)->name('create.files');
         Route::post('/', StoreController::class)->name('store');
+        Route::post('/store/file', StoreFileController::class)->name('store.file');
         Route::get('/{track}/edit', EditController::class)->name('edit');
         Route::patch('/{track}', UpdateController::class)->name('update');
         Route::delete('/{track}', DestroyController::class)->name('destroy');
