@@ -8,7 +8,7 @@ class IndexController extends BaseController
 {
     public function __invoke()
     {
-        $playlists = Playlist::orderByDesc('created_at')->get();
+        $playlists = Playlist::orderByDesc('title_ru')->get();
 
         $this->service->statusChangetoString($playlists);
 
