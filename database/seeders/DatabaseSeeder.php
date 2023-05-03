@@ -10,6 +10,7 @@ use App\Models\BlockName;
 use App\Models\Country;
 use App\Models\Genre;
 use App\Models\Playlist;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -27,6 +28,18 @@ class DatabaseSeeder extends Seeder
                 'name' => $name,
                 'code' => $code
             ]);
+
+        User::factory()->create([
+            'name' => 'Super',
+            'email' => 'super@example.com',
+            'password' => 'super123!',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => 'admin123!',
+        ]);
 
         Album::factory(5)->create();
         Playlist::factory(5)->create();
