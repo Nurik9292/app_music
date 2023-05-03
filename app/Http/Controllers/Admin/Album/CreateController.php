@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Album;
 use App\Enums\AlbumTypes;
 use App\Http\Controllers\Controller;
 use App\Models\Album;
+use App\Models\Artist;
 
 class CreateController extends Controller
 {
@@ -13,6 +14,8 @@ class CreateController extends Controller
         $album = new Album();
         $types = $album->getTypes();
 
-        return view('album.create', compact('types'));
+        $artists = Artist::orderByDesc('name')->get();
+
+        return view('album.create', compact('types', 'artists'));
     }
 }

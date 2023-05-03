@@ -26,6 +26,7 @@ class StoreRequest extends FormRequest
             'description' => ['required', 'string'],
             'release_date' => ['required', 'date'],
             'added_date' => ['required', 'date'],
+            'artists' => ['required'],
             'artwork_url' => ['required', 'image'],
             'type' => ['required', 'numeric'],
             'status' => ['nullable'],

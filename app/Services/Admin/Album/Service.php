@@ -3,6 +3,7 @@
 namespace App\Services\Admin\Album;
 
 use App\Models\Album;
+use App\Models\Artist;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -13,15 +14,20 @@ class Service
 
     public function store($data)
     {
+        $data = $this->type($data);
+
         $data = $this->resize($data);
 
         $data['status'] = $this->status($data);
 
-        $data = $this->type($data);
-
         $data = $this->dateFormat($data);
 
-        Album::create($data);
+        $artists = $data['artists'];
+        unset($data['artists']);
+
+        $album = Album::create($data);
+
+        $album->artists()->attach($artists);
     }
 
 
@@ -37,23 +43,46 @@ class Service
 
         $data = $this->type($data);
 
+        $artists = $data['artists'];
+        unset($data['artists']);
+
         $album->update($data);
+
+        $album->artists()->sync($artists);
     }
 
 
     private function resize($data, $album = null)
     {
+        $arist = Artist::where('id', $data['artists'][0])->get();
+
+        $arist_name = $arist[0]->name;
 
         if (isset($album))
             Storage::disk('public')->delete([$album->artwork_url, $album->thumb_url]);
 
         $image_name = $data['artwork_url']->getClientOriginalName();
 
-        $artWork =  Image::make($data['artwork_url']);
-        $thumb = clone $artWork;
+        if (str_ends_with($image_name, "png"))
+            $image_name_wepb = substr($image_name, 0, strpos($image_name, "png") - 1);
+        if (str_ends_with($image_name, "jpg"))
+            $image_name_wepb = substr($image_name, 0, strpos($image_name, "jpg") - 1);
+        if (str_ends_with($image_name, "jpeg"))
+            $image_name_wepb = substr($image_name, 0, strpos($image_name, "jpeg") - 1);
 
-        $path_artWork = "/app/public/images/album/artWork/";
-        $path_thumb = "/app/public/images/album/thumb/";
+        $artWork =  Image::make($data['artwork_url']);
+        $artWork_webp =  Image::make($data['artwork_url']);
+
+        $thumb = Image::make($data['artwork_url']);
+        $thumb_webp = Image::make($data['artwork_url']);
+
+        if (isset($data['is_national'])) {
+            $path_artWork = "/app/public/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
+            $path_thumb = "/app/public/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/";
+        } else {
+            $path_artWork = "/app/public/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
+            $path_thumb = "/app/public/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/";
+        }
 
         if (!file_exists(storage_path($path_thumb)))
             mkdir(storage_path($path_thumb), 0777, true);
@@ -62,10 +91,18 @@ class Service
             mkdir(storage_path($path_artWork), 0777, true);
 
         $artWork->fit(375, 250)->save(storage_path($path_artWork) . $image_name);
-        $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
+        $artWork_webp->fit(375, 250)->save(storage_path($path_artWork) . $image_name_wepb . ".webp");
 
-        $data['artwork_url'] = "images/album/artWork/$image_name";
-        $data['thumb_url'] = "images/album/thumb/$image_name";
+        $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
+        $thumb_webp->fit(142, 166)->save(storage_path($path_thumb) . $image_name_wepb . ".webp");
+
+        if (isset($data['is_national'])) {
+            $data['artwork_url'] = "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
+            $data['thumb_url'] = "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/";
+        } else {
+            $data['artwork_url'] = "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
+            $data['thumb_url'] = "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
+        }
 
         return $data;
     }

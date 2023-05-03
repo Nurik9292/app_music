@@ -28,7 +28,7 @@ class Service
 
         $album = $data['album'];
         unset($data['album']);
-        dd($data);
+
         $track = Track::create($data);
 
         $track->artists()->attach($artists);
@@ -68,10 +68,11 @@ class Service
             $name_artist = $data['artists'][0];
 
         if (!isset($data['is_national'])) {
-            $album = Album::where('id', $data['album'][0])->get();
+            $album = Album::where('id', $data['album'])->get();
             $type_album = $album[0]->type;
             $name_album = $album[0]->title;
         }
+
 
         if (isset($track))
             Storage::disk('public')->delete($track->audio_url);
@@ -139,10 +140,8 @@ class Service
     {
         $image_name = $image->getClientOriginalName();
 
-
         if (isset($track))
             Storage::disk('public')->delete([$track->thumb_url]);
-
 
         $thumb =  Image::make($image);
         $webp = Image::make($image)->encode('webp');

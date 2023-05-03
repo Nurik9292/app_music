@@ -56,7 +56,27 @@
                           </div>
                         </div>
 
+                        <div class="row">
+                            <label>Исполнитель</label>
+                              <div class="block_one">
+                                <div class="select2-purple">
+                                  <select class="form-control select2" multiple="multiple" name=artists[]" data-placeholder="Выберите испольнителя" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                    @foreach ($artists as $artist)
+                                    <option value="{{$artist->id}}">{{$artist->name}}</option>
+                                    @endforeach
+                                  </select>
+                                  @error('artists')
+                                  <p class="text-danger">{{$message}}</p>
+                                @enderror
+                                </div>
+                            </div>
 
+
+                            <div class="block_one">
+                                <a  href="{{route('artist.create')}}" class="btn btn-outline-primary " >Добавить</a>
+                            </div>
+
+                        </div>
 
                 <div class="row">
                     <div class="block_one">

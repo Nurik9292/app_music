@@ -13,6 +13,7 @@ class DestroyController extends Controller
         Storage::disk('public')->delete([$album->artwork_url, $album->thumb_url]);
 
         // $album->tracks()->detach();
+        $album->artists()->detach();
 
         $album->delete();
 
