@@ -130,20 +130,28 @@
 
                       </div>
 
-                      <div class="block_one">
-                        <label for="inputFile_2">Трэк</label>
+                      {{-- <div class="block_one">
+                        <label for="inputFile_2">Трек</label>
                           <div class="custom-file">
-                              <label class="custom-file-label" for="inputFile_2">Выберите Трэк</label>
+                              <label class="custom-file-label" for="inputFile_2">Выберите Трек</label>
                             <input type="file" class="custom-file-input"  id="inputFile_2" name="audio_url" accept="audio/mp4, audio/mpeg">
                             @error('audio_url')
                             <p class="text-danger">{{$message}}</p>
                           @enderror
                           </div>
+                      </div> --}}
+
+                      <div class="block_one">
+                        <label for="audio_url">Введите трек</label>
+                        <input type="text" class="form-control" id="audio_url" placeholder="Введите путь до трека" name="audio_url">
+                        @error('audio_url')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
                       </div>
 
                         <div class="block_one">
                             <label for="number">Номер трека </label>
-                            <input type="number" class="form-control" id="number" placeholder="Введите номер трекв" name="track_number">
+                            <input type="number" class="form-control" id="number" placeholder="Введите номер трека" name="track_number">
                             @error('track_number')
                             <p class="text-danger">{{$message}}</p>
                             @enderror

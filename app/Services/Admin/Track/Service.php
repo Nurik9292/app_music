@@ -2,14 +2,18 @@
 
 namespace App\Services\Admin\Track;
 
+use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Track;
+use GuzzleHttp\Client;
 use Owenoj\LaravelGetId3\GetId3;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
 class Service
 {
+    private $path;
+
     public function store($data)
     {
         $data = $this->saveTrack($data);
@@ -24,7 +28,7 @@ class Service
 
         $album = $data['album'];
         unset($data['album']);
-
+        dd($data);
         $track = Track::create($data);
 
         $track->artists()->attach($artists);
@@ -57,28 +61,78 @@ class Service
 
     public function saveTrack($data, $track = null)
     {
-        $track_name = $data['audio_url']->getClientOriginalName();
-
         $artist = Artist::where('id', $data['artists'][0])->get();
+        if (isset($artist))
+            $name_artist = $artist[0]->name;
+        else
+            $name_artist = $data['artists'][0];
 
-        $path_artist = $artist[0]->name;
+        if (!isset($data['is_national'])) {
+            $album = Album::where('id', $data['album'][0])->get();
+            $type_album = $album[0]->type;
+            $name_album = $album[0]->title;
+        }
 
         if (isset($track))
             Storage::disk('public')->delete($track->audio_url);
 
-        $track = new GetId3($data['audio_url']);
+        $client = new Client();
 
-        $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
+        $res = $client->get($data['audio_url']);
+
+        $audio = $res->getBody()->getContents();
+
+        if (!isset($data['is_national'])) {
+            $path = "tracks/{$name_artist}/{$type_album}/{$name_album}/"  . $data['title'] . '.mp3';
+            $this->path = "tracks/{$name_artist}/{$type_album}/{$name_album}/";
+        } else {
+            $path = "tm_tracks/{$name_artist}/" . $data['title'] . '.mp3';
+            $this->path = "tm_tracks/{$name_artist}/";
+        }
+
+        Storage::disk('public')->put($path, $audio);
+
+        $track = new GetId3(storage_path("app/public/$path"));
+
+        if ($track->getPlaytimeSeconds() != null)
+            $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
 
         $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
 
         if (empty($data['track_number']))
             $data['track_number'] = $track->getTrackNumber();
 
-        $data['audio_url'] = Storage::disk('public')->putFileAs("tracks/{$path_artist}", $data['audio_url'], $track_name);
+        $data['audio_url'] = $path;
 
         return $data;
     }
+
+
+
+    // public function saveTrack($data, $track = null)
+    // {
+
+    //     $artist = Artist::where('id', $data['artists'][0])->get();
+
+    //     $path_artist = $artist[0]->name;
+
+    //     if (isset($track))
+    //         Storage::disk('public')->delete($track->audio_url);
+
+    //     $track = new GetId3($data['audio_url']);
+
+    //     if ($track->getPlaytimeSeconds() != null)
+    //         $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
+
+    //     $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
+
+    //     if (empty($data['track_number']))
+    //         $data['track_number'] = $track->getTrackNumber();
+
+    //     $data['audio_url'] = Storage::disk('public')->putFileAs("tracks/{$path_artist}", $data['audio_url'], $track_name);
+
+    //     return $data;
+    // }
 
 
     public function resize($image, $track = null)
@@ -93,7 +147,7 @@ class Service
         $thumb =  Image::make($image);
         $webp = Image::make($image)->encode('webp');
 
-        $path_thumb = "/app/public/images/track/";
+        $path_thumb = "/app/public/{$this->path}";
 
         if (!file_exists(storage_path($path_thumb)))
             mkdir(storage_path($path_thumb), 0777, true);
@@ -102,7 +156,7 @@ class Service
         $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
         $webp->fit(142, 166)->save(storage_path($path_thumb) . $webp->basename . '.webp');
 
-        $image = "images/track/$image_name";
+        $image = $this->path . $image_name;
 
         return $image;
     }

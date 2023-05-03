@@ -27,7 +27,7 @@
 
         <div class="container-fluid">
             <div class="d-flex justify-content-end mb-3">
-                <a class="btn btn-primary btn-lg" href="{{route('track.create')}}">Добавить</a>
+                <a class="btn btn-primary btn-lg" href="{{route('track.two')}}">Добавить</a>
             </div>
             <!-- Main row -->
             <div class="row" >

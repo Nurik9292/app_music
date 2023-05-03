@@ -39,10 +39,11 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
+
 
         's3' => [
             'driver' => 's3',
@@ -54,6 +55,46 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
+        ],
+
+        'ftp' => [
+            'driver' => 'ftp',
+            'host' => env('FTP_HOST'),
+            'username' => env('FTP_USERNAME'),
+            'password' => env('FTP_PASSWORD'),
+            // 'port' => 1000,
+
+            // Optional FTP Settings...
+            // 'root' => env('FTP_ROOT'),
+            // 'passive' => true,
+            // 'ssl' => true,
+            // 'timeout' => 30,
+        ],
+
+        'sftp' => [
+            'driver' => 'sftp',
+            'host' => env('SFTP_HOST'),
+
+            // Settings for basic authentication...
+            'username' => env('SFTP_USERNAME'),
+            'password' => env('SFTP_PASSWORD'),
+
+            // Settings for SSH key based authentication with encryption password...
+            // 'privateKey' => env('SFTP_PRIVATE_KEY'),
+            // 'passphrase' => env('SFTP_PASSPHRASE'),
+
+            // Settings for file / directory permissions...
+            // 'visibility' => 'public', // `private` = 0600, `public` = 0700
+            // 'directory_visibility' => 'public', // `private` = 0700, `public` = 0755
+
+            // Optional SFTP Settings...
+            // 'hostFingerprint' => env('SFTP_HOST_FINGERPRINT'),
+            // 'maxTries' => 4,
+            // 'passphrase' => env('SFTP_PASSPHRASE'),
+            // 'port' => 1000,
+            // 'root' => env('SFTP_ROOT', ''),
+            // 'timeout' => 30,
+            // 'useAgent' => true,
         ],
 
     ],

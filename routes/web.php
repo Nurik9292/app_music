@@ -83,7 +83,9 @@ Route::namespace('App\Http\Controllers\Admin')->group(function () {
     //============= TRACK ========================
     Route::prefix('tracks')->namespace('Track')->name('track.')->group(function () {
         Route::get('/', IndexController::class)->name('index');
+        Route::get('/two', TwoCreateController::class)->name('two');
         Route::get('/create', CreateController::class)->name('create');
+        Route::get('/create/file', FileCreateController::class)->name('create.files');
         Route::post('/', StoreController::class)->name('store');
         Route::get('/{track}/edit', EditController::class)->name('edit');
         Route::patch('/{track}', UpdateController::class)->name('update');
