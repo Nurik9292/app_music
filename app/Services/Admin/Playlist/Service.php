@@ -56,17 +56,30 @@ class Service
 
     private function resize($data, $playlist = null)
     {
-
         if (isset($playlist))
             Storage::disk('public')->delete([$playlist->artwork_url, $playlist->thumb_url]);
 
         $image_name = $data['artwork_url']->getClientOriginalName();
 
-        $artWork =  Image::make($data['artwork_url']);
-        $thumb = clone $artWork;
 
-        $path_artWork = "/app/public/images/playlist/artWork/";
-        $path_thumb = "/app/public/images/playlist/thumb/";
+        if (str_ends_with($image_name, "png"))
+            $image_name_wepb = substr($image_name, 0, strpos($image_name, "png") - 1);
+        if (str_ends_with($image_name, "jpg"))
+            $image_name_wepb = substr($image_name, 0, strpos($image_name, "jpg") - 1);
+        if (str_ends_with($image_name, "jpeg"))
+            $image_name_wepb = substr($image_name, 0, strpos($image_name, "jpeg") - 1);
+
+
+        $artWork =  Image::make($data['artwork_url']);
+        $artWork_webp =  Image::make($data['artwork_url']);
+
+        $thumb = Image::make($data['artwork_url']);
+        $thumb_webp = Image::make($data['artwork_url']);
+
+
+        $path_artWork = "/app/public/playlists/{$data['title_ru']}/playlist_artWork/";
+        $path_thumb = "/app/public/playlists/{$data['title_ru']}/playlist_thumb/";
+
 
         if (!file_exists(storage_path($path_thumb)))
             mkdir(storage_path($path_thumb), 0777, true);
@@ -75,10 +88,13 @@ class Service
             mkdir(storage_path($path_artWork), 0777, true);
 
         $artWork->fit(375, 250)->save(storage_path($path_artWork) . $image_name);
-        $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
+        $artWork_webp->fit(375, 250)->save(storage_path($path_artWork) . $image_name_wepb . ".webp");
 
-        $data['artwork_url'] = "images/playlist/artWork/$image_name";
-        $data['thumb_url'] = "images/playlist/thumb/$image_name";
+        $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
+        $thumb_webp->fit(142, 166)->save(storage_path($path_thumb) . $image_name_wepb . ".webp");
+
+        $data['artwork_url'] = "playlists/{$data['title_ru']}/playlist_artWork/$image_name";
+        $data['thumb_url'] = "playlists/{$data['title_ru']}/playlist_thumb/$image_name";
 
         return $data;
     }
