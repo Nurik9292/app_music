@@ -12,8 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        DB::statement("
+        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS artists CASCADE");
+        DB::connection('pgsql_prod')->statement("
         CREATE TABLE artists (
             id serial PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -29,8 +29,8 @@ return new class extends Migration
             FOREIGN KEY (country_id) REFERENCES countries(id)
           )");
 
-        DB::statement("CREATE INDEX idx_artist_name ON artists (name);");
-        DB::statement("CREATE INDEX idx_artist_country_id ON artists (country_id);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_artist_name ON artists (name);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_artist_country_id ON artists (country_id);");
 
 
         // Schema::create('artists', function (Blueprint $table) {
@@ -58,7 +58,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TABLE artists CASCADE");
+        DB::connection('pgsql_prod')->statement("DROP TABLE artists CASCADE");
         // Schema::dropIfExists('artists');
     }
 };

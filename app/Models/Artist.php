@@ -9,6 +9,8 @@ class Artist extends Model
 {
     use HasFactory;
 
+    protected $connection = 'pgsql_prod';
+
     /**
      * The attributes that are mass assignable.
      *

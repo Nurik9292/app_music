@@ -11,6 +11,8 @@ class Track extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $connection = 'pgsql_prod';
+
     protected $guarded = false;
 
     public $timestamps = false;

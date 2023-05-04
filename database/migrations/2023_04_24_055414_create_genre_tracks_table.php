@@ -13,7 +13,9 @@ return new class extends Migration
     public function up(): void
     {
 
-        DB::statement("
+        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS genre_track CASCADE");
+
+        DB::connection('pgsql_prod')->statement("
             CREATE TABLE genre_track (
             track_id bigserial,
             genre_id integer,
@@ -22,8 +24,8 @@ return new class extends Migration
             FOREIGN KEY (genre_id) REFERENCES genres(id)
           );");
 
-        DB::statement("CREATE INDEX idx_genre_track_track_id ON genre_track (track_id);");
-        DB::statement("CREATE INDEX idx_genre_track_genre_id ON genre_track (genre_id);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_genre_track_track_id ON genre_track (track_id);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_genre_track_genre_id ON genre_track (genre_id);");
 
         // Schema::create('genre_track', function (Blueprint $table) {
         //     $table->unsignedBigInteger('genre_id')->nullable();
@@ -44,7 +46,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TABLE genre_track CASCADE");
+        DB::connection('pgsql_prod')->statement("DROP TABLE genre_track CASCADE");
         // Schema::dropIfExists('genre_track');
     }
 };

@@ -9,6 +9,8 @@ class Playlist extends Model
 {
     use HasFactory;
 
+    protected $connection = 'pgsql_prod';
+
     protected $guarded = false;
 
     public $timestamps = false;

@@ -87,7 +87,7 @@
                         <label>Альбомы</label>
                         <div >
                             <select class="form-control single" name="album">
-                                <option>все</option>
+                                <option value="0">все</option>
                                 @foreach ($albums as $album)
                                 <option value="{{$album->id}}">{{$album->title}}</option>
                                 @endforeach

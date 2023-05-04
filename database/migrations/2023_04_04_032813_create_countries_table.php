@@ -12,8 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        DB::statement("
+        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS countries CASCADE");
+        DB::connection('pgsql_prod')->statement("
         CREATE TABLE countries (
             id serial PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -34,7 +34,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TABLE countries CASCADE");
+        DB::connection('pgsql_prod')->statement("DROP TABLE countries CASCADE");
         // Schema::dropIfExists('countries');
     }
 };

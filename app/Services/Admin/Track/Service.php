@@ -6,14 +6,13 @@ use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Track;
 use GuzzleHttp\Client;
-use Illuminate\Http\UploadedFile;
 use Owenoj\LaravelGetId3\GetId3;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
 class Service
 {
-    private $path;
+    private $path = "/nfs/production/images";
 
     public function store($data)
     {
@@ -76,14 +75,17 @@ class Service
             $artist = Artist::where('name', 'like', $data['artists'])->get();
 
 
-        if ($artist != null && count($artist) > 0)
+        if ($artist != null && count($artist) > 0) {
             $name_artist = $artist[0]->name;
-        else {
-            if (is_array($data['artists']))
+        } else {
+            if (is_array($data['artists'])) {
                 $name_artist = $data['artists'][0];
-            else
+            } else {
                 $name_artist = $data['artists'];
+            }
         }
+
+        dd($name_artist);
 
         if (!isset($data['is_national'])) {
             $album = Album::where('id', $data['album'])->get();
@@ -173,7 +175,7 @@ class Service
         $thumb = Image::make($image)->encode('jpg');
         $webp =  Image::make($image)->encode('webp');
 
-        $path_thumb = "/app/public/{$this->path}";
+        $path_thumb = "{$this->path}";
 
         if (!file_exists(storage_path($path_thumb)))
             mkdir(storage_path($path_thumb), 0777, true);

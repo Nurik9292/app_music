@@ -12,7 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("
+        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS tracks CASCADE");
+
+        DB::connection('pgsql_prod')->statement("
         CREATE TABLE tracks (
             id bigserial PRIMARY KEY,
             title VARCHAR(100) NOT NULL,
@@ -29,7 +31,7 @@ return new class extends Migration
             status BOOL DEFAULT false
           );");
 
-        DB::statement("CREATE INDEX idx_track_title ON tracks (title);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_track_title ON tracks (title);");
 
         // Schema::create('tracks', function (Blueprint $table) {
         //     $table->id();
@@ -54,7 +56,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TABLE tracks CASCADE");
+        DB::connection('pgsql_prod')->statement("DROP TABLE tracks CASCADE");
         // Schema::dropIfExists('tracks');
     }
 };

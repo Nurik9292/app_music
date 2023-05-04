@@ -12,7 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("
+
+        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS genre_playlist CASCADE");
+
+        DB::connection('pgsql_prod')->statement("
         CREATE TABLE genre_playlist (
             playlist_id bigint,
             genre_id integer,
@@ -21,8 +24,8 @@ return new class extends Migration
             FOREIGN KEY (genre_id) REFERENCES genres(id)
           );
           ");
-        DB::statement("CREATE INDEX idx_genre_playlist_playlist_id ON genre_playlist (playlist_id);");
-        DB::statement("CREATE INDEX idx_genre_playlist_genre_id ON genre_playlist (genre_id);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_genre_playlist_playlist_id ON genre_playlist (playlist_id);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_genre_playlist_genre_id ON genre_playlist (genre_id);");
 
         // Schema::create('genre_playlist', function (Blueprint $table) {
         //     $table->unsignedBigInteger('playlist_id')->nullable();
@@ -42,7 +45,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TABLE genre_playlist CASCADE");
+        DB::connection('pgsql_prod')->statement("DROP TABLE genre_playlist CASCADE");
         // Schema::dropIfExists('genre_playlists');
     }
 };

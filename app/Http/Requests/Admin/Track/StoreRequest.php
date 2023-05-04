@@ -26,7 +26,7 @@ class StoreRequest extends FormRequest
             'lyrics' => ['required', 'string'],
             'artists' => ['required'],
             'genres' => ['required'],
-            'album' => ['required', 'numeric'],
+            'album' => ['nullable', 'numeric'],
             'thumb_url' => ['required', 'image'],
             'audio_url' => ['required', 'string'],
             // 'audio_url' => ['required', 'file', 'mimes:mp3,mpeg'],

@@ -12,7 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("
+        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS playlists CASCADE");
+        DB::connection('pgsql_prod')->statement("
         CREATE TABLE playlists (
             id bigserial PRIMARY KEY,
             title_tm VARCHAR(255) NOT NULL,
@@ -24,8 +25,8 @@ return new class extends Migration
             created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
           );
           ");
-        DB::statement("CREATE INDEX idx_playlist_title_tm ON playlists (title_tm);");
-        DB::statement("CREATE INDEX idx_playlist_title_ru ON playlists (title_ru);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_playlist_title_tm ON playlists (title_tm);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_playlist_title_ru ON playlists (title_ru);");
 
         // Schema::create('playlists', function (Blueprint $table) {
         //     $table->id();
@@ -47,7 +48,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TABLE playlists CASCADE");
-        Schema::dropIfExists('playlists');
+        DB::connection('pgsql_prod')->statement("DROP TABLE playlists CASCADE");
+        // Schema::dropIfExists('playlists');
     }
 };

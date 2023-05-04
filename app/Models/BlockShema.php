@@ -9,10 +9,13 @@ class BlockShema extends Model
 {
     use HasFactory;
 
+    protected $connection = 'pgsql_prod';
+
     protected $guarded = false;
 
     protected $table = 'block_shema';
 
+    public $timestamps = false;
 
     public function blockNames()
     {

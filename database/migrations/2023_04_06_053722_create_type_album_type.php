@@ -12,8 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement(" DROP TYPE IF EXISTS album_type");
-        DB::statement("CREATE TYPE album_type AS ENUM('album', 'single', 'soundtrack', 'live', 'remix')");
+        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS albums CASCADE");
+        DB::connection('pgsql_prod')->statement("DROP TYPE IF EXISTS album_type");
+        DB::connection('pgsql_prod')->statement("CREATE TYPE album_type AS ENUM('album', 'single', 'soundtrack', 'live', 'remix')");
     }
 
     /**
@@ -21,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TYPE album_type CASCADE");
+        DB::connection('pgsql_prod')->statement("DROP TYPE album_type CASCADE");
     }
 };

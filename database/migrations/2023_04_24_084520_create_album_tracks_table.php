@@ -13,7 +13,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("
+        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS album_track CASCADE");
+
+        DB::connection('pgsql_prod')->statement("
         CREATE TABLE album_track (
             album_id bigint,
             track_id bigint,
@@ -23,8 +25,8 @@ return new class extends Migration
           );
           ");
 
-        DB::statement("CREATE INDEX idx_album_track_track_id ON album_track (track_id);");
-        DB::statement("CREATE INDEX idx_album_track_album_id ON album_track (album_id);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_album_track_track_id ON album_track (track_id);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_album_track_album_id ON album_track (album_id);");
 
         // Schema::create('album_track', function (Blueprint $table) {
         //     $table->unsignedBigInteger('album_id')->nullable();
@@ -45,7 +47,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TABLE album_track CASCADE");
+        DB::connection('pgsql_prod')->statement("DROP TABLE album_track CASCADE");
 
         // Schema::dropIfExists('album_track');
     }

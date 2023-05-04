@@ -15,7 +15,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("
+
+        DB::connection('pgsql_prod')->statement("
         CREATE TABLE albums (
             id bigserial PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
@@ -31,7 +32,7 @@ return new class extends Migration
             show_count INT DEFAULT 0
           );");
 
-        DB::statement("CREATE INDEX idx_album_title ON albums (title);");
+        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_album_title ON albums (title);");
 
         // Schema::create('albums', function (Blueprint $table) {
 
@@ -54,7 +55,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TABLE albums CASCADE");
+        DB::connection('pgsql_prod')->statement("DROP TABLE albums CASCADE");
         // Schema::dropIfExists('albums');
     }
 };
