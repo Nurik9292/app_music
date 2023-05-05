@@ -19,7 +19,7 @@ class Service
 
         $data['status'] = $this->status($data);
 
-        Artist::create($data);
+        Artist::firstOrCreate(['name' => $data['name']], $data);
     }
 
     public function update($data, $artist)

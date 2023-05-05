@@ -13,7 +13,7 @@ class BlockShema extends Model
 
     protected $guarded = false;
 
-    protected $table = 'block_shema';
+    protected $table = 'bloc_shema';
 
     public $timestamps = false;
 

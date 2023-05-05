@@ -36,6 +36,13 @@ return [
             'throw' => false,
         ],
 
+        'nfs' => [
+            'driver' => 'dropbox',
+            'root' => 'home/nfs/production/images',
+            'url' => env('APP_URL'),
+            'throw' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

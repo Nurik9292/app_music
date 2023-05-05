@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Service
 {
-    private $path = "/nfs/production/images";
+    private $path = '/home/nury/nfs/production/images/';
 
     public function store($data)
     {
@@ -85,88 +85,61 @@ class Service
             }
         }
 
-        dd($name_artist);
-
         if (!isset($data['is_national'])) {
-            $album = Album::where('id', $data['album'])->get();
-            $type_album = $album[0]->type;
-            $name_album = $album[0]->title;
+            if ($data['album'] != '0') {
+                $album = Album::where('id', $data['album'])->get();
+                $type_album = $album[0]->type;
+                $name_album = $album[0]->title;
+            }
         }
-
 
         if (isset($track))
             Storage::disk('public')->delete($track->audio_url);
 
         $client = new Client();
-
         $res = $client->get($data['audio_url']);
-
         $audio = $res->getBody()->getContents();
 
+        $data['title'] = basename($data['audio_url']);
 
         if (isset($data['is_national'])) {
-            $path = "tm_tracks/{$name_artist}/" . $data['title'] . '.mp3';
-            $this->path = "tm_tracks/{$name_artist}/";
+            $this->path .= "tm_tracks/{$name_artist}/{$data['title']}/";
         } else {
-            $path = "tracks/{$name_artist}/{$type_album}/{$name_album}/"  . $data['title'] . '.mp3';
-            $this->path = "tracks/{$name_artist}/{$type_album}/{$name_album}/";
+            if ($data['album'] != '0') {
+                $this->path .= "tracks/{$name_artist}/{$type_album}/{$name_album}/{$data['title']}/";
+            } else {
+                $this->path .= "tracks/{$name_artist}/{$data['title']}/";
+            }
         }
 
-        Storage::disk('public')->put($path, $audio);
+        Storage::disk('public')->put("tracks/{$data['title']}", $audio);
 
-        $track = new GetId3(storage_path("app/public/$path"));
+        $track = new GetId3(storage_path("app/public/tracks/{$data['title']}"));
 
         if ($track->getPlaytimeSeconds() != null)
             $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
 
         $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
 
-        if (empty($data['track_number']) && $track->getTrackNumber() != null)
+        if (!isset($data['track_number']) && $track->getTrackNumber() != null)
             $data['track_number'] = $track->getTrackNumber();
 
-        $data['audio_url'] = $path;
+        Storage::disk('public')->delete("tracks/{$data['title']}");
 
         return $data;
     }
-
-
-
-    // public function saveTrack($data, $track = null)
-    // {
-
-    //     $artist = Artist::where('id', $data['artists'][0])->get();
-
-    //     $path_artist = $artist[0]->name;
-
-    //     if (isset($track))
-    //         Storage::disk('public')->delete($track->audio_url);
-
-    //     $track = new GetId3($data['audio_url']);
-
-    //     if ($track->getPlaytimeSeconds() != null)
-    //         $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
-
-    //     $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
-
-    //     if (empty($data['track_number']))
-    //         $data['track_number'] = $track->getTrackNumber();
-
-    //     $data['audio_url'] = Storage::disk('public')->putFileAs("tracks/{$path_artist}", $data['audio_url'], $track_name);
-
-    //     return $data;
-    // }
-
 
     public function resize($image, $track = null)
     {
         if (is_string($image)) {
             $image_name = basename($image);
-
             $client = new Client();
             $res = $client->get($image);
             $image = $res->getBody()->getContents();
-        } else
+        } else {
             $image_name = $image->getClientOriginalName();
+            $image_name_base = substr($image_name, 0, strpos($image_name, '.'));
+        }
 
         if (isset($track))
             Storage::disk('public')->delete([$track->thumb_url]);
@@ -175,22 +148,22 @@ class Service
         $thumb = Image::make($image)->encode('jpg');
         $webp =  Image::make($image)->encode('webp');
 
-        $path_thumb = "{$this->path}";
+        $path_thumb = $this->path;
 
-        if (!file_exists(storage_path($path_thumb)))
-            mkdir(storage_path($path_thumb), 0777, true);
+        if (!file_exists($path_thumb))
+            mkdir($path_thumb, 0777, true);
 
         if (is_string($image)) {
-            $webp->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
-            $thumb->fit(142, 166)->save(storage_path($path_thumb) . $webp->basename . '.jpg');
+            $webp->fit(142, 166)->save($path_thumb . $image_name);
+            $thumb->fit(142, 166)->save($path_thumb . $webp->basename . '.jpg');
         } else {
-            $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
-            $webp->fit(142, 166)->save(storage_path($path_thumb) . $webp->basename . '.webp');
+            $thumb->fit(142, 166)->save($path_thumb . $image_name);
+            $webp->fit(142, 166)->save($path_thumb . $image_name_base . '.webp');
         }
 
 
-        $image = $this->path . $image_name;
-
+        $image = $path_thumb . $image_name;
+        // dd($image);
         return $image;
     }
 

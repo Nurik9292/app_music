@@ -10,7 +10,9 @@ class DestroyController extends Controller
 {
     public function __invoke(Track $track)
     {
-        Storage::disk('public')->delete([$track->audio_url, $track->thumb_url]);
+        Storage::delete([$track->audio_url, $track->thumb_url]);
+
+
 
         $track->artists()->detach();
         $track->genres()->detach();
