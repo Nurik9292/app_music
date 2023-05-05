@@ -13,20 +13,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS album_track CASCADE");
+        // DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS album_track CASCADE");
 
-        DB::connection('pgsql_prod')->statement("
-        CREATE TABLE album_track (
-            album_id bigint,
-            track_id bigint,
-            PRIMARY KEY (album_id, track_id),
-            FOREIGN KEY (album_id) REFERENCES albums(id),
-            FOREIGN KEY (track_id) REFERENCES tracks(id)
-          );
-          ");
+        // DB::connection('pgsql_prod')->statement("
+        // CREATE TABLE album_track (
+        //     album_id bigint,
+        //     track_id bigint,
+        //     PRIMARY KEY (album_id, track_id),
+        //     FOREIGN KEY (album_id) REFERENCES albums(id),
+        //     FOREIGN KEY (track_id) REFERENCES tracks(id)
+        //   );
+        //   ");
 
-        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_album_track_track_id ON album_track (track_id);");
-        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_album_track_album_id ON album_track (album_id);");
+        // DB::connection('pgsql_prod')->statement("CREATE INDEX idx_album_track_track_id ON album_track (track_id);");
+        // DB::connection('pgsql_prod')->statement("CREATE INDEX idx_album_track_album_id ON album_track (album_id);");
 
         // Schema::create('album_track', function (Blueprint $table) {
         //     $table->unsignedBigInteger('album_id')->nullable();

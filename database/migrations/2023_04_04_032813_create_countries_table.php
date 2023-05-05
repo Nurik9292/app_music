@@ -20,13 +20,6 @@ return new class extends Migration
             code VARCHAR(3) NOT NULL
          );
         ");
-
-        // Schema::create('countries', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('name');
-        //     $table->string('code', 3);
-        //     $table->timestamps();
-        // });
     }
 
     /**
@@ -35,6 +28,5 @@ return new class extends Migration
     public function down(): void
     {
         DB::connection('pgsql_prod')->statement("DROP TABLE countries CASCADE");
-        // Schema::dropIfExists('countries');
     }
 };

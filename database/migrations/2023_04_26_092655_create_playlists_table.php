@@ -12,35 +12,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS playlists CASCADE");
-        DB::connection('pgsql_prod')->statement("
-        CREATE TABLE playlists (
-            id bigserial PRIMARY KEY,
-            title_tm VARCHAR(255) NOT NULL,
-            title_ru VARCHAR(255) NOT NULL,
-            status BOOL DEFAULT false,
-            artwork_url VARCHAR(255) DEFAULT '',
-            thumb_url VARCHAR(255) DEFAULT '',
-            show_count INT DEFAULT 0,
-            created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-          );
-          ");
-        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_playlist_title_tm ON playlists (title_tm);");
-        DB::connection('pgsql_prod')->statement("CREATE INDEX idx_playlist_title_ru ON playlists (title_ru);");
+        // DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS playlists CASCADE");
+        // DB::connection('pgsql_prod')->statement("
+        // CREATE TABLE playlists (
+        //     id bigserial PRIMARY KEY,
+        //     title_tm VARCHAR(255) NOT NULL,
+        //     title_ru VARCHAR(255) NOT NULL,
+        //     status BOOL DEFAULT false,
+        //     artwork_url VARCHAR(255) DEFAULT '',
+        //     thumb_url VARCHAR(255) DEFAULT '',
+        //     show_count INT DEFAULT 0,
+        //     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        //   );
+        //   ");
+        // DB::connection('pgsql_prod')->statement("CREATE INDEX idx_playlist_title_tm ON playlists (title_tm);");
+        // DB::connection('pgsql_prod')->statement("CREATE INDEX idx_playlist_title_ru ON playlists (title_ru);");
 
-        // Schema::create('playlists', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('title_tm');
-        //     $table->string('title_ru');
-        //     $table->string('artwork_url')->default('');
-        //     $table->string('thumb_url')->default('');
-        //     $table->boolean('status')->default(false);
-        //     $table->integer('show_count')->default(0);
-        //     $table->timestamps();
 
-        //     $table->index('title_tm', 'idx_playlist_title_tm');
-        //     $table->index('title_ru', 'idx_playlist_title_ru');
-        // });
     }
 
     /**

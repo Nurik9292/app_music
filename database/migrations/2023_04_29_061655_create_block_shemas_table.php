@@ -12,23 +12,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS bloc_shema CASCADE");
-        DB::connection('pgsql_prod')->statement("
-        CREATE TABLE bloc_shema (
-            id serial PRIMARY KEY,
-            name VARCHAR(50) NOT NULL,
-            body json NOT NULL,
-            order_number INT NOT NULL,
-            status BOOL DEFAULT false
-          );");
+        // DB::connection('pgsql_prod')->statement("DROP TABLE IF EXISTS bloc_shema CASCADE");
+        // DB::connection('pgsql_prod')->statement("
+        // CREATE TABLE bloc_shema (
+        //     id serial PRIMARY KEY,
+        //     name VARCHAR(50) NOT NULL,
+        //     body json NOT NULL,
+        //     order_number INT NOT NULL,
+        //     status BOOL DEFAULT false
+        //   );");
 
-        // Schema::connection('pgsql_prod')->create('bloc_shema', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('name')->nullable();
-        //     $table->boolean('status')->default(false);
-        //     $table->json('body')->nullable();
-        //     $table->unsignedBigInteger('order_number')->nullable();
-        // });
     }
 
     /**
