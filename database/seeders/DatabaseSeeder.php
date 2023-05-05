@@ -29,19 +29,20 @@ class DatabaseSeeder extends Seeder
                 'code' => $code
             ]);
 
-        User::factory()->create([
-            'name' => 'Super',
-            'email' => 'super@example.com',
-            'password' => 'super123!',
-            'role' => 1,
-        ]);
-
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => 'admin123!',
-            'role' => 2,
-        ]);
+        if (!User::where('email', 'like', 'super@example.com'))
+            User::factory()->create([
+                'name' => 'Super',
+                'email' => 'super@example.com',
+                'password' => 'super123!',
+                'role' => 1,
+            ]);
+        if (!User::where('email', 'like', 'admin@example.com'))
+            User::factory()->create([
+                'name' => 'Admin',
+                'email' => 'admin@example.com',
+                'password' => 'admin123!',
+                'role' => 2,
+            ]);
 
         Album::factory(5)->create();
         Playlist::factory(5)->create();

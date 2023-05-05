@@ -27,18 +27,6 @@ return new class extends Migration
         // DB::connection('pgsql_prod')->statement("CREATE INDEX idx_genre_track_track_id ON genre_track (track_id);");
         // DB::connection('pgsql_prod')->statement("CREATE INDEX idx_genre_track_genre_id ON genre_track (genre_id);");
 
-        // Schema::create('genre_track', function (Blueprint $table) {
-        //     $table->unsignedBigInteger('genre_id')->nullable();
-        //     $table->unsignedBigInteger('track_id')->nullable();
-
-        //     $table->primary(['genre_id', 'track_id']);
-
-        //     $table->index('genre_id', 'genre_track_idx');
-        //     $table->index('track_id', 'track_genre_idx');
-
-        //     $table->foreign('genre_id', 'genre_track_fk')->on('genres')->references('id');
-        //     $table->foreign('track_id', 'track_genre_fk')->on('tracks')->references('id');
-        // });
     }
 
     /**
@@ -47,6 +35,5 @@ return new class extends Migration
     public function down(): void
     {
         DB::connection('pgsql_prod')->statement("DROP TABLE genre_track CASCADE");
-        // Schema::dropIfExists('genre_track');
     }
 };
