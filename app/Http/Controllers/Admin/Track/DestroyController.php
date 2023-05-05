@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Admin\Track;
 
-use App\Http\Controllers\Controller;
 use App\Models\Track;
-use Illuminate\Support\Facades\Storage;
 
-class DestroyController extends Controller
+class DestroyController extends BaseController
 {
     public function __invoke(Track $track)
     {
-        Storage::delete([$track->audio_url, $track->thumb_url]);
+        $path = $track->thumb_url;
+        $path = substr($path, 0, strpos($path, basename($path)));
+        $path = '/home/nury/nfs/production/' . substr($path, strpos($path, "images"), strlen($path));
 
-
+        $this->service->delete($path);
 
         $track->artists()->detach();
         $track->genres()->detach();

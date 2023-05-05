@@ -54,6 +54,8 @@ class Service
 
     private function resize($data, $album = null)
     {
+        $path = "/home/nury/nfs/production/images";
+
         $arist = Artist::where('id', $data['artists'][0])->get();
 
         $arist_name = $arist[0]->name;
@@ -77,24 +79,30 @@ class Service
         $thumb_webp = Image::make($data['artwork_url']);
 
         if (isset($data['is_national'])) {
-            $path_artWork = "/app/public/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
-            $path_thumb = "/app/public/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/";
+            $path_artWork = "$path/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
+            $path_thumb = "/$path/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/";
         } else {
-            $path_artWork = "/app/public/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
-            $path_thumb = "/app/public/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/";
+            $path_artWork = "/$path/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
+            $path_thumb = "/$path/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/";
         }
 
-        if (!file_exists(storage_path($path_thumb)))
-            mkdir(storage_path($path_thumb), 0777, true);
+        // if (!file_exists(storage_path($path_thumb)))
+        //     mkdir(storage_path($path_thumb), 0777, true);
 
-        if (!file_exists(storage_path($path_artWork)))
-            mkdir(storage_path($path_artWork), 0777, true);
+        if (!file_exists($path_thumb))
+            mkdir($path_thumb, 0777, true);
 
-        $artWork->fit(375, 250)->save(storage_path($path_artWork) . $image_name);
-        $artWork_webp->fit(375, 250)->save(storage_path($path_artWork) . $image_name_wepb . ".webp");
+        // if (!file_exists(storage_path($path_artWork)))
+        //     mkdir(storage_path($path_artWork), 0777, true);
 
-        $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
-        $thumb_webp->fit(142, 166)->save(storage_path($path_thumb) . $image_name_wepb . ".webp");
+        if (!file_exists($path_artWork))
+            mkdir($path_artWork, 0777, true);
+
+        $artWork->fit(375, 250)->save($path_artWork . $image_name);
+        $artWork_webp->fit(375, 250)->save($path_artWork . $image_name_wepb . ".webp");
+
+        $thumb->fit(142, 166)->save($path_thumb . $image_name);
+        $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_wepb . ".webp");
 
         if (isset($data['is_national'])) {
             $data['artwork_url'] = "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";

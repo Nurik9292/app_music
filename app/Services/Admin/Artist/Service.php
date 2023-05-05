@@ -33,14 +33,17 @@ class Service
 
     public function resize($data, $artist = null)
     {
+        $path = "/home/nury/nfs/production/images";
+
         if (!empty($data['country_id'])) {
             $country = Country::where("id", $data['country_id'])->get();
             $country = $country[0]->name;
         } else $country = 'Туркменния';
 
 
-        if (isset($artist))
+        if (isset($artist)) {
             Storage::disk('public')->delete([$artist->artwork_url, $artist->thumb_url]);
+        }
 
         if (is_string($data['artwork_url'])) {
             $image_name = basename($data['artwork_url']);
@@ -72,32 +75,38 @@ class Service
         $thumb_webp = Image::make($image);
 
         if ($country == 'Туркмения') {
-            $path_artWork = "/app/public/tm_tracks/{$data['name']}/artist_artWork/";
-            $path_thumb = "/app/public/tm_tracks/{$data['name']}/artist_thumb/";
+            $path_artWork = "$path/tm_tracks/{$data['name']}/artist_artWork/";
+            $path_thumb = "$path/tm_tracks/{$data['name']}/artist_thumb/";
         } else {
-            $path_artWork = "/app/public/tracks/{$data['name']}/artist_artWork/";
-            $path_thumb = "/app/public/tracks/{$data['name']}/artist_thumb/";
+            $path_artWork = "$path/tracks/{$data['name']}/artist_artWork/";
+            $path_thumb = "$path/tracks/{$data['name']}/artist_thumb/";
         }
 
+        // if (!file_exists(storage_path($path_thumb)))
+        //     mkdir(storage_path($path_thumb), 0777, true);
 
-        if (!file_exists(storage_path($path_thumb)))
-            mkdir(storage_path($path_thumb), 0777, true);
+        if (!file_exists($path_thumb))
+            mkdir($path_thumb, 0777, true);
 
-        if (!file_exists(storage_path($path_artWork)))
-            mkdir(storage_path($path_artWork), 0777, true);
+        // if (!file_exists(storage_path($path_artWork)))
+        //     mkdir(storage_path($path_artWork), 0777, true);
+
+        if (!file_exists($path_artWork))
+            mkdir($path_artWork, 0777, true);
+
 
         if (is_string($image)) {
-            $artWork->fit(375, 250)->save(storage_path($path_artWork) . $image_name_jpg . '.jpg');
-            $artWork_webp->fit(375, 250)->save(storage_path($path_artWork) . $image_name);
+            $artWork->fit(375, 250)->save($path_artWork . $image_name_jpg . '.jpg');
+            $artWork_webp->fit(375, 250)->save($path_artWork . $image_name);
 
-            $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name_jpg . '.jpg');
-            $thumb_webp->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
+            $thumb->fit(142, 166)->save($path_thumb . $image_name_jpg . '.jpg');
+            $thumb_webp->fit(142, 166)->save($path_thumb . $image_name);
         } else {
-            $artWork->fit(375, 250)->save(storage_path($path_artWork) . $image_name);
-            $artWork_webp->fit(375, 250)->save(storage_path($path_artWork) . $image_name_wepb . ".webp");
+            $artWork->fit(375, 250)->save($path_artWork . $image_name);
+            $artWork_webp->fit(375, 250)->save($path_artWork . $image_name_wepb . ".webp");
 
-            $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
-            $thumb_webp->fit(142, 166)->save(storage_path($path_thumb) . $image_name_wepb . ".webp");
+            $thumb->fit(142, 166)->save($path_thumb . $image_name);
+            $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_wepb . ".webp");
         }
 
         if ($country == 'Туркменния') {

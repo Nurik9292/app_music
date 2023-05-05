@@ -36,7 +36,7 @@
                 @csrf
                 @method('PATCH')
               <div class="card-body">
-
+{{--
                 <div class="row">
                     <div class="block_one">
                         <label for="name">Название</label>
@@ -46,7 +46,7 @@
                         @enderror
                       </div>
 
-                </div>
+                </div> --}}
 
                 <div class="row">
                     <div class="text">
@@ -64,6 +64,7 @@
                             <div class="select2-purple">
                               <select class="form-control select2" multiple="multiple" name=artists[]" data-placeholder="Выберите испольнителя" data-dropdown-css-class="select2-purple" style="width: 100%;">
                                 <option>все</option>
+
                                 @foreach ($artists as $artist)
                                 <option
                                 @foreach ($track->artists as $art)
@@ -93,7 +94,7 @@
                         <label>Альбомы</label>
                         <div >
                             <select class="form-control single" name="album">
-                                <option>все</option>
+                                <option value="0">все</option>
                                 @foreach ($albums as $album)
                                 <option @foreach ($track->album as $al)
                                     {{$al->id == $album->id ? 'selected' : ''}}
@@ -144,7 +145,7 @@
 
                       </div>
 
-                      <div class="block_one">
+                      {{-- <div class="block_one">
                         <label for="inputFile_2">Трэк</label>
                           <div class="custom-file">
                               <label class="custom-file-label" for="inputFile_2">Выберите Трэк</label>
@@ -153,6 +154,14 @@
                             <p class="text-danger">{{$message}}</p>
                           @enderror
                           </div>
+                      </div> --}}
+
+                      <div class="block_one">
+                        <label for="audio_url">Введите трек</label>
+                        <input type="text" class="form-control" id="audio_url" placeholder="Введите путь до трека" name="audio_url" value="{{$track->audio_url}}">
+                        @error('audio_url')
+                        <p class="text-danger">{{$message}}</p>
+                        @enderror
                       </div>
 
                         <div class="block_one">

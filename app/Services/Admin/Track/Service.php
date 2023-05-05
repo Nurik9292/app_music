@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Storage;
 
 class Service
 {
-    private $path = '/home/nury/nfs/production/images/';
+    private $path_first = '/home/nury/nfs/production/images/';
+    private $path_second;
 
     public function store($data)
     {
@@ -23,46 +24,59 @@ class Service
         $artists = $data['artists'];
         unset($data['artists']);
 
-        if (isset($data['genres']) && $data['genres'] != null) {
+        if (isset($data['genres']) && $data['genres'] != '0')
             $genres = $data['genres'];
-            unset($data['genres']);
-        }
+        unset($data['genres']);
 
-        if (isset($data['album']) && $data['album'] != null) {
+
+        if (isset($data['album']) && $data['album'] != '0')
             $album = $data['album'];
-            unset($data['album']);
-        }
+        unset($data['album']);
+
 
         $track = Track::create($data);
 
-        if (isset($data['artists']) && $data['artists'] != null)
-            $track->artists()->attach($artists);
-        if (isset($data['genres']) && $data['genres'] != null)
+        $track->artists()->attach($artists);
+        if (isset($genres) && $genres != '0')
             $track->genres()->attach($genres);
-        if (isset($data['album']) && $data['album'] != null)
+        if (isset($album) && $album != '0')
             $track->album()->attach($album);
     }
 
 
     public function updata($data, $track)
     {
+        if (isset($data['audio_url'])) {
+            if ($track->artists[0]->id != $data['artists'][0]) {
+                $data = $this->saveTrack($data, $track);
+                $data['thumb_url'] = $this->move($track->thumb_url);
+            } elseif (!$track->where('audio_url', 'like', $data['audio_url']))
+                $data = $this->saveTrack($data, $track);
+        }
 
-        if (isset($data['audio_url']))
-            $data = $this->saveTrack($data, $track);
-
-        if (isset($data['thumb_url']))
-            $data['thumb_url'] = $this->resize($data['thumb_url']);
+        if ($track->artists[0]->id == $data['artists'][0])
+            if (isset($data['thumb_url']))
+                $data['thumb_url'] = $this->resize($data['thumb_url']);
 
         $artists = $data['artists'];
         unset($data['artists']);
 
-        $albumTrack['album_id'] = $data['album_id'];
-        unset($data['album_id']);
+        if (isset($data['genres']) && $data['genres'] != '0')
+            $genres = $data['genres'];
+        unset($data['genres']);
 
+
+        if (isset($data['album']) && $data['album'] != '0')
+            $album = $data['album'];
+        unset($data['album']);
 
         $track->update($data);
 
         $track->artists()->sync($artists);
+        if (isset($album) && $album != '0')
+            $track->album()->sync($album);
+        if (isset($genres) && $genres != '0')
+            $track->genres()->sync($genres);
     }
 
 
@@ -93,9 +107,6 @@ class Service
             }
         }
 
-        if (isset($track))
-            Storage::disk('public')->delete($track->audio_url);
-
         $client = new Client();
         $res = $client->get($data['audio_url']);
         $audio = $res->getBody()->getContents();
@@ -103,12 +114,12 @@ class Service
         $data['title'] = basename($data['audio_url']);
 
         if (isset($data['is_national'])) {
-            $this->path .= "tm_tracks/{$name_artist}/{$data['title']}/";
+            $this->path_second .= "tm_tracks/{$name_artist}/{$data['title']}/";
         } else {
             if ($data['album'] != '0') {
-                $this->path .= "tracks/{$name_artist}/{$type_album}/{$name_album}/{$data['title']}/";
+                $this->path_second .= "tracks/{$name_artist}/{$type_album}/{$name_album}/{$data['title']}/";
             } else {
-                $this->path .= "tracks/{$name_artist}/{$data['title']}/";
+                $this->path_second .= "tracks/{$name_artist}/{$data['title']}/";
             }
         }
 
@@ -142,13 +153,13 @@ class Service
         }
 
         if (isset($track))
-            Storage::disk('public')->delete([$track->thumb_url]);
+            $this->deleteForUpdated($track);
 
 
         $thumb = Image::make($image)->encode('jpg');
         $webp =  Image::make($image)->encode('webp');
 
-        $path_thumb = $this->path;
+        $path_thumb = $this->path_first . $this->path_second;
 
         if (!file_exists($path_thumb))
             mkdir($path_thumb, 0777, true);
@@ -161,9 +172,8 @@ class Service
             $webp->fit(142, 166)->save($path_thumb . $image_name_base . '.webp');
         }
 
+        $image = "https://storage2.ma.st.com.tm/images/" . $this->path_second . $image_name;
 
-        $image = $path_thumb . $image_name;
-        // dd($image);
         return $image;
     }
 
@@ -174,5 +184,66 @@ class Service
             if ($track->status) $track['status'] = 'on';
             else $track['status'] = 'off';
         }
+    }
+
+
+    public function delete($path)
+    {
+        if (is_dir($path) === true) {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            foreach ($files as $file) {
+                $this->delete(realpath($path) . '/' . $file);
+            }
+
+            return rmdir($path);
+        } else if (is_file($path) === true) {
+            return unlink($path);
+        }
+
+        return false;
+    }
+
+    public function move($path)
+    {
+        $image = "https://storage2.ma.st.com.tm/" . "images/" . $this->path_second . basename($path);
+        $path = substr($path, 0, strpos($path, basename($path)));
+        $path = '/home/nury/nfs/production/' . substr($path, strpos($path, "images"), strlen($path));
+
+        if (is_dir($path) === true) {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            if (!file_exists($this->path_first . $this->path_second))
+                mkdir($this->path_first . $this->path_second, 0777, true);
+
+            foreach ($files as $file) {
+                rename($path . $file, $this->path_first . $this->path_second . $file);
+            };
+        }
+
+        return $image;
+    }
+
+
+
+    private function deleteForUpdated($track)
+    {
+        if (str_ends_with($track->thumb_url, 'png')) {
+            $webp = substr($track->thumb_url, 0, strpos($track->thumb_url, 'png'));
+            $webp = substr($webp, strpos($webp, "images"), strlen($webp));
+        }
+        if (str_ends_with($track->thumb_url, 'jpg')) {
+            $webp = substr($track->thumb_url, 0, strpos($track->thumb_url, 'jpg'));
+            $webp = substr($webp, strpos($webp, "images"), strlen($webp));
+        }
+        if (str_ends_with($track->thumb_url, 'jpeg')) {
+            $webp = substr($track->thumb_url, 0, strpos($track->thumb_url, 'jpeg'));
+            $webp = substr($webp, strpos($webp, "images"), strlen($webp));
+        }
+
+        $image = substr($track->thumb_url, strpos($track->thumb_url, "images"), strlen($track->thumb_url));
+
+        $this->delete("/home/nury/nfs/production/" . $image);
+        $this->delete("/home/nury/nfs/production/" . $webp . "webp");
     }
 }
