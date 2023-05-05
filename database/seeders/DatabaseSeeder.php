@@ -28,15 +28,15 @@ class DatabaseSeeder extends Seeder
                 'name' => $name,
                 'code' => $code
             ]);
-
-        if (!User::where('email', 'like', 'super@example.com'))
+        if (count(User::where('email', 'like', 'super@example.com')->get()) == false)
             User::factory()->create([
                 'name' => 'Super',
                 'email' => 'super@example.com',
                 'password' => 'super123!',
                 'role' => 1,
             ]);
-        if (!User::where('email', 'like', 'admin@example.com'))
+
+        if (count(User::where('email', 'like', 'admin@example.com')->get()) == false)
             User::factory()->create([
                 'name' => 'Admin',
                 'email' => 'admin@example.com',
