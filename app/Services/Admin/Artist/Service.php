@@ -6,7 +6,6 @@ use App\Models\Artist;
 use App\Models\Country;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 
@@ -42,7 +41,11 @@ class Service
 
 
         if (isset($artist)) {
-            Storage::disk('public')->delete([$artist->artwork_url, $artist->thumb_url]);
+            $path_artist = $artist->artwork_url;
+            $path_artist = substr($path, 0, strpos($path, basename($path)));
+            $path_artist = '/home/nury/nfs/production/' . substr($path, strpos($path, "images"), strlen($path));
+
+            $this->delete($path_artist);
         }
 
         if (is_string($data['artwork_url'])) {
@@ -110,11 +113,11 @@ class Service
         }
 
         if ($country == 'Туркменния') {
-            $data['artwork_url'] = "tm_tracks/{$data['name']}/artist_artWork/$image_name";
-            $data['thumb_url'] = "tm_tracks/{$data['name']}/artist_artWork/$image_name";
+            $data['artwork_url'] = "https://storage2.ma.st.com.tm/images/tm_tracks/{$data['name']}/artist_artWork/$image_name";
+            $data['thumb_url'] = "https://storage2.ma.st.com.tm/images/tm_tracks/{$data['name']}/artist_artWork/$image_name";
         } else {
-            $data['artwork_url'] = "tracks/{$data['name']}/artist_artWork/$image_name";
-            $data['thumb_url'] = "tracks/{$data['name']}/artist_thumb/$image_name";
+            $data['artwork_url'] = "https://storage2.ma.st.com.tm/images/tracks/{$data['name']}/artist_artWork/$image_name";
+            $data['thumb_url'] = "https://storage2.ma.st.com.tm/images/tracks/{$data['name']}/artist_thumb/$image_name";
         }
 
         return $data;
@@ -145,5 +148,23 @@ class Service
             if ($artist->status) $artist['status'] = 'on';
             else $artist['status'] = 'off';
         }
+    }
+
+
+    public function delete($path)
+    {
+        if (is_dir($path) === true) {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            foreach ($files as $file) {
+                $this->delete(realpath($path) . '/' . $file);
+            }
+
+            return rmdir($path);
+        } else if (is_file($path) === true) {
+            return unlink($path);
+        }
+
+        return false;
     }
 }

@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Admin\Album;
 
-use App\Http\Controllers\Controller;
 use App\Models\Album;
-use Illuminate\Support\Facades\Storage;
 
-class DestroyController extends Controller
+class DestroyController extends BaseController
 {
     public function __invoke(Album $album)
     {
-        Storage::disk('public')->delete([$album->artwork_url, $album->thumb_url]);
+        // Storage::disk('public')->delete([$album->artwork_url, $album->thumb_url]);
+
+        $path = $album->artwork_url;
+        $path = substr($path, 0, strpos($path, basename($path)));
+        $path = '/home/nury/nfs/production/' . substr($path, strpos($path, "images"), strlen($path));
+
+        $this->service->delete($path);
+
 
         // $album->tracks()->detach();
         $album->artists()->detach();

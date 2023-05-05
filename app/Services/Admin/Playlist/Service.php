@@ -56,8 +56,15 @@ class Service
 
     private function resize($data, $playlist = null)
     {
-        if (isset($playlist))
-            Storage::disk('public')->delete([$playlist->artwork_url, $playlist->thumb_url]);
+        $path = "/home/nury/nfs/production/images";
+
+        if (isset($playlist)) {
+            $path_playlist = $playlist->artwork_url;
+            $path_playlist = substr($path, 0, strpos($path, basename($path)));
+            $path_playlist = '/home/nury/nfs/production/' . substr($path, strpos($path, "images"), strlen($path));
+
+            $this->delete($path_playlist);
+        }
 
         $image_name = $data['artwork_url']->getClientOriginalName();
 
@@ -77,24 +84,24 @@ class Service
         $thumb_webp = Image::make($data['artwork_url']);
 
 
-        $path_artWork = "/app/public/playlists/{$data['title_ru']}/playlist_artWork/";
-        $path_thumb = "/app/public/playlists/{$data['title_ru']}/playlist_thumb/";
+        $path_artWork = "{$path}/playlists/{$data['title_ru']}/playlist_artWork/";
+        $path_thumb = "{$path}//playlists/{$data['title_ru']}/playlist_thumb/";
 
 
-        if (!file_exists(storage_path($path_thumb)))
-            mkdir(storage_path($path_thumb), 0777, true);
+        if (!file_exists($path_thumb))
+            mkdir($path_thumb, 0777, true);
 
-        if (!file_exists(storage_path($path_artWork)))
-            mkdir(storage_path($path_artWork), 0777, true);
+        if (!file_exists($path_artWork))
+            mkdir($path_artWork, 0777, true);
 
-        $artWork->fit(375, 250)->save(storage_path($path_artWork) . $image_name);
-        $artWork_webp->fit(375, 250)->save(storage_path($path_artWork) . $image_name_wepb . ".webp");
+        $artWork->fit(375, 250)->save($path_artWork . $image_name);
+        $artWork_webp->fit(375, 250)->save($path_artWork . $image_name_wepb . ".webp");
 
-        $thumb->fit(142, 166)->save(storage_path($path_thumb) . $image_name);
-        $thumb_webp->fit(142, 166)->save(storage_path($path_thumb) . $image_name_wepb . ".webp");
+        $thumb->fit(142, 166)->save($path_thumb . $image_name);
+        $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_wepb . ".webp");
 
-        $data['artwork_url'] = "playlists/{$data['title_ru']}/playlist_artWork/$image_name";
-        $data['thumb_url'] = "playlists/{$data['title_ru']}/playlist_thumb/$image_name";
+        $data['artwork_url'] = "https://storage2.ma.st.com.tm/images/playlists/{$data['title_ru']}/playlist_artWork/$image_name";
+        $data['thumb_url'] = "https://storage2.ma.st.com.tm/images/playlists/{$data['title_ru']}/playlist_thumb/$image_name";
 
         return $data;
     }
@@ -125,5 +132,22 @@ class Service
             $dates[$playlist->id] = Carbon::parse($playlist->created_at)->format('d-m-Y');
 
         return $dates;
+    }
+
+    public function delete($path)
+    {
+        if (is_dir($path) === true) {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            foreach ($files as $file) {
+                $this->delete(realpath($path) . '/' . $file);
+            }
+
+            return rmdir($path);
+        } else if (is_file($path) === true) {
+            return unlink($path);
+        }
+
+        return false;
     }
 }
