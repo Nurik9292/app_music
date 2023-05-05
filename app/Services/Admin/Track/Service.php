@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Service
 {
-    private $path_first = '/home/nury/nfs/production/images/';
+    private $path_first = '/nfs/storage2/';
     private $path_second;
 
     public function store($data)
@@ -208,7 +208,7 @@ class Service
     {
         $image = "https://storage2.ma.st.com.tm/" . "images/" . $this->path_second . basename($path);
         $path = substr($path, 0, strpos($path, basename($path)));
-        $path = '/home/nury/nfs/production/' . substr($path, strpos($path, "images"), strlen($path));
+        $path = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
 
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), array('.', '..'));
@@ -228,22 +228,10 @@ class Service
 
     private function deleteForUpdated($track)
     {
-        if (str_ends_with($track->thumb_url, 'png')) {
-            $webp = substr($track->thumb_url, 0, strpos($track->thumb_url, 'png'));
-            $webp = substr($webp, strpos($webp, "images"), strlen($webp));
-        }
-        if (str_ends_with($track->thumb_url, 'jpg')) {
-            $webp = substr($track->thumb_url, 0, strpos($track->thumb_url, 'jpg'));
-            $webp = substr($webp, strpos($webp, "images"), strlen($webp));
-        }
-        if (str_ends_with($track->thumb_url, 'jpeg')) {
-            $webp = substr($track->thumb_url, 0, strpos($track->thumb_url, 'jpeg'));
-            $webp = substr($webp, strpos($webp, "images"), strlen($webp));
-        }
+        $path = $track->thumb_url;
+        $path = substr($path, 0, strpos($path, basename($path)));
+        $path = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
 
-        $image = substr($track->thumb_url, strpos($track->thumb_url, "images"), strlen($track->thumb_url));
-
-        $this->delete("/home/nury/nfs/production/" . $image);
-        $this->delete("/home/nury/nfs/production/" . $webp . "webp");
+        $this->delete($path);
     }
 }

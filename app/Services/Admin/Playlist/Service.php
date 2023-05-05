@@ -56,12 +56,12 @@ class Service
 
     private function resize($data, $playlist = null)
     {
-        $path = "/home/nury/nfs/production/images";
+        $path = "/nfs/storage2/images";
 
         if (isset($playlist)) {
             $path_playlist = $playlist->artwork_url;
             $path_playlist = substr($path, 0, strpos($path, basename($path)));
-            $path_playlist = '/home/nury/nfs/production/' . substr($path, strpos($path, "images"), strlen($path));
+            $path_playlist = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
 
             $this->delete($path_playlist);
         }

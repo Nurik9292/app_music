@@ -32,7 +32,7 @@ class Service
 
     public function resize($data, $artist = null)
     {
-        $path = "/home/nury/nfs/production/images";
+        $path = "/nfs/storage2/images";
 
         if (!empty($data['country_id'])) {
             $country = Country::where("id", $data['country_id'])->get();
@@ -43,7 +43,7 @@ class Service
         if (isset($artist)) {
             $path_artist = $artist->artwork_url;
             $path_artist = substr($path, 0, strpos($path, basename($path)));
-            $path_artist = '/home/nury/nfs/production/' . substr($path, strpos($path, "images"), strlen($path));
+            $path_artist = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
 
             $this->delete($path_artist);
         }

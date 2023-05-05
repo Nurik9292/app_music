@@ -54,7 +54,7 @@ class Service
 
     private function resize($data, $album = null)
     {
-        $path = "/home/nury/nfs/production/images";
+        $path = "/nfs/storage2/images";
 
         $arist = Artist::where('id', $data['artists'][0])->get();
 
@@ -63,7 +63,7 @@ class Service
         if (isset($album)) {
             $path_album = $album->artwork_url;
             $path_album = substr($path, 0, strpos($path, basename($path)));
-            $path_album = '/home/nury/nfs/production/' . substr($path, strpos($path, "images"), strlen($path));
+            $path_album = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
 
             $this->delete($path_album);
         }
