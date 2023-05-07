@@ -2,15 +2,22 @@
 
 namespace App\Services\Admin\Album;
 
+use Carbon\Carbon;
 use App\Models\Album;
 use App\Models\Artist;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Admin\HelperService;
 use Intervention\Image\Facades\Image;
 
 
 class Service
 {
+    private $helper;
+
+    public function __construct()
+    {
+        $this->helper  = new HelperService();
+    }
+
 
     public function store($data)
     {
@@ -33,42 +40,57 @@ class Service
 
     public function update($data, $album)
     {
-        if (isset($data['artwokr_url']))
-            $data = $this->resize($data);
+        $data = $this->type($data);
+
+        if (isset($data['artwork_url']))
+            $data = $this->resize($data, $album);
+
+        if ($data['title'] != $album->title)
+            $data = $this->move($data, $album);
 
         if (isset($data['added_date']) || isset($data['release_date']))
             $data = $this->dateFormat($data);
 
         $data['status'] = $this->status($data);
 
-        $data = $this->type($data);
-
-        $artists = $data['artists'];
-        unset($data['artists']);
+        if (isset($data['artists'])) {
+            $artists = $data['artists'];
+            unset($data['artists']);
+        }
 
         $album->update($data);
 
-        $album->artists()->sync($artists);
+        if (isset($data['artists']))
+            $album->artists()->sync($artists);
     }
 
 
     private function resize($data, $album = null)
     {
-        $path = "/nfs/storage2/images";
+        $path = $this->helper->pathImageForServer . 'images/';
 
-        $arist = Artist::where('id', $data['artists'][0])->get();
-
-        $arist_name = $arist[0]->name;
+        if (isset($data['artists']))
+            $arist = Artist::where('id', $data['artists'][0])->get();
+        $arist_name = $arist[0]->name ?? $album->artists[0]->name;
 
         if (isset($album)) {
-            $path_album = $album->artwork_url;
-            $path_album = substr($path, 0, strpos($path, basename($path)));
-            $path_album = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
+            $path_temp = $this->helper->pathImageForServer;
 
-            $this->delete($path_album);
+            $path_artwork = $album->artwork_url;
+            $path_artwork = $path_temp . substr($path_artwork, strpos($path_artwork, "images"));
+            $path_artwork = substr($path_artwork, 0, strpos($path_artwork, basename($path_artwork)));
+
+            $path_thumb = $album->thumb_url;
+            $path_thumb = $path_temp . substr($path_thumb, strpos($path_thumb, "images"));
+            $path_thumb = substr($path_thumb, 0, strpos($path_thumb, basename($path_thumb)));
+
+            $this->delete($path_artwork);
+            $this->delete($path_thumb);
+            unset($path_temp);
         }
 
-        $image_name = $data['artwork_url']->getClientOriginalName();
+        if (isset($data['artwork_url']))
+            $image_name = $data['artwork_url']->getClientOriginalName();
 
         if (str_ends_with($image_name, "png"))
             $image_name_wepb = substr($image_name, 0, strpos($image_name, "png") - 1);
@@ -110,11 +132,11 @@ class Service
         $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_wepb . ".webp");
 
         if (isset($data['is_national'])) {
-            $data['artwork_url'] = "https://storage2.ma.st.com.tm/images/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
-            $data['thumb_url'] = "https://storage2.ma.st.com.tm/images/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/";
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
         } else {
-            $data['artwork_url'] = "https://storage2.ma.st.com.tm/images/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
-            $data['thumb_url'] = "https://storage2.ma.st.com.tm/images/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
         }
 
         return $data;
@@ -193,5 +215,38 @@ class Service
         }
 
         return false;
+    }
+
+    public function move($data, $album)
+    {
+        $arist_name = $album->artists[0]->name;
+        $image_name = basename($album->artwork_url);
+
+        if (isset($data['is_national'])) {
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
+            $new_path = $this->helper->pathImageForServer . "images/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/";
+        } else {
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
+            $new_path = $this->helper->pathImageForServer . "images/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
+        }
+
+        $image = substr($album->artwork_url, strpos($album->artwork_url, 'images'));
+        $path =  $this->helper->pathImageForServer . substr($image,  strpos($image, 'images'));
+        $path = substr($path, 0, strpos($path, "album_artWork/" . basename($path)));
+
+        if (is_dir($path) === true) {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            if (!file_exists($new_path))
+                mkdir($new_path, 0777, true);
+
+            foreach ($files as $file) {
+                rename($path . $file, $new_path . $file);
+            };
+        }
+
+        return $data;
     }
 }

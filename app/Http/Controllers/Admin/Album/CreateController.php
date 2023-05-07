@@ -14,7 +14,7 @@ class CreateController extends Controller
         $album = new Album();
         $types = $album->getTypes();
 
-        $artists = Artist::orderByDesc('name')->get();
+        $artists = Artist::orderBy('name')->get();
 
         return view('album.create', compact('types', 'artists'));
     }

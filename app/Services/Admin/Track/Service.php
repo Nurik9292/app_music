@@ -5,6 +5,7 @@ namespace App\Services\Admin\Track;
 use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Track;
+use App\Services\Admin\HelperService;
 use GuzzleHttp\Client;
 use Owenoj\LaravelGetId3\GetId3;
 use Intervention\Image\Facades\Image;
@@ -12,8 +13,16 @@ use Illuminate\Support\Facades\Storage;
 
 class Service
 {
-    private $path_first = '/nfs/storage2/';
+
+    private $helper;
+    private $path_first;
     private $path_second;
+
+    public function __construct()
+    {
+        $this->helper = new HelperService();
+        $this->path_first = $this->helper->pathImageForServer . "images/";
+    }
 
     public function store($data)
     {
@@ -43,6 +52,11 @@ class Service
             $track->album()->attach($album);
     }
 
+
+    public function storeForFile($data)
+    {
+        $this->saveTrackFromFile($data);
+    }
 
     public function updata($data, $track)
     {
@@ -83,38 +97,20 @@ class Service
     public function saveTrack($data, $track = null)
     {
 
-        if (is_array($data['artists']))
-            $artist = Artist::where('id', $data['artists'][0])->get();
-        else
-            $artist = Artist::where('name', 'like', $data['artists'])->get();
+        $artist = Artist::where('id', $data['artists'][0])->get();
+        $name_artist = $artist[0]->name;
 
+        list($type_album, $name_album) = $this->albumPath($data);
 
-        if ($artist != null && count($artist) > 0) {
-            $name_artist = $artist[0]->name;
-        } else {
-            if (is_array($data['artists'])) {
-                $name_artist = $data['artists'][0];
-            } else {
-                $name_artist = $data['artists'];
-            }
-        }
-
-        if (!isset($data['is_national'])) {
-            if ($data['album'] != '0') {
-                $album = Album::where('id', $data['album'])->get();
-                $type_album = $album[0]->type;
-                $name_album = $album[0]->title;
-            }
-        }
-
-        $client = new Client();
-        $res = $client->get($data['audio_url']);
-        $audio = $res->getBody()->getContents();
+        $audio = $this->getContent($data['audio_url']);
 
         $data['title'] = basename($data['audio_url']);
 
         if (isset($data['is_national'])) {
-            $this->path_second .= "tm_tracks/{$name_artist}/{$data['title']}/";
+            if ($data['album'] != '0')
+                $this->path_second .= "tm_tracks/{$name_artist}/{$type_album}/{$name_album}/{$data['title']}/";
+            else
+                $this->path_second .= "tm_tracks/{$name_artist}/{$data['title']}/";
         } else {
             if ($data['album'] != '0') {
                 $this->path_second .= "tracks/{$name_artist}/{$type_album}/{$name_album}/{$data['title']}/";
@@ -140,13 +136,61 @@ class Service
         return $data;
     }
 
+    public function saveTrackFromFile($data)
+    {
+        if (count($artist = Artist::where('name', 'like', $data['artists'])->get()) == false)
+            $artist = $data['artists'];
+        else
+            $artist = $artist[0]->name;
+
+        if ($data['is_national']) {
+            if ($data['album'] != null || $data['album'] != '0') {
+                $album = Album::where('id', $data['album'])->get();
+                $type_album = $album[0]->type;
+                $name_album = $album[0]->title;
+            }
+        }
+
+        $audio = $this->getContent($data['audio_url']);
+
+        $data['title'] = basename($data['audio_url']);
+
+        $audio = $this->getContent($data['audio_url']);
+
+        $data['title'] = basename($data['audio_url']);
+
+        if (isset($data['is_national'])) {
+            $this->path_second .= "tm_tracks/{$artist}/{$data['title']}/";
+        } else {
+            if ($data['album'] != '0') {
+                $this->path_second .= "tracks/{$artist}/{$type_album}/{$name_album}/{$data['title']}/";
+            } else {
+                $this->path_second .= "tracks/{$artist}/{$data['title']}/";
+            }
+        }
+
+        Storage::disk('public')->put("tracks/{$data['title']}", $audio);
+
+        $track = new GetId3(storage_path("app/public/tracks/{$data['title']}"));
+
+        if ($track->getPlaytimeSeconds() != null)
+            $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
+
+        $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
+
+        if (!isset($data['track_number']) && $track->getTrackNumber() != null)
+            $data['track_number'] = $track->getTrackNumber();
+
+        Storage::disk('public')->delete("tracks/{$data['title']}");
+
+        return $data;
+    }
+
     public function resize($image, $track = null)
     {
         if (is_string($image)) {
             $image_name = basename($image);
-            $client = new Client();
-            $res = $client->get($image);
-            $image = $res->getBody()->getContents();
+            $image = $this->getContent($image);
         } else {
             $image_name = $image->getClientOriginalName();
             $image_name_base = substr($image_name, 0, strpos($image_name, '.'));
@@ -172,7 +216,7 @@ class Service
             $webp->fit(142, 166)->save($path_thumb . $image_name_base . '.webp');
         }
 
-        $image = "https://storage2.ma.st.com.tm/images/" . $this->path_second . $image_name;
+        $image = $this->helper->pathImageForDb . $this->path_second . $image_name;
 
         return $image;
     }
@@ -189,6 +233,7 @@ class Service
 
     public function delete($path)
     {
+
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), array('.', '..'));
 
@@ -206,9 +251,9 @@ class Service
 
     public function move($path)
     {
-        $image = "https://storage2.ma.st.com.tm/" . "images/" . $this->path_second . basename($path);
+        $image = $this->helper->pathImageForDb . $this->path_second . basename($path);
         $path = substr($path, 0, strpos($path, basename($path)));
-        $path = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
+        $path = $this->helper->pathImageForServer . substr($path, strpos($path, "images"), strlen($path));
 
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), array('.', '..'));
@@ -224,14 +269,31 @@ class Service
         return $image;
     }
 
-
+    private function getContent($url)
+    {
+        $client = new Client();
+        $res = $client->get($url);
+        return $res->getBody()->getContents();
+    }
 
     private function deleteForUpdated($track)
     {
         $path = $track->thumb_url;
         $path = substr($path, 0, strpos($path, basename($path)));
-        $path = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
+        $path = $this->helper->pathImageForServer . substr($path, strpos($path, "images"), strlen($path));
 
         $this->delete($path);
+    }
+
+    private function albumPath($data)
+    {
+        // if (!isset($data['is_national'])) {
+        if ($data['album'] != '0') {
+            $album = Album::where('id', $data['album'])->get();
+            $type_album = $album[0]->type;
+            $name_album = $album[0]->title;
+            return [$type_album, $name_album];
+        }
+        // }
     }
 }

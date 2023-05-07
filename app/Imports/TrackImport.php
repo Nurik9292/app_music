@@ -42,8 +42,8 @@ class TrackImport implements ToCollection, WithHeadingRow
                 $http_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 
                 if ($http_code != 404) {
-                    $service_artist->store($artist);
-                    $service_track->store($track);
+                    // $service_artist->store($artist);
+                    $service_track->storeForFile($track);
                 }
             }
     }

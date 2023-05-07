@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin\Playlist;
 
-use App\Http\Requests\Admin\Playlist\UpdateRequest;
 use App\Models\Playlist;
+use App\Http\Requests\Admin\Playlist\UpdateRequest;
 
 class UpdateController extends BaseController
 {
     public function __invoke(UpdateRequest $request, Playlist $playlist)
     {
         $data = $request->validated();
-
+        dd($data);
         $this->service->update($data, $playlist);
 
         return redirect()->route('playlist.index');

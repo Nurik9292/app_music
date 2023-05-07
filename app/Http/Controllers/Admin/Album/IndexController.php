@@ -8,7 +8,7 @@ class IndexController extends BaseController
 {
     public function __invoke()
     {
-        $albums = Album::orderByDesc('title')->get();
+        $albums = Album::orderBy('title')->get();
 
         $this->service->statusChangetoString($albums);
 

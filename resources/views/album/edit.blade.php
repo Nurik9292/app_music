@@ -33,6 +33,7 @@
 
             <!-- form start -->
             <form action="{{route('album.update', $album)}}" method="POST" enctype="multipart/form-data">
+
                 @csrf
                 @method('PATCH')
               <div class="card-body">
@@ -57,13 +58,33 @@
                           </div>
                         </div>
 
+                        <div class="row">
+                            <label>Исполнитель</label>
+                              <div class="block_one">
+                                <div class="select2-purple">
+                                  <select class="form-control select2" multiple="multiple" name=artists[]" data-placeholder="Выберите испольнителя" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                    @foreach ($artists as $artist)
+                                    <option value="{{$artist->id}}">{{$artist->name}}</option>
+                                    @endforeach
+                                  </select>
+                                  @error('artists')
+                                  <p class="text-danger">{{$message}}</p>
+                                @enderror
+                                </div>
+                            </div>
 
+
+                            <div class="block_one">
+                                <a  href="{{route('artist.create')}}" class="btn btn-outline-primary " >Добавить</a>
+                            </div>
+
+                        </div>
 
                 <div class="row">
                     <div class="block_one">
                             <label>Дата выпуска:</label>
                               <div class="input-group date" id="date_release" data-target-input="nearest">
-                                  <input type="text" class="form-control datetimepicker-input" data-target="#date_release" placeholder="Нажми ---->" name="release_date">
+                                  <input type="text" class="form-control datetimepicker-input" data-target="#date_release" placeholder="Нажми ---->" name="release_date" >
                                   <div class="input-group-append" data-target="#date_release" data-toggle="datetimepicker">
                                       <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                   </div>

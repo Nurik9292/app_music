@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'release_date' => ['nullable', 'date'],
             'added_date' => ['nullable', 'date'],
-            'artists' => ['required'],
+            'artists' => ['nullable'],
             'artwork_url' => ['nullable', 'image'],
             'type' => ['nullable', 'numeric'],
             'status' => ['nullable'],
