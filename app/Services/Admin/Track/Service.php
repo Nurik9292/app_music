@@ -133,6 +133,8 @@ class Service
 
         Storage::disk('public')->delete("tracks/{$data['title']}");
 
+        $data['audio_url'] = preg_replace('/:1000\/files/', '', $data['audio_url']);
+
         return $data;
     }
 
