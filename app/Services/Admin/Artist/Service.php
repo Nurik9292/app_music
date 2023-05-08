@@ -31,8 +31,11 @@ class Service
 
     public function update($data, $artist)
     {
-        if ($data['artwork_url'])
+        if (isset($data['artwork_url']))
             $data = $this->resize($data, $artist);
+
+        if ($data['name'] != $artist->name)
+            $data = $this->move($data, $artist);
 
         $artist->update($data);
     }
@@ -42,17 +45,11 @@ class Service
     {
         $path = $this->helper->pathImageForServer;
 
-        if (!empty($data['country_id'])) {
-            $country = Country::where("id", $data['country_id'])->get();
-            $country = $country[0]->name;
-        } else $country = 'Туркменния';
-
-
         if (isset($artist)) {
             $path_temp = $this->helper->pathImageForServer;
             $pathImage = $artist->artwork_url;
-            $pathImage = $path_temp . substr($pathImage, strpos($pathImage, "images"));
-            $pathImage = substr($pathImage, 0, strpos($pathImage,  "album_artWork/" . basename($pathImage)));
+            $pathImage = substr($pathImage, 0, strpos($pathImage, "artist_artWork/" . basename($pathImage)));
+            $pathImage = pathToServer() . substr($pathImage, strpos($pathImage, "images"), strlen($pathImage));
             $pathImage = preg_replace('/images\//', '', $path);
             $this->delete($pathImage);
             unset($path_temp);
@@ -87,7 +84,7 @@ class Service
         $thumb = Image::make($image);
         $thumb_webp = Image::make($image);
 
-        if ($country == 'Туркмения') {
+        if ($this->getCountry($data) == 'Туркмения') {
             $path_artWork = "$path/tm_tracks/{$data['name']}/artist_artWork/";
             $path_thumb = "$path/tm_tracks/{$data['name']}/artist_thumb/";
         } else {
@@ -116,13 +113,7 @@ class Service
             $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_wepb . ".webp");
         }
 
-        if ($country == 'Туркменния') {
-            $data['artwork_url'] = $this->helper->pathImageForDb . "tm_tracks/{$data['name']}/artist_artWork/$image_name";
-            $data['thumb_url'] = $this->helper->pathImageForDb . "tm_tracks/{$data['name']}/artist_artWork/$image_name";
-        } else {
-            $data['artwork_url'] = $this->helper->pathImageForDb . "tracks/{$data['name']}/artist_artWork/$image_name";
-            $data['thumb_url'] = $this->helper->pathImageForDb . "tracks/{$data['name']}/artist_thumb/$image_name";
-        }
+        $data = $this->getPathForDataBase($data, $image_name);
 
         return $data;
     }
@@ -170,5 +161,59 @@ class Service
         }
 
         return false;
+    }
+
+    public function move($data, $artist)
+    {
+
+        $image_name = basename($artist->artwork_url);
+
+        $data = $this->getPathForDataBase($data, $image_name);
+
+        if ($this->getCountry($data) == 'Туркменния')
+            $new_path = $this->helper->pathImageForServer . "tm_tracks/{$data['name']}/";
+        else
+            $new_path = $this->helper->pathImageForServer . "tracks/{$data['name']}/";
+
+        $image = substr($artist->artwork_url, strpos($artist->artwork_url, 'images'));
+        $path =  $this->helper->pathImageForServer . substr($image,  strpos($image, 'images'));
+        $path = substr($path, 0, strpos($path, 'artist_artWork/' . basename($path)));
+        $path = preg_replace('/images\//', '', $path);
+
+        if (is_dir($path) === true) {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            if (!file_exists($new_path))
+                mkdir($new_path, 0777, true);
+
+            foreach ($files as $file) {
+                rename($path . $file, $new_path . $file);
+            };
+        }
+
+        return $data;
+    }
+
+    private function getPathForDataBase($data, $image_name)
+    {
+        if ($this->getCountry($data) == 'Туркменния') {
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tm_tracks/{$data['name']}/artist_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tm_tracks/{$data['name']}/artist_thumb/$image_name";
+        } else {
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tracks/{$data['name']}/artist_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tracks/{$data['name']}/artist_thumb/$image_name";
+        }
+
+        return $data;
+    }
+
+    private function getCountry($data)
+    {
+        if (!empty($data['country_id'])) {
+            $country = Country::where("id", $data['country_id'])->get();
+            $country = $country[0]->name;
+        } else $country = 'Туркменния';
+
+        return $country;
     }
 }
