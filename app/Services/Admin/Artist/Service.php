@@ -4,6 +4,7 @@ namespace App\Services\Admin\Artist;
 
 use App\Models\Artist;
 use App\Models\Country;
+use App\Services\Admin\HelperService;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Intervention\Image\Facades\Image;
@@ -11,6 +12,13 @@ use Intervention\Image\Facades\Image;
 
 class Service
 {
+    private $helper;
+
+    public function __construct()
+    {
+        $this->helper = new HelperService();
+    }
+
 
     public function store($data)
     {
@@ -32,7 +40,7 @@ class Service
 
     public function resize($data, $artist = null)
     {
-        $path = "/nfs/storage2/images";
+        $path = $this->helper->pathImageForServer;
 
         if (!empty($data['country_id'])) {
             $country = Country::where("id", $data['country_id'])->get();
@@ -43,7 +51,7 @@ class Service
         if (isset($artist)) {
             $path_artist = $artist->artwork_url;
             $path_artist = substr($path, 0, strpos($path, basename($path)));
-            $path_artist = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
+            $path_artist = $path . substr($path, strpos($path, "images"), strlen($path));
 
             $this->delete($path_artist);
         }

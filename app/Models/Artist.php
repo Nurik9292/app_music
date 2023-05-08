@@ -33,4 +33,9 @@ class Artist extends Model
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');
     }
+
+    public function albums()
+    {
+        return $this->belongsToMany(Album::class, "artist_album", "artist_id", "album_id");
+    }
 }

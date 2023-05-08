@@ -10,7 +10,7 @@ class DestroyController extends BaseController
     {
         $path = $playlist->thumb_url;
         $path = substr($path, 0, strpos($path, basename($path)));
-        $path = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
+        $path = pathToServer() . substr($path, strpos($path, "images"), strlen($path));
 
         $this->service->delete($path);
         $playlist->tracks()->detach();

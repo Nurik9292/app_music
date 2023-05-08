@@ -21,7 +21,7 @@ class Service
     public function __construct()
     {
         $this->helper = new HelperService();
-        $this->path_first = $this->helper->pathImageForServer . "images/";
+        $this->path_first = $this->helper->pathImageForServer;
     }
 
     public function store($data)

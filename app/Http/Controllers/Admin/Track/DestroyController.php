@@ -10,8 +10,7 @@ class DestroyController extends BaseController
     {
         $path = $track->thumb_url;
         $path = substr($path, 0, strpos($path, basename($path)));
-
-        $path = '/nfs/storage2/' . substr($path, strpos($path, "images"));
+        $path = pathToServer() . substr($path, strpos($path, "images"));
         // dd();
         $this->service->delete($path);
 

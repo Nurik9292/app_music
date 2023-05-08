@@ -67,7 +67,7 @@ class Service
 
     private function resize($data, $album = null)
     {
-        $path = $this->helper->pathImageForServer . 'images/';
+        $path = $this->helper->pathImageForServer;
 
         if (isset($data['artists']))
             $arist = Artist::where('id', $data['artists'][0])->get();
@@ -113,14 +113,8 @@ class Service
             $path_thumb = "/$path/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/";
         }
 
-        // if (!file_exists(storage_path($path_thumb)))
-        //     mkdir(storage_path($path_thumb), 0777, true);
-
         if (!file_exists($path_thumb))
             mkdir($path_thumb, 0777, true);
-
-        // if (!file_exists(storage_path($path_artWork)))
-        //     mkdir(storage_path($path_artWork), 0777, true);
 
         if (!file_exists($path_artWork))
             mkdir($path_artWork, 0777, true);
@@ -131,13 +125,7 @@ class Service
         $thumb->fit(142, 166)->save($path_thumb . $image_name);
         $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_wepb . ".webp");
 
-        if (isset($data['is_national'])) {
-            $data['artwork_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
-            $data['thumb_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
-        } else {
-            $data['artwork_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
-            $data['thumb_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
-        }
+        $data = $this->getPathForDataBase($data, $arist_name, $image_name);
 
         return $data;
     }
@@ -222,15 +210,12 @@ class Service
         $arist_name = $album->artists[0]->name;
         $image_name = basename($album->artwork_url);
 
-        if (isset($data['is_national'])) {
-            $data['artwork_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
-            $data['thumb_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
-            $new_path = $this->helper->pathImageForServer . "images/tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/";
-        } else {
-            $data['artwork_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
-            $data['thumb_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
-            $new_path = $this->helper->pathImageForServer . "images/tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
-        }
+        $data = $this->getPathForDataBase($data, $arist_name, $image_name);
+
+        if (isset($data['is_national']))
+            $new_path = $this->helper->pathImageForServer . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/";
+        else
+            $new_path = $this->helper->pathImageForServer . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
 
         $image = substr($album->artwork_url, strpos($album->artwork_url, 'images'));
         $path =  $this->helper->pathImageForServer . substr($image,  strpos($image, 'images'));
@@ -245,6 +230,19 @@ class Service
             foreach ($files as $file) {
                 rename($path . $file, $new_path . $file);
             };
+        }
+
+        return $data;
+    }
+
+    private function getPathForDataBase($data, $arist_name, $image_name)
+    {
+        if (isset($data['is_national'])) {
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
+        } else {
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
         }
 
         return $data;
