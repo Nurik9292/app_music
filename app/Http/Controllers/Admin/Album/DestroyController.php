@@ -12,15 +12,14 @@ class DestroyController extends BaseController
 
         $path_artwork = $album->artwork_url;
         $path_artwork = substr($path_artwork, 0, strpos($path_artwork, basename($path_artwork)));
-        $path_artwork = '/home/nury/nfs/storage2/' . substr($path_artwork, strpos($path_artwork, "images"), strlen($path_artwork));
+        $path_artwork = '/nfs/storage2/' . substr($path_artwork, strpos($path_artwork, "images"), strlen($path_artwork));
 
         $path_thumb = $album->thumb_url;
         $path_thumb = substr($path_thumb, 0, strpos($path_thumb, basename($path_thumb)));
-        $path_thumb = '/home/nury/nfs/storage2/' . substr($path_thumb, strpos($path_thumb, "images"), strlen($path_thumb));
+        $path_thumb = '/nfs/storage2/' . substr($path_thumb, strpos($path_thumb, "images"), strlen($path_thumb));
 
         $this->service->delete($path_artwork);
         $this->service->delete($path_thumb);
-
 
         // $album->tracks()->detach();
         $album->artists()->detach();
