@@ -60,15 +60,24 @@ class Service
 
     public function updata($data, $track)
     {
+
         if (isset($data['audio_url'])) {
             if ($track->artists[0]->id != $data['artists'][0]) {
                 $data = $this->saveTrack($data, $track);
                 $data['thumb_url'] = $this->move($track->thumb_url);
+            } elseif (isset($data['album'])) {
+                if (count($track->album) == 0 || $data['album'] != $track->album[0]->id) {
+                    $data = $this->saveTrack($data, $track);
+                    $data['thumb_url'] = $this->move($track->thumb_url);
+                }
             } elseif (!$track->where('audio_url', 'like', $data['audio_url']))
                 $data = $this->saveTrack($data, $track);
         }
 
-        if ($track->artists[0]->id == $data['artists'][0])
+        if (isset($data['thumb_url']) && $data['thumb_url'] != $track->audio_url)
+            $data['thumb_url'] = $this->resize($data['thumb_url']);
+
+        if ($track->artists[0]->id == $data['artists'][0] && (count($track->album) > 0 && $track->album[0]->id == $data['album']))
             if (isset($data['thumb_url']))
                 $data['thumb_url'] = $this->resize($data['thumb_url']);
 
@@ -119,21 +128,23 @@ class Service
             }
         }
 
-        Storage::disk('public')->put("tracks/{$data['title']}", $audio);
+        if ($track != null && $track->audio_url != $data['audio_url']) {
+            Storage::disk('public')->put("tracks/{$data['title']}", $audio);
 
-        $track = new GetId3(storage_path("app/public/tracks/{$data['title']}"));
+            $track = new GetId3(storage_path("app/public/tracks/{$data['title']}"));
 
-        if ($track->getPlaytimeSeconds() != null)
-            $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
+            if ($track->getPlaytimeSeconds() != null)
+                $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
 
-        $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
+            $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
 
-        if (!isset($data['track_number']) && $track->getTrackNumber() != null)
-            $data['track_number'] = $track->getTrackNumber();
+            if (!isset($data['track_number']) && $track->getTrackNumber() != null)
+                $data['track_number'] = $track->getTrackNumber();
 
-        Storage::disk('public')->delete("tracks/{$data['title']}");
+            Storage::disk('public')->delete("tracks/{$data['title']}");
 
-        $data['audio_url'] = preg_replace('/:1000\/files/', '', $data['audio_url']);
+            $data['audio_url'] = preg_replace('/:1000\/files/', '', $data['audio_url']);
+        }
 
         return $data;
     }
@@ -256,6 +267,7 @@ class Service
         $image = $this->helper->pathImageForDb . $this->path_second . basename($path);
         $path = substr($path, 0, strpos($path, basename($path)));
         $path = $this->helper->pathImageForServer . substr($path, strpos($path, "images"), strlen($path));
+        $path = preg_replace('/images\//', '', $path);
 
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), array('.', '..'));
@@ -282,7 +294,8 @@ class Service
     {
         $path = $track->thumb_url;
         $path = substr($path, 0, strpos($path, basename($path)));
-        $path = $this->helper->pathImageForServer . substr($path, strpos($path, "images"), strlen($path));
+        $path = $this->helper->pathImageForServer . substr($path, strpos($path, "images"));
+        $path = preg_replace('/images\//', '', $path);
 
         $this->delete($path);
     }
