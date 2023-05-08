@@ -3,12 +3,20 @@
 namespace App\Services\Admin\Playlist;
 
 use App\Models\Playlist;
+use App\Services\Admin\HelperService;
 use Carbon\Carbon;
 use Intervention\Image\Facades\Image;
 
 
 class Service
 {
+
+    private $helper;
+
+    public function __construct()
+    {
+        $this->helper = new HelperService();
+    }
 
     public function store($data)
     {
@@ -46,6 +54,9 @@ class Service
 
         $data['status'] = $this->status($data);
 
+        if ($data['title_ru'] != $playlist->title_ru)
+            $data = $this->move($data, $playlist);
+
         $playlist->update($data);
 
         $playlist->tracks()->sync($tracks);
@@ -55,14 +66,11 @@ class Service
 
     private function resize($data, $playlist = null)
     {
-        $path = "/nfs/storage2/images";
+        $path = $this->helper->pathImageForServer;
 
         if (isset($playlist)) {
-            $path_playlist = $playlist->artwork_url;
-            $path_playlist = substr($path, 0, strpos($path, basename($path)));
-            $path_playlist = '/nfs/storage2/' . substr($path, strpos($path, "images"), strlen($path));
-
-            $this->delete($path_playlist);
+            $this->deleteForUpdate($playlist->thumb_url);
+            $this->deleteForUpdate($playlist->artwork_url);
         }
 
         $image_name = $data['artwork_url']->getClientOriginalName();
@@ -99,8 +107,7 @@ class Service
         $thumb->fit(142, 166)->save($path_thumb . $image_name);
         $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_wepb . ".webp");
 
-        $data['artwork_url'] = "https://storage2.ma.st.com.tm/images/playlists/{$data['title_ru']}/playlist_artWork/$image_name";
-        $data['thumb_url'] = "https://storage2.ma.st.com.tm/images/playlists/{$data['title_ru']}/playlist_thumb/$image_name";
+        $data = $this->getPathForDataBase($data, $image_name);
 
         return $data;
     }
@@ -148,5 +155,51 @@ class Service
         }
 
         return false;
+    }
+
+    public function move($data, $playlist)
+    {
+
+        $image_name = basename($playlist->artwork_url);
+
+        $data = $this->getPathForDataBase($data, $image_name);
+
+        $new_path = $this->helper->pathImageForServer . "playlists/{$data['title_ru']}/";
+
+        $image = substr($playlist->artwork_url, strpos($playlist->artwork_url, 'images'));
+        $path = substr($image, 0, strpos($image, 'playlist_artWork/' . basename($image)));
+        $path = $this->helper->pathImageForServer  . substr($path, strpos($path, "images"), strlen($path));
+        $path = preg_replace('/images\//', '', $path);
+
+        if (is_dir($path) === true) {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            if (!file_exists($new_path))
+                mkdir($new_path, 0777, true);
+
+            foreach ($files as $file) {
+                rename($path . $file, $new_path . $file);
+            };
+        }
+
+        return $data;
+    }
+
+
+    private function getPathForDataBase($data, $image_name)
+    {
+
+        $data['artwork_url'] = $this->helper->pathImageForDb . "playlists/{$data['title_ru']}/playlist_artWork/$image_name";
+        $data['thumb_url'] = $this->helper->pathImageForDb . "playlists/{$data['title_ru']}/playlist_thumb/$image_name";
+
+        return $data;
+    }
+
+    private function deleteForUpdate($image)
+    {
+        $path = substr($image, 0, strpos($image,  basename($image)));
+        $path = $this->helper->pathImageForServer  . substr($path, strpos($path, "images"), strlen($path));
+        $path = preg_replace('/images\//', '', $path);
+        $this->delete($path);
     }
 }

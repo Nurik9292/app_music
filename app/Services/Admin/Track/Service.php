@@ -128,7 +128,7 @@ class Service
             }
         }
 
-        if ($track != null && $track->audio_url != $data['audio_url']) {
+        if ($track == null || $track->audio_url != $data['audio_url']) {
             Storage::disk('public')->put("tracks/{$data['title']}", $audio);
 
             $track = new GetId3(storage_path("app/public/tracks/{$data['title']}"));
