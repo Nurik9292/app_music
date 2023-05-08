@@ -45,7 +45,7 @@ class Service
         if (isset($data['artwork_url']))
             $data = $this->resize($data, $album);
 
-        if ($data['title'] != $album->title)
+        if ($data['title'] != $album->title || $data['artists'][0] != $album->artists[0]->id || $data['type'] != $album->type)
             $data = $this->move($data, $album);
 
         if (isset($data['added_date']) || isset($data['release_date']))
@@ -60,7 +60,7 @@ class Service
 
         $album->update($data);
 
-        if (isset($data['artists']))
+        if ($artists)
             $album->artists()->sync($artists);
     }
 
@@ -201,7 +201,9 @@ class Service
 
     public function move($data, $album)
     {
-        $arist_name = $album->artists[0]->name;
+
+        $artist = Artist::where("id", $data['artists'][0])->get();
+        $arist_name = $album->artists[0]->id == $data['artists'][0] ? $album->artists[0]->name : $artist[0]->name;
         $image_name = basename($album->artwork_url);
 
         $data = $this->getPathForDataBase($data, $arist_name, $image_name);
@@ -209,7 +211,7 @@ class Service
         if (isset($data['is_national']))
             $new_path = $this->helper->pathImageForServer . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/";
         else
-            $new_path = $this->helper->pathImageForServer . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/";
+            $new_path = $this->helper->pathImageForServer . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/";
 
         $image = substr($album->artwork_url, strpos($album->artwork_url, 'images'));
         $path =  $this->helper->pathImageForServer . substr($image,  strpos($image, 'images'));

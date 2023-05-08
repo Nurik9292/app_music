@@ -15,7 +15,7 @@ class DestroyController extends BaseController
 
         $this->service->delete($path);
 
-        // $album->tracks()->detach();
+        $album->tracks()->detach();
         $album->artists()->detach();
 
         $album->delete();
