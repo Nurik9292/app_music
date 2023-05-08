@@ -170,7 +170,7 @@ class Service
 
         $data = $this->getPathForDataBase($data, $image_name);
 
-        if ($this->getCountry($data) == 'Туркменния')
+        if ($this->getCountry($data) == 'Туркмения')
             $new_path = $this->helper->pathImageForServer . "tm_tracks/{$data['name']}/";
         else
             $new_path = $this->helper->pathImageForServer . "tracks/{$data['name']}/";
@@ -196,7 +196,7 @@ class Service
 
     private function getPathForDataBase($data, $image_name)
     {
-        if ($this->getCountry($data) == 'Туркменния') {
+        if ($this->getCountry($data) == 'Туркмения') {
             $data['artwork_url'] = $this->helper->pathImageForDb . "tm_tracks/{$data['name']}/artist_artWork/$image_name";
             $data['thumb_url'] = $this->helper->pathImageForDb . "tm_tracks/{$data['name']}/artist_thumb/$image_name";
         } else {
@@ -212,7 +212,7 @@ class Service
         if (!empty($data['country_id'])) {
             $country = Country::where("id", $data['country_id'])->get();
             $country = $country[0]->name;
-        } else $country = 'Туркменния';
+        } else $country = 'Туркмения';
 
         return $country;
     }
