@@ -49,11 +49,13 @@ class Service
 
 
         if (isset($artist)) {
-            $path_artist = $artist->artwork_url;
-            $path_artist = substr($path, 0, strpos($path, basename($path)));
-            $path_artist = $path . substr($path, strpos($path, "images"), strlen($path));
-
-            $this->delete($path_artist);
+            $path_temp = $this->helper->pathImageForServer;
+            $pathImage = $artist->artwork_url;
+            $pathImage = $path_temp . substr($pathImage, strpos($pathImage, "images"));
+            $pathImage = substr($pathImage, 0, strpos($pathImage,  "album_artWork/" . basename($pathImage)));
+            $pathImage = preg_replace('/images\//', '', $path);
+            $this->delete($pathImage);
+            unset($path_temp);
         }
 
         if (is_string($data['artwork_url'])) {
@@ -93,14 +95,8 @@ class Service
             $path_thumb = "$path/tracks/{$data['name']}/artist_thumb/";
         }
 
-        // if (!file_exists(storage_path($path_thumb)))
-        //     mkdir(storage_path($path_thumb), 0777, true);
-
         if (!file_exists($path_thumb))
             mkdir($path_thumb, 0777, true);
-
-        // if (!file_exists(storage_path($path_artWork)))
-        //     mkdir(storage_path($path_artWork), 0777, true);
 
         if (!file_exists($path_artWork))
             mkdir($path_artWork, 0777, true);
@@ -121,11 +117,11 @@ class Service
         }
 
         if ($country == 'Туркменния') {
-            $data['artwork_url'] = "https://storage2.ma.st.com.tm/images/tm_tracks/{$data['name']}/artist_artWork/$image_name";
-            $data['thumb_url'] = "https://storage2.ma.st.com.tm/images/tm_tracks/{$data['name']}/artist_artWork/$image_name";
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tm_tracks/{$data['name']}/artist_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tm_tracks/{$data['name']}/artist_artWork/$image_name";
         } else {
-            $data['artwork_url'] = "https://storage2.ma.st.com.tm/images/tracks/{$data['name']}/artist_artWork/$image_name";
-            $data['thumb_url'] = "https://storage2.ma.st.com.tm/images/tracks/{$data['name']}/artist_thumb/$image_name";
+            $data['artwork_url'] = $this->helper->pathImageForDb . "tracks/{$data['name']}/artist_artWork/$image_name";
+            $data['thumb_url'] = $this->helper->pathImageForDb . "tracks/{$data['name']}/artist_thumb/$image_name";
         }
 
         return $data;

@@ -76,16 +76,11 @@ class Service
         if (isset($album)) {
             $path_temp = $this->helper->pathImageForServer;
 
-            $path_artwork = $album->artwork_url;
-            $path_artwork = $path_temp . substr($path_artwork, strpos($path_artwork, "images"));
-            $path_artwork = substr($path_artwork, 0, strpos($path_artwork, basename($path_artwork)));
+            $pathImage = $album->artwork_url;
+            $pathImage = $path_temp . substr($pathImage, strpos($pathImage, "images"));
+            $pathImage = substr($pathImage, 0, strpos($pathImage,  "album_artWork/" . basename($pathImage)));
 
-            $path_thumb = $album->thumb_url;
-            $path_thumb = $path_temp . substr($path_thumb, strpos($path_thumb, "images"));
-            $path_thumb = substr($path_thumb, 0, strpos($path_thumb, basename($path_thumb)));
-
-            $this->delete($path_artwork);
-            $this->delete($path_thumb);
+            $this->delete($pathImage);
             unset($path_temp);
         }
 
