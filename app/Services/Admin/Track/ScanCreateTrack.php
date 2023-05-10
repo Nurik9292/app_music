@@ -7,6 +7,7 @@ use App\Models\Track;
 use App\Models\Artist;
 use App\Models\Country;
 use App\Services\Admin\HelperService;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
 class ScanCreateTrack
@@ -59,13 +60,14 @@ class ScanCreateTrack
             $item['audio_url'] =  preg_replace('/(:1000\/files)/', '', $item['audio_url']);;
             $item['audio_url'] =  "https://storage2.ma.st.com.tm/" . preg_replace('/(\/nfs\/storage2\/)/', '', $item['audio_url']);;
 
+            Log::debug($item['thumb_url']);
 
             if ($item['thumb_url'] != null) {
-                $artwork = Image::make(file_get_contents($item['thumb_url']));
-                $artWork_webp =  Image::make(file_get_contents($item['thumb_url']));
+                $artwork = Image::make($item['thumb_url']);
+                $artWork_webp =  Image::make($item['thumb_url']);
 
-                $thumb = Image::make(file_get_contents($item['thumb_url']));
-                $thumb_webp =  Image::make(file_get_contents($item['thumb_url']));
+                $thumb = Image::make($item['thumb_url']);
+                $thumb_webp =  Image::make($item['thumb_url']);
             }
 
             if (!$artist) $artist = preg_replace('/(.webp)/', '', basename($item['thumb_url']));
