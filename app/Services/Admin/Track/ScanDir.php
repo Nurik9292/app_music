@@ -24,7 +24,7 @@ class ScanDir
     public function getContentDir($path, $local)
     {
 
-        $path = $this->helper->pathImageForServer . preg_replace('/(https:\/\/storage2.ma.st.com.tm:1000\/files\/)/', '', $path);
+        $path = $this->helper->pathTrackForServer . preg_replace('/(https:\/\/storage2.ma.st.com.tm:1000\/files\/)/', '', $path);
 
         $file = File::where('local', $local)->get();
 
@@ -35,10 +35,10 @@ class ScanDir
                 if ($item->isDir()) $this->getContentDir($path . "/" . $item->getBasename(), $local);
 
                 if ($item->isFile()) {
-                    // if ($file[0]->scanTime <= Carbon::parse($item->getATime())->format('Y-m-d H:i')) {
-                    str_ends_with($item->getBasename(), 'mp3') ? $this->mp3[] = $item->getRealPath() : '';
-                    str_ends_with($item->getBasename(), 'webp') ? $this->wepb[] = $item->getRealPath() : '';
-                    // }
+                    if ($file[0]->scanTime <= Carbon::parse($item->getATime())->format('Y-m-d H:i')) {
+                        str_ends_with($item->getBasename(), 'mp3') ? $this->mp3[] = $item->getRealPath() : '';
+                        str_ends_with($item->getBasename(), 'webp') ? $this->wepb[] = $item->getRealPath() : '';
+                    }
                 }
             }
         }
