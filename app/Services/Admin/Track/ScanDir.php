@@ -53,7 +53,8 @@ class ScanDir
     private function addMp3($local)
     {
         $track = new getID3;
-
+        ini_set('max_execution_time', '300');
+        set_time_limit(300);
 
         foreach ($this->mp3 as $audio_url) {
             $track = new getID3;
