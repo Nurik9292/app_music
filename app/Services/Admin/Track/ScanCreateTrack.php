@@ -51,7 +51,7 @@ class ScanCreateTrack
 
             // $item['audio_url'] = "https://storage2.ma.st.com.tm" . $item['audio_url'];
             $item['audio_url'] =  preg_replace('/(:1000\/files)/', '', $item['audio_url']);;
-            $item['audio_url'] =  "https://storage2.ma.st.com.tm" . preg_replace('/(\/nfs\/storage2)/', '', $item['audio_url']);;
+            $item['audio_url'] =  "https://storage2.ma.st.com.tm" . preg_replace('/(\/nfs\/storage2\/images\/)/', '', $item['audio_url']);;
 
             dd($item['audio_url']);
 
