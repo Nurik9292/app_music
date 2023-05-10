@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('files', function (Blueprint $table) {
-            $table->id();
-            $table->string('path')->nullable();
-            // $table->string('scanTime')->nullable();
-            $table->string('local')->nullable();
+        Schema::table('files', function (Blueprint $table) {
+            $table->addColumn('string', 'scanTime')->nullable();
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('files');
+        Schema::table('files', function (Blueprint $table) {
+            $table->dropColumn('scanTime');
+        });
     }
 };
