@@ -8,6 +8,7 @@ use App\Models\Album;
 use App\Models\Artist;
 use App\Models\BlockName;
 use App\Models\Country;
+use App\Models\File;
 use App\Models\Genre;
 use App\Models\Playlist;
 use App\Models\User;
@@ -20,14 +21,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $json = file_get_contents(__DIR__ . "/../../countries.json");
-        $countries = json_decode($json)->name;
+        if (count(Country::all()) == 0) {
+            $json = file_get_contents(__DIR__ . "/../../countries.json");
+            $countries = json_decode($json)->name;
 
-        foreach ($countries as $code => $name)
-            Country::factory()->create([
-                'name' => $name,
-                'code' => $code
-            ]);
+            foreach ($countries as $code => $name)
+                Country::factory()->create([
+                    'name' => $name,
+                    'code' => $code
+                ]);
+        }
+
         if (count(User::where('email', 'like', 'super@example.com')->get()) == false)
             User::factory()->create([
                 'name' => 'Super',
@@ -50,14 +54,24 @@ class DatabaseSeeder extends Seeder
         Genre::factory(10)->create();
 
 
+        File::factory()->create([
+            'path' => null,
+            'scanTime' => '2001-05-01',
+            'local' => 'tm'
+        ]);
 
-        BlockName::factory()->create(['key' => 'new_and_update', 'name' => 'Новинки и обновления']);
-        BlockName::factory()->create(['key' => 'recom', 'name' => 'Рекомендуем послушать']);
-        BlockName::factory()->create(['key' => 'new_track', 'name' => 'Новая музыка']);
-        BlockName::factory()->create(['key' => 'best_track', 'name' => 'Лучшие новые песни']);
-        BlockName::factory()->create(['key' => 'chart', 'name' => 'Чарты']);
-        BlockName::factory()->create(['key' => 'genre_and_category', 'name' => 'Жанры и Категориия']);
-        BlockName::factory()->create(['key' => 'for_child', 'name' => 'Для детей']);
-        BlockName::factory()->create(['key' => 'fun', 'name' => 'Настроение']);
+
+        File::factory()->create([
+            'path' => null,
+            'scanTime' => '2001-05-01',
+            'local' => 'ru'
+        ]);
+
+
+        File::factory()->create([
+            'path' => null,
+            'scanTime' => '2001-05-01',
+            'local' => 'en'
+        ]);
     }
 }

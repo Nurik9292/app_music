@@ -10,7 +10,7 @@
 
         <div class="block">
                 <a href="{{route('track.create')}}" class="btn btn-primary btn-lg ">Через поля</a>
-                <a href="{{route('track.create.files')}}" class="btn btn-primary btn-lg ">Через файл</a>
+                <a href="{{route('track.create.scan')}}" class="btn btn-primary btn-lg ">Сканировать</a>
           </div>
 
     <!-- /.content -->

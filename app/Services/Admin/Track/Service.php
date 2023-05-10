@@ -3,11 +3,11 @@
 namespace App\Services\Admin\Track;
 
 use App\Models\Album;
-use App\Models\Artist;
 use App\Models\Track;
-use App\Services\Admin\HelperService;
+use App\Models\Artist;
 use GuzzleHttp\Client;
 use Owenoj\LaravelGetId3\GetId3;
+use App\Services\Admin\HelperService;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,18 +15,26 @@ class Service
 {
 
     private $helper;
+    private $track;
+
     private $path_first;
     private $path_second;
+    private $scanDir;
 
     public function __construct()
     {
+        $this->scanDir = new ScanDir();
         $this->helper = new HelperService();
+        $this->track = new ScanCreateTrack();
         $this->path_first = $this->helper->pathImageForServer;
     }
 
     public function store($data)
     {
         $data = $this->saveTrack($data);
+
+        if ($data['title'] == null)
+            $data['title'] = 'none';
 
         $data['thumb_url'] = $this->resize($data['thumb_url']);
 
@@ -52,17 +60,10 @@ class Service
             $track->album()->attach($album);
     }
 
-
-    public function storeForFile($data)
-    {
-        $this->saveTrackFromFile($data);
-    }
-
     public function updata($data, $track)
     {
-
         if (isset($data['audio_url'])) {
-            if ($track->artists[0]->id != $data['artists'][0]) {
+            if (count($track->artists) > 0 && $track->artists[0]->id != $data['artists'][0]) {
                 $data = $this->saveTrack($data, $track);
                 $data['thumb_url'] = $this->move($track->thumb_url);
             } elseif (isset($data['album'])) {
@@ -106,8 +107,10 @@ class Service
     public function saveTrack($data, $track = null)
     {
 
-        $artist = Artist::where('id', $data['artists'][0])->get();
-        $name_artist = $artist[0]->name;
+        if (isset($data['artists']) && $data['artists'] != null) {
+            $artist = Artist::where('id', $data['artists'][0])->get();
+            $name_artist = $artist[0]->name;
+        }
 
         list($type_album, $name_album) = $this->albumPath($data);
 
@@ -145,56 +148,6 @@ class Service
 
             $data['audio_url'] = preg_replace('/:1000\/files/', '', $data['audio_url']);
         }
-
-        return $data;
-    }
-
-    public function saveTrackFromFile($data)
-    {
-        if (count($artist = Artist::where('name', 'like', $data['artists'])->get()) == false)
-            $artist = $data['artists'];
-        else
-            $artist = $artist[0]->name;
-
-        if ($data['is_national']) {
-            if ($data['album'] != null || $data['album'] != '0') {
-                $album = Album::where('id', $data['album'])->get();
-                $type_album = $album[0]->type;
-                $name_album = $album[0]->title;
-            }
-        }
-
-        $audio = $this->getContent($data['audio_url']);
-
-        $data['title'] = basename($data['audio_url']);
-
-        $audio = $this->getContent($data['audio_url']);
-
-        $data['title'] = basename($data['audio_url']);
-
-        if (isset($data['is_national'])) {
-            $this->path_second .= "tm_tracks/{$artist}/{$data['title']}/";
-        } else {
-            if ($data['album'] != '0') {
-                $this->path_second .= "tracks/{$artist}/{$type_album}/{$name_album}/{$data['title']}/";
-            } else {
-                $this->path_second .= "tracks/{$artist}/{$data['title']}/";
-            }
-        }
-
-        Storage::disk('public')->put("tracks/{$data['title']}", $audio);
-
-        $track = new GetId3(storage_path("app/public/tracks/{$data['title']}"));
-
-        if ($track->getPlaytimeSeconds() != null)
-            $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
-
-        $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
-
-        if (!isset($data['track_number']) && $track->getTrackNumber() != null)
-            $data['track_number'] = $track->getTrackNumber();
-
-        Storage::disk('public')->delete("tracks/{$data['title']}");
 
         return $data;
     }
@@ -248,7 +201,7 @@ class Service
     {
 
         if (is_dir($path) === true) {
-            $files = array_diff(scandir($path), array('.', '..'));
+            $files = array_diff(scandir($path), ['.', '..']);
 
             foreach ($files as $file) {
                 $this->delete(realpath($path) . '/' . $file);
@@ -310,5 +263,17 @@ class Service
             return [$type_album, $name_album];
         }
         // }
+    }
+
+
+    public function startScanDir($path, $local)
+    {
+        $this->scanDir->getContentDir($path, $local);
+        $this->scanDir->addContent($local);
+
+        $data = $this->scanDir->getData();
+
+        if ($data != null)
+            $this->track->create($data);
     }
 }

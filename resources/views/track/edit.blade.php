@@ -36,7 +36,7 @@
                 @csrf
                 @method('PATCH')
               <div class="card-body">
-{{--
+
                 <div class="row">
                     <div class="block_one">
                         <label for="name">Название</label>
@@ -46,7 +46,7 @@
                         @enderror
                       </div>
 
-                </div> --}}
+                </div>
 
                 <div class="row">
                     <div class="text">
@@ -57,14 +57,12 @@
                       @enderror
                       </div>
                 </div>
-
                     <div class="row">
                         <label>Исполнитель</label>
                           <div class="block_one">
                             <div class="select2-purple">
                               <select class="form-control select2" multiple="multiple" name=artists[]" data-placeholder="Выберите испольнителя" data-dropdown-css-class="select2-purple" style="width: 100%;">
                                 <option>все</option>
-
                                 @foreach ($artists as $artist)
                                 <option
                                 @foreach ($track->artists as $art)

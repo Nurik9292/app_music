@@ -35,8 +35,8 @@
             <form action="{{route('track.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
               <div class="card-body">
-
-                {{-- <div class="row">
+{{--
+                <div class="row">
                     <div class="block_one">
                         <label for="name">Название</label>
                         <input type="text" class="form-control" id="name" placeholder="Введите Название" name="title">

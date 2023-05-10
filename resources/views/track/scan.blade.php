@@ -8,13 +8,13 @@
 
     <!-- Main content -->
     <section class="block">
-        <form action="{{route('track.store.file')}}" method="POST" enctype="multipart/form-data">
+        <form action="{{route('track.store.scan')}}" method="POST">
             @csrf
             <div class="row">
                 <div class="block_one">
-                    <label for="file">Название</label>
-                    <input type="file" class="form-control" id="name" placeholder="Выберите файл" name="file">
-                    @error('file')
+                    <label for="path">Путь до файла</label>
+                    <input type="text" class="form-control" id="path" placeholder="Введите url" name="path">
+                    @error('path')
                     <p class="text-danger">{{$message}}</p>
                     @enderror
                 </div>
@@ -44,7 +44,7 @@
 <style>
     .block_one {
         float: left;
-        width: 320px;
+        width: 420px;
         margin-right: 50px;
         margin-bottom: 40px;
    }

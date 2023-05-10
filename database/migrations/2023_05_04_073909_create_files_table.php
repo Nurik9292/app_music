@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('path');
-            $table->string('local');
+            $table->string('path')->nullable();
+            $table->string('scanTime')->nullable();
+            $table->string('local')->nullable();
         });
     }
 

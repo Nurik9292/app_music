@@ -12,9 +12,9 @@ class EditController extends Controller
 {
     public function __invoke(Track $track)
     {
-        $artists = Artist::orderByDesc('name')->get();
-        $albums = Album::orderByDesc('title')->get();
-        $genres = Genre::orderByDesc('name_ru')->get();
+        $artists = Artist::orderBy('name')->get();
+        $albums = Album::orderBy('title')->get();
+        $genres = Genre::orderBy('name_ru')->get();
 
         return view('track.edit', compact('track', 'artists', 'albums', 'genres'));
     }
