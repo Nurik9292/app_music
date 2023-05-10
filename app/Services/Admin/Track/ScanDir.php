@@ -37,7 +37,7 @@ class ScanDir
                 if ($item->isFile()) {
                     if ($file[0]->scanTime <= Carbon::parse($item->getATime())->format('Y-m-d H:i')) {
                         str_ends_with($item->getBasename(), 'mp3') ? $this->mp3[] = $item->getRealPath() : '';
-                        str_ends_with($item->getBasename(), 'webp') ? $this->wepb[] = $item->getRealPath() : '';
+                        str_ends_with($item->getBasename(), '.webp') ? $this->wepb[] = $item->getRealPath() : '';
                     }
                 }
             }

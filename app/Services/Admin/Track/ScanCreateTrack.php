@@ -59,39 +59,57 @@ class ScanCreateTrack
             $item['audio_url'] =  preg_replace('/(:1000\/files)/', '', $item['audio_url']);;
             $item['audio_url'] =  "https://storage2.ma.st.com.tm/" . preg_replace('/(\/nfs\/storage2\/)/', '', $item['audio_url']);;
 
-            // dd($item['audio_url']);
 
             if ($item['thumb_url'] != null) {
-                $thumb = Image::make($item['thumb_url'])->encode('jpg');
-                $webp =  Image::make($item['thumb_url'])->encode('webp');
+                $artwork = Image::make(file_get_contents($item['thumb_url']));
+                $artWork_webp =  Image::make(file_get_contents($item['thumb_url']));
+
+                $thumb = Image::make(file_get_contents($item['thumb_url']));
+                $thumb_webp =  Image::make(file_get_contents($item['thumb_url']));
             }
+
+            if (!$artist) $artist = preg_replace('/(.webp)/', '', basename($data['thumb_url']));
 
             if ($item['is_national']) {
-                if (isset($album))
-                    $path_second = "tm_tracks/{$artist}/{$album->title}/{$item['title']}/";
-                else
-                    $path_second = "tm_tracks/{$artist}/{$item['title']}/";
+                if (isset($album)) {
+                    $path_second_artwork = "tm_tracks/{$artist}/{$album->title}/{$item['title']}/artwokr/";
+                    $path_second_thumb = "tm_tracks/{$artist}/{$album->title}/{$item['title']}/thumb/";
+                } else {
+                    $path_second_artwork = "tm_tracks/{$artist}/{$item['title']}/artwokr/";
+                    $path_second_thumb = "tm_tracks/{$artist}/{$item['title']}/thumb/";
+                }
             } else {
-                if (isset($album))
-                    $path_second = "tracks/{$artist}/{$album->title}/{$item['title']}/";
-                else
-                    $path_second = "tracks/{$artist}/{$item['title']}/";
+                if (isset($album)) {
+                    $path_second_artwork = "tracks/{$artist}/{$album->title}/{$item['title']}/artwokr/";
+                    $path_second_thumb = "tracks/{$artist}/{$album->title}/{$item['title']}/thumb/";
+                } else {
+                    $path_second_artwork = "tracks/{$artist}/{$item['title']}/artwokr/";
+                    $path_second_thumb = "tracks/{$artist}/{$item['title']}/thumb/";
+                }
             }
 
 
-            $path_thumb = $this->path_first . $path_second;
+            $path_thumb = $this->path_first . $path_second_thumb;
+            $path_artWork = $this->path_first . $path_second_artwork;
 
             if (!file_exists($path_thumb))
                 mkdir($path_thumb, 0777, true);
 
             if ($item['thumb_url'] != null) {
-                $base_name  = preg_replace('/.webp/', '', $webp->basename) . ".jpg";
-                $webp->fit(142, 166)->save($path_thumb . $image_name);
-                $thumb->fit(142, 166)->save($path_thumb . $base_name);
-                $image = $this->helper->pathImageForDb . $path_second . $base_name;
+                $base_name  = preg_replace('/.webp/', '', $thumb_webp->basename) . ".jpg";
+
+                $thumb_webp->fit(142, 166)->save($path_thumb . $image_name)->encode('webp');
+                $thumb->fit(142, 166)->save($path_thumb . $base_name)->encode('jpg');
+
+                $artWork_webp->fit(375, 250)->save($path_thumb . $image_name)->encode('webp');
+                $artwork->fit(375, 250)->save($path_thumb . $base_name)->encode('jpg');
+
+                $image_thumb = $this->helper->pathImageForDb . $path_second_thumb . $base_name;
+                $image_artWork = $this->helper->pathImageForDb . $path_second_artwork . $base_name;
             }
 
-            $item['thumb_url'] = $image ?? '';
+            $item['thumb_url'] = $image_thumb ?? '';
+            $item['artwork_url'] = $image_artWork ?? '';
 
             if (isset($item['artists']))
                 unset($item['artists']);
