@@ -40,8 +40,10 @@ class ScanCreateTrack
                     'is_national' =>  $item['is_national'] ? true : false,
                 ]);
 
-            if ($item['artists'] && $item['album'])
+            if ($item['artists'] && $item['album']) {
+                $artists->albums()->detach($album->id);
                 $artists->albums()->attach($album->id);
+            }
             // $album->artists()->attach($artists->id);
 
 
