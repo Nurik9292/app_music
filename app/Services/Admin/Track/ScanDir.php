@@ -63,15 +63,17 @@ class ScanDir
                 $title = $track->analyze($audio_url)['tags']['id3v1']['title'][0];
                 $album = $track->analyze($audio_url)['tags']['id3v1']['album'][0];
             }
-            $bitrate = intval(round($track->analyze($audio_url)['bitrate']));
-            $duration = intval(round($track->analyze($audio_url)['playtime_seconds']));
+            if (isset($track->analyze($audio_url)['bitrate']))
+                $bitrate = intval(round($track->analyze($audio_url)['bitrate']));
+            if (isset($track->analyze($audio_url)['playtime_seconds']))
+                $duration = intval(round($track->analyze($audio_url)['playtime_seconds']));
 
             $this->data[] = [
                 'title' => isset($title) ? $title : '',
                 'artists' => isset($artist) ? $artist : '',
                 'album' => isset($album) ? $album : '',
-                'duration' => $duration,
-                'bit_rate' => $bitrate,
+                'duration' => isset($duration) ? $duration : 0,
+                'bit_rate' => isset($bitrate) ? $bitrate : 0,
                 'lyrics' => '',
                 'audio_url' => $audio_url,
                 'is_national' => $local == 'tm' ? true : false,
