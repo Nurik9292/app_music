@@ -41,7 +41,8 @@ class ScanCreateTrack
                 ]);
 
             if ($item['artists'] && $item['album'])
-                $album->artists()->attach($artists->id);
+                $artists->albums()->attach($album->id);
+            // $album->artists()->attach($artists->id);
 
 
             if ($item['thumb_url'])
