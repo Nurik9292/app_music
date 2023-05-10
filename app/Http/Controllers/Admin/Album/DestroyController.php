@@ -11,7 +11,7 @@ class DestroyController extends BaseController
         $path = $album->artwork_url;
         $path =  pathToServer() . substr($path,  strpos($path, 'images'));
         $path = substr($path, 0, strpos($path, "album_artWork/" . basename($path)));
-        $path = preg_replace('/images\//', '', $path);
+        // $path = preg_replace('/images\//', '', $path);
 
         $this->service->delete($path);
 
