@@ -68,7 +68,7 @@ class ScanCreateTrack
                 $thumb_webp =  Image::make(file_get_contents($item['thumb_url']));
             }
 
-            if (!$artist) $artist = preg_replace('/(.webp)/', '', basename($data['thumb_url']));
+            if (!$artist) $artist = preg_replace('/(.webp)/', '', basename($item['thumb_url']));
 
             if ($item['is_national']) {
                 if (isset($album)) {
@@ -94,6 +94,9 @@ class ScanCreateTrack
 
             if (!file_exists($path_thumb))
                 mkdir($path_thumb, 0777, true);
+
+            if (!file_exists($path_artWork))
+                mkdir($path_artWork, 0777, true);
 
             if ($item['thumb_url'] != null) {
                 $base_name  = preg_replace('/.webp/', '', $thumb_webp->basename) . ".jpg";
