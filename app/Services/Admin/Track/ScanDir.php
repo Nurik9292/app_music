@@ -32,7 +32,7 @@ class ScanDir
 
         foreach ($iter as $item) {
             if ($item != '.' && $item != '..') {
-                if ($item->isDir()) $this->getContentDir($path . $item->getBasename(), $local);
+                if ($item->isDir()) $this->getContentDir($path . $item->getBasename() . "/", $local);
 
                 if ($item->isFile()) {
                     if ($file[0]->scanTime <= Carbon::parse($item->getATime())->format('Y-m-d H:i')) {
