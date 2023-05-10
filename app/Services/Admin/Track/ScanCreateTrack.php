@@ -106,8 +106,8 @@ class ScanCreateTrack
                 $thumb_webp->fit(142, 166)->save($path_thumb . $image_name)->encode('webp');
                 $thumb->fit(142, 166)->save($path_thumb . $base_name)->encode('jpg');
 
-                $artWork_webp->fit(375, 250)->save($path_thumb . $image_name)->encode('webp');
-                $artwork->fit(375, 250)->save($path_thumb . $base_name)->encode('jpg');
+                $artWork_webp->fit(375, 250)->save($path_artWork . $image_name)->encode('webp');
+                $artwork->fit(375, 250)->save($path_artWork . $base_name)->encode('jpg');
 
                 $image_thumb = $this->helper->pathImageForDb . $path_second_thumb . $base_name;
                 $image_artWork = $this->helper->pathImageForDb . $path_second_artwork . $base_name;
