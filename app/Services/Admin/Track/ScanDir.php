@@ -23,8 +23,8 @@ class ScanDir
 
     public function getContentDir($path, $local)
     {
-
-        $path = $this->helper->pathTrackForServer . preg_replace('/(https:\/\/storage2.ma.st.com.tm:1000\/files\/)/', '', $path);
+        if (str_starts_with($path, "https://storage2.ma.st.com.tm:1000/files/"))
+            $path = $this->helper->pathTrackForServer . preg_replace('/(https:\/\/storage2.ma.st.com.tm:1000\/files\/)/', '', $path);
 
         $file = File::where('local', $local)->get();
 
@@ -32,7 +32,7 @@ class ScanDir
 
         foreach ($iter as $item) {
             if ($item != '.' && $item != '..') {
-                if ($item->isDir()) $this->getContentDir($path . "/" . $item->getBasename(), $local);
+                if ($item->isDir()) $this->getContentDir($path . $item->getBasename(), $local);
 
                 if ($item->isFile()) {
                     if ($file[0]->scanTime <= Carbon::parse($item->getATime())->format('Y-m-d H:i')) {
