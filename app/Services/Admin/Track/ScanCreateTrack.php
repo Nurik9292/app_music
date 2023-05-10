@@ -22,8 +22,11 @@ class ScanCreateTrack
 
     public function create($data)
     {
+        ini_set('max_execution_time', '300');
+        set_time_limit(300);
+
         foreach ($data as $item) {
-            dd($item);
+            // dd($item);
             if ($item['artists'])
                 $artists = Artist::query()->firstOrCreate(['name' => $item['artists']], [
                     'name' => $item['artists'],
@@ -53,7 +56,7 @@ class ScanCreateTrack
             $item['audio_url'] =  preg_replace('/(:1000\/files)/', '', $item['audio_url']);;
             $item['audio_url'] =  "https://storage2.ma.st.com.tm" . preg_replace('/(\/nfs\/storage2\/)/', '', $item['audio_url']);;
 
-            dd($item['audio_url']);
+            // dd($item['audio_url']);
 
             if ($item['thumb_url'] != null) {
                 $thumb = Image::make($item['thumb_url'])->encode('jpg');
