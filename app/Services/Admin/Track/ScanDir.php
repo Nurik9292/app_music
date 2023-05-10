@@ -59,9 +59,12 @@ class ScanDir
             $track = new getID3;
             // dd(isset($track->analyze($audio_url)['tags']['id3v1']), $track->analyze($audio_url));
             if (isset($track->analyze($audio_url)['tags']['id3v1'])) {
-                $artist = $track->analyze($audio_url)['tags']['id3v1']['artist'][0];
-                $title = $track->analyze($audio_url)['tags']['id3v1']['title'][0];
-                $album = $track->analyze($audio_url)['tags']['id3v1']['album'][0];
+                if (isset($track->analyze($audio_url)['tags']['id3v1']['artist']))
+                    $artist = $track->analyze($audio_url)['tags']['id3v1']['artist'][0];
+                if (isset($track->analyze($audio_url)['tags']['id3v1']['title']))
+                    $title = $track->analyze($audio_url)['tags']['id3v1']['title'][0];
+                if (isset($track->analyze($audio_url)['tags']['id3v1']['album']))
+                    $album = $track->analyze($audio_url)['tags']['id3v1']['album'][0];
             }
             if (isset($track->analyze($audio_url)['bitrate']))
                 $bitrate = intval(round($track->analyze($audio_url)['bitrate']));
