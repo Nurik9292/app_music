@@ -27,34 +27,43 @@ class ScanCreateTrack
         set_time_limit(300);
 
         foreach ($data as $item) {
-            // dd($item);
-            if ($item['artists'])
-                $artists = Artist::query()->firstOrCreate(['name' => $item['artists']], [
+            $artists = null;
+            $album = null;
+
+            if (isset($item['artists'])) {
+                $artists = Artist::firstOrCreate(['name' => $item['artists']], [
                     'name' => $item['artists'],
                     'country_id' =>  $item['is_national'] ? Country::where('name', 'like', 'Туркмения')->get()[0]->id : 1,
                 ]);
+            } else {
+                $artists = Artist::create([
+                    'name' => 'none',
+                    'country_id' =>  $item['is_national'] ? Country::where('name', 'like', 'Туркмения')->get()[0]->id : 1,
+                ]);
+            }
 
-            if ($item['album'])
+            if (isset($artists))
+                $artist = $artists->name;
+            else  $artist = $item['artists'] ?? '';
+
+
+
+            if (isset($item['album']))
                 $album = Album::query()->firstOrCreate(['title' => $item['album']], [
                     'title' => $item['album'],
                     'status' => true,
                     'is_national' =>  $item['is_national'] ? true : false,
                 ]);
 
-            if ($item['artists'] && $item['album']) {
+            if (isset($artists) && isset($album)) {
                 $artists->albums()->detach($album->id);
                 $artists->albums()->attach($album->id);
             }
             // $album->artists()->attach($artists->id);
 
-
-            if ($item['thumb_url'])
+            if (isset($item['thumb_url']))
                 $image_name = basename($item['thumb_url']);
             else $image_name = '';
-
-            if (isset($artists))
-                $artist = $artists->name;
-            else  $artist = $item['artists'] ?? '';
 
             // $item['audio_url'] = "https://storage2.ma.st.com.tm" . $item['audio_url'];
             $item['audio_url'] =  preg_replace('/(:1000\/files)/', '', $item['audio_url']);;
@@ -70,7 +79,7 @@ class ScanCreateTrack
                 $thumb_webp =  Image::make($item['thumb_url']);
             }
 
-            if (!$artist) $artist = preg_replace('/(.webp)/', '', basename($item['thumb_url']));
+            if (isset($artist)) $artist = preg_replace('/(.webp)/', '', basename($item['thumb_url']));
 
             if ($item['is_national']) {
                 if (isset($album)) {

@@ -61,12 +61,12 @@ class ScanDir
 
             $track = new GetId3($audio_url);
 
-            $artist = $track->getArtist() ?? '';
-            $title = $track->getTitle() ?? '';
-            $album = $track->getAlbum() ?? '';
+            $artist = $track->getArtist() ?? null;
+            $title = $track->getTitle() ?? null;
+            $album = $track->getAlbum() ?? null;
             if ($track->getPlaytimeSeconds())
                 $duration = intval(round($track->getPlaytimeSeconds()));
-            if (isset($track->$track->extractInfo()['bitrate']))
+            if (isset($track->extractInfo()['bitrate']))
                 $bitrate = intval(round($track->extractInfo()['bitrate']));
 
 
@@ -95,7 +95,7 @@ class ScanDir
                 $url_image = $image_url;
                 unset($this->wepb[$image_url]);
                 return $url_image;
-            }
+            } else return null;
         }
     }
 
