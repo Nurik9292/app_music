@@ -61,6 +61,8 @@ class ScanDir
 
             $track = new GetId3($audio_url);
 
+            $count = 0;
+
             $artist = $track->getArtist() ?? null;
             $title = $track->getTitle() ?? null;
             $album = $track->getAlbum() ?? null;
@@ -92,9 +94,7 @@ class ScanDir
             $image_name = substr(basename($image_url), 0, strpos(basename($image_url), '.webp'));
             $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
             if ($image_name == $audio_name) {
-                $url_image = $image_url;
-                unset($this->wepb[$image_url]);
-                return $url_image;
+                return $image_url;
             } else return null;
         }
     }
