@@ -54,6 +54,8 @@ class DatabaseSeeder extends Seeder
         Genre::factory(10)->create();
 
 
+        File::truncate();
+
         File::factory()->create([
             'path' => null,
             'scanTime' => '2001-05-01',
