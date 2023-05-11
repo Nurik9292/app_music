@@ -35,7 +35,7 @@ class ScanCreateTrack
 
             if (isset($artists))
                 $artist = $artists->name;
-            else  $artist = $artist ?? '';
+            else  $artist = $artist ?? 'none';
 
             if (isset($item['album']))
                 $album = $this->createAlbum($item['album'], $item['is_national']);
@@ -148,28 +148,28 @@ class ScanCreateTrack
                 $path_second_artwork = "tm_tracks/{$artist}/{$album->title}/{$title}/artwokr/";
                 $path_second_thumb = "tm_tracks/{$artist}/{$album->title}/{$title}/thumb/";
 
-                $path_second_artwork = preg_replace('/\/{2,}/', '', $path_second_artwork);
-                $path_second_thumb = preg_replace('/\/{2,}/', '', $path_second_thumb);
+                $path_second_artwork = preg_replace('/(\/)(?=\1)/', '', $path_second_artwork);
+                $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
             } else {
                 $path_second_artwork = "tm_tracks/{$artist}/{$title}/artwokr/";
                 $path_second_thumb = "tm_tracks/{$artist}/{$title}/thumb/";
 
-                $path_second_artwork = preg_replace('/\/{2,}/', '', $path_second_artwork);
-                $path_second_thumb = preg_replace('/\/{2,}/', '', $path_second_thumb);
+                $path_second_artwork = preg_replace('/(\/)(?=\1)/', '', $path_second_artwork);
+                $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
             }
         } else {
             if (isset($album)) {
                 $path_second_artwork = "tracks/{$artist}/{$album->title}/{$title}/artwokr/";
                 $path_second_thumb = "tracks/{$artist}/{$album->title}/{$title}/thumb/";
 
-                $path_second_artwork = preg_replace('/\/{2,}/', '', $path_second_artwork);
-                $path_second_thumb = preg_replace('/\/{2,}/', '', $path_second_thumb);
+                $path_second_artwork = preg_replace('/(\/)(?=\1)/', '', $path_second_artwork);
+                $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
             } else {
                 $path_second_artwork = "tracks/{$artist}/{$title}/artwokr/";
                 $path_second_thumb = "tracks/{$artist}/{$title}/thumb/";
 
-                $path_second_artwork = preg_replace('/\/{2,}/', '', $path_second_artwork);
-                $path_second_thumb = preg_replace('/\/{2,}/', '', $path_second_thumb);
+                $path_second_artwork = preg_replace('/(\/)(?=\1)/', '', $path_second_artwork);
+                $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
             }
         }
 
