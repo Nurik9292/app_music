@@ -23,13 +23,13 @@ class ScanCreateTrack
 
     public function create($data)
     {
-        // ini_set('memory_limit', '128M');
         ini_set('max_execution_time', '300');
         set_time_limit(300);
 
         foreach ($data as $item) {
             $artists = null;
             $album = null;
+
 
             $artists = $this->createArtist($item['artists'], $item['is_national']);
 
@@ -53,7 +53,6 @@ class ScanCreateTrack
             $item['audio_url'] =  preg_replace('/(:1000\/files)/', '', $item['audio_url']);;
             $item['audio_url'] =  "https://storage2.ma.st.com.tm/" . preg_replace('/(\/nfs\/storage2\/)/', '', $item['audio_url']);;
 
-            Log::debug($item['thumb_url']);
 
             if ($item['thumb_url'] != null) {
                 $artwork = Image::make($item['thumb_url']);
@@ -63,9 +62,10 @@ class ScanCreateTrack
                 $thumb_webp =  Image::make($item['thumb_url']);
             }
 
-            if (isset($artist)) $artist = preg_replace('/(.webp)/', '', basename($item['thumb_url']));
+            if (!isset($artist)) $artist = preg_replace('/(.webp)/', '', basename($item['thumb_url']));
 
             [$path_second_artwork, $path_second_thumb] = $this->createPath($item['is_national'], $album, $artist, $item['title']);
+
 
             $path_thumb = $this->path_first . $path_second_thumb;
             $path_artWork = $this->path_first . $path_second_artwork;
@@ -149,31 +149,21 @@ class ScanCreateTrack
             if (isset($album)) {
                 $path_second_artwork = "tm_tracks/{$artist}/{$album->title}/{$title}/artwokr/";
                 $path_second_thumb = "tm_tracks/{$artist}/{$album->title}/{$title}/thumb/";
-
-                $path_second_artwork = preg_replace('/(\/)(?=\1)/', '', $path_second_artwork);
-                $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
             } else {
                 $path_second_artwork = "tm_tracks/{$artist}/{$title}/artwokr/";
                 $path_second_thumb = "tm_tracks/{$artist}/{$title}/thumb/";
-
-                $path_second_artwork = preg_replace('/(\/)(?=\1)/', '', $path_second_artwork);
-                $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
             }
         } else {
             if (isset($album)) {
                 $path_second_artwork = "tracks/{$artist}/{$album->title}/{$title}/artwokr/";
                 $path_second_thumb = "tracks/{$artist}/{$album->title}/{$title}/thumb/";
-
-                $path_second_artwork = preg_replace('/(\/)(?=\1)/', '', $path_second_artwork);
-                $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
             } else {
                 $path_second_artwork = "tracks/{$artist}/{$title}/artwokr/";
                 $path_second_thumb = "tracks/{$artist}/{$title}/thumb/";
-
-                $path_second_artwork = preg_replace('/(\/)(?=\1)/', '', $path_second_artwork);
-                $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
             }
         }
+        $path_second_artwork = preg_replace('/(\/)(?=\1)/', '', $path_second_artwork);
+        $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
 
         return [$path_second_artwork, $path_second_thumb];
     }

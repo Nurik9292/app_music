@@ -35,11 +35,11 @@ class ScanDir
                 if ($item->isDir()) $this->getContentDir($path . $item->getBasename() . "/", $local);
 
                 if ($item->isFile()) {
-                    if ($file[0]->scanTime <= Carbon::parse($item->getATime())->format('Y-m-d H:i')) {
-                        if ($item->getSize() != 0) {
-                            str_ends_with($item->getBasename(), '.mp3') ? $this->mp3[] = $item->getRealPath() : '';
-                            str_ends_with($item->getBasename(), '.webp') ? $this->wepb[] = $item->getRealPath() : '';
-                        }
+                    // if ($file[0]->scanTime <= Carbon::parse($item->getATime())->format('Y-m-d H:i')) {
+                    if ($item->getSize() != 0) {
+                        str_ends_with($item->getBasename(), '.mp3') ? $this->mp3[] = $item->getRealPath() : '';
+                        str_ends_with($item->getBasename(), '.webp') ? $this->wepb[] = $item->getRealPath() : '';
+                        // }
                     }
                 }
             }
@@ -93,7 +93,7 @@ class ScanDir
             $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
             if ($image_name == $audio_name) {
                 return $image_url;
-            } else return null;
+            }
         }
     }
 
