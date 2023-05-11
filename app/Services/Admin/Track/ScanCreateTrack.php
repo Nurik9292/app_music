@@ -30,30 +30,14 @@ class ScanCreateTrack
             $artists = null;
             $album = null;
 
-            if (isset($item['artists'])) {
-                $artists = Artist::firstOrCreate(['name' => $item['artists']], [
-                    'name' => $item['artists'],
-                    'country_id' =>  $item['is_national'] ? Country::where('name', 'like', 'Туркмения')->get()[0]->id : 1,
-                ]);
-            } else {
-                $artists = Artist::create([
-                    'name' => 'none',
-                    'country_id' =>  $item['is_national'] ? Country::where('name', 'like', 'Туркмения')->get()[0]->id : 1,
-                ]);
-            }
+            $artists = $this->createArtist($item['artists'], $item['is_national']);
 
             if (isset($artists))
                 $artist = $artists->name;
-            else  $artist = $item['artists'] ?? '';
-
-
+            else  $artist = $artist ?? '';
 
             if (isset($item['album']))
-                $album = Album::query()->firstOrCreate(['title' => $item['album']], [
-                    'title' => $item['album'],
-                    'status' => true,
-                    'is_national' =>  $item['is_national'] ? true : false,
-                ]);
+                $album = $this->createAlbum($item['album'], $item['is_national']);
 
             if (isset($artists) && isset($album)) {
                 $artists->albums()->detach($album->id);
@@ -151,5 +135,34 @@ class ScanCreateTrack
             if (isset($album))
                 $track->album()->attach($album->id);
         }
+    }
+
+
+    private function createArtist($artist, $inNational)
+    {
+        if (isset($artist)) {
+            $artists = Artist::firstOrCreate(['name' => $artist], [
+                'name' => $artist,
+                'country_id' =>  $inNational ? Country::where('name', 'like', 'Туркмения')->get()[0]->id : 1,
+            ]);
+        } else {
+            $artists = Artist::create([
+                'name' => 'none',
+                'country_id' =>  $inNational ? Country::where('name', 'like', 'Туркмения')->get()[0]->id : 1,
+            ]);
+        }
+
+        return $artists;
+    }
+
+    private function createAlbum($albums, $isNational)
+    {
+        $album = Album::query()->firstOrCreate(['title' => $albums], [
+            'title' => $albums,
+            'status' => true,
+            'is_national' =>  $isNational ? true : false,
+        ]);
+
+        return $album;
     }
 }
