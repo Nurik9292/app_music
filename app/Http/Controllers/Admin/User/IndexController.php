@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Album;
 use App\Models\User;
 use Owenoj\LaravelGetId3\GetId3;
 

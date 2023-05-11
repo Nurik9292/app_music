@@ -43,7 +43,6 @@ class ScanCreateTrack
                 $artists->albums()->detach($album->id);
                 $artists->albums()->attach($album->id);
             }
-            // $album->artists()->attach($artists->id);
 
             if (isset($item['thumb_url']))
                 $image_name = basename($item['thumb_url']);
@@ -108,6 +107,7 @@ class ScanCreateTrack
 
     private function createArtist($artist, $inNational)
     {
+
         if (isset($artist)) {
             $artists = Artist::firstOrCreate(['name' => $artist], [
                 'name' => $artist,
@@ -125,6 +125,9 @@ class ScanCreateTrack
 
     private function createAlbum($albums, $isNational)
     {
+        if (mb_detect_encoding($albums) != 'UTF-8')
+            $albums = mb_convert_encoding($albums, 'UTF-8');
+
         $album = Album::firstOrCreate(['title' => $albums], [
             'title' => $albums,
             'status' => true,
