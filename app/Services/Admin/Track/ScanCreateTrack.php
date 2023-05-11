@@ -125,8 +125,9 @@ class ScanCreateTrack
 
     private function createAlbum($albums, $isNational)
     {
-        if (mb_detect_encoding($albums) != 'UTF-8')
-            $albums = mb_convert_encoding($albums, 'UTF-8');
+        Log::debug($albums);
+        // if (mb_detect_encoding($albums) != 'UTF-8')
+        $albums = mb_convert_encoding($albums, 'UTF-8');
 
         $album = Album::firstOrCreate(['title' => $albums], [
             'title' => $albums,
