@@ -120,12 +120,8 @@ class ScanCreateTrack
             $item['thumb_url'] = $image_thumb ?? '';
             $item['artwork_url'] = $image_artWork ?? '';
 
-            if (isset($item['artists']))
-                unset($item['artists']);
-
-            if (isset($item['album']))
-                unset($item['album']);
-
+            unset($item['artists']);
+            unset($item['album']);
 
             $track = Track::create($item);
 
