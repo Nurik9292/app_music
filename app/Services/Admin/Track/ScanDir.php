@@ -6,7 +6,7 @@ use App\Models\File;
 use App\Services\Admin\HelperService;
 use Carbon\Carbon;
 use DirectoryIterator;
-use getID3;
+use Owenoj\LaravelGetId3\GetId3;
 
 class ScanDir
 {
@@ -54,30 +54,26 @@ class ScanDir
 
     private function addMp3($local)
     {
-        $track = new getID3;
         ini_set('max_execution_time', '300');
         set_time_limit(300);
 
         foreach ($this->mp3 as $audio_url) {
-            $track = new getID3;
-            // dd(isset($track->analyze($audio_url)['tags']['id3v1']), $track->analyze($audio_url));
-            if (isset($track->analyze($audio_url)['tags']['id3v1'])) {
-                if (isset($track->analyze($audio_url)['tags']['id3v1']['artist']))
-                    $artist = $track->analyze($audio_url)['tags']['id3v1']['artist'][0];
-                if (isset($track->analyze($audio_url)['tags']['id3v1']['title']))
-                    $title = $track->analyze($audio_url)['tags']['id3v1']['title'][0];
-                if (isset($track->analyze($audio_url)['tags']['id3v1']['album']))
-                    $album = $track->analyze($audio_url)['tags']['id3v1']['album'][0];
-            }
-            if (isset($track->analyze($audio_url)['bitrate']))
-                $bitrate = intval(round($track->analyze($audio_url)['bitrate']));
-            if (isset($track->analyze($audio_url)['playtime_seconds']))
-                $duration = intval(round($track->analyze($audio_url)['playtime_seconds']));
+
+            $track = new GetId3($audio_url);
+
+            $artist = $track->getArtist() ?? '';
+            $title = $track->getTitle() ?? '';
+            $album = $track->getAlbum() ?? '';
+            if ($track->getPlaytimeSeconds())
+                $duration = intval(round($track->getPlaytimeSeconds()));
+            if (isset($track->$track->extractInfo()['bitrate']))
+                $bitrate = intval(round($track->extractInfo()['bitrate']));
+
 
             $this->data[] = [
-                'title' => isset($title) ? $title : '',
-                'artists' => isset($artist) ? $artist : '',
-                'album' => isset($album) ? $album : '',
+                'title' => $title,
+                'artists' => $artist,
+                'album' => $album,
                 'duration' => isset($duration) ? $duration : 0,
                 'bit_rate' => isset($bitrate) ? $bitrate : 0,
                 'lyrics' => '',
@@ -95,7 +91,11 @@ class ScanDir
         foreach ($this->wepb as $image_url) {
             $image_name = substr(basename($image_url), 0, strpos(basename($image_url), '.webp'));
             $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
-            if ($image_name == $audio_name) return $image_url;
+            if ($image_name == $audio_name) {
+                $url_image = $image_url;
+                unset($this->wepb[$image_url]);
+                return $url_image;
+            }
         }
     }
 
