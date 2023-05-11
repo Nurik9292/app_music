@@ -112,11 +112,13 @@ class ScanCreateTrack
         if (isset($artist)) {
             $artists = Artist::firstOrCreate(['name' => $artist], [
                 'name' => $artist,
+                'status' => true,
                 'country_id' =>  $inNational ? Country::where('name', 'like', 'Туркмения')->get()[0]->id : 1,
             ]);
         } else {
             $artists = Artist::create([
                 'name' => 'none',
+                'status' => true,
                 'country_id' =>  $inNational ? Country::where('name', 'like', 'Туркмения')->get()[0]->id : 1,
             ]);
         }

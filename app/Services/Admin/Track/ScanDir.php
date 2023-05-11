@@ -61,8 +61,6 @@ class ScanDir
 
             $track = new GetId3($audio_url);
 
-            $count = 0;
-
             $artist = $track->getArtist() ?? null;
             $title = $track->getTitle() ?? null;
             $album = $track->getAlbum() ?? null;

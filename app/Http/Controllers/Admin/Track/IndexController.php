@@ -8,7 +8,7 @@ class IndexController extends BaseController
 {
     public function __invoke()
     {
-        $tracks = Track::orderByDesc('title')->get();
+        $tracks = Track::orderBy('title')->get();
 
         $this->service->statusChangetoString($tracks);
 
