@@ -66,9 +66,9 @@
                   </table>
             </div>
 
-            {{$tracks->links()}}
 
-          </div>
+        </div>
+        {{$tracks->links('vendor.pagination.bootstrap-5')}}
 
     </section>
     <!-- /.content -->
