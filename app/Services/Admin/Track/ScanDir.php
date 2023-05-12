@@ -55,7 +55,6 @@ class ScanDir
 
     public function addContent($local)
     {
-        dd($this->mp3);
         if ($this->mp3 != null)
             $this->addMp3($local);
     }
