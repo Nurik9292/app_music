@@ -66,6 +66,8 @@
                   </table>
             </div>
 
+            {{$tracks->links()}}
+
           </div>
 
     </section>

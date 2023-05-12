@@ -58,21 +58,21 @@ class DatabaseSeeder extends Seeder
 
         File::factory()->create([
             'path' => null,
-            'scanTime' => '2001-05-01',
+            'scanTime' => 0,
             'local' => 'tm'
         ]);
 
 
         File::factory()->create([
             'path' => null,
-            'scanTime' => '2001-05-01',
+            'scanTime' => 0,
             'local' => 'ru'
         ]);
 
 
         File::factory()->create([
             'path' => null,
-            'scanTime' => '2001-05-01',
+            'scanTime' => 0,
             'local' => 'en'
         ]);
     }

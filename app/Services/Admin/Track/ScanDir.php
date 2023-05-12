@@ -15,6 +15,7 @@ class ScanDir
     private $mp3;
     private $wepb;
     private $helper;
+    private $timestamp;
 
     public function __construct()
     {
@@ -26,6 +27,9 @@ class ScanDir
         if (str_starts_with($path, "https://storage2.ma.st.com.tm:1000/files/"))
             $path = $this->helper->pathTrackForServer . preg_replace('/(https:\/\/storage2.ma.st.com.tm:1000\/files\/)/', '', $path);
 
+        if (!str_ends_with($path, '/'))
+            $path = $path . '/';
+
         $file = File::where('local', $local)->get();
 
         $iter = new DirectoryIterator($path);
@@ -35,12 +39,15 @@ class ScanDir
                 if ($item->isDir()) $this->getContentDir($path . $item->getBasename() . "/", $local);
 
                 if ($item->isFile()) {
-                    if ($file[0]->scanTime <= Carbon::parse($item->getATime())->format('Y-m-d H:i')) {
+
+                    if ($file[0]->scanTime < $item->getATime()) {
                         if ($item->getSize() != 0) {
                             str_ends_with($item->getBasename(), '.mp3') ? $this->mp3[] = $item->getRealPath() : '';
                             str_ends_with($item->getBasename(), '.webp') ? $this->wepb[] = $item->getRealPath() : '';
                         }
                     }
+
+                    $this->timestamp = $item->getATime();
                 }
             }
         }
@@ -48,6 +55,7 @@ class ScanDir
 
     public function addContent($local)
     {
+        dd($this->mp3);
         if ($this->mp3 != null)
             $this->addMp3($local);
     }
@@ -85,6 +93,12 @@ class ScanDir
 
     private function addImage($audio_url)
     {
+        if (!is_array($this->wepb)) {
+            $image_name = substr(basename($this->wepb), 0, strpos(basename($this->wepb), '.webp'));
+            $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
+            return $this->wepb;
+        }
+
         foreach ($this->wepb as $key => $image_url) {
             $image_name = substr(basename($image_url), 0, strpos(basename($image_url), '.webp'));
             $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
@@ -111,5 +125,10 @@ class ScanDir
     public function getData()
     {
         return $this->data;
+    }
+
+    public function getTimestamp()
+    {
+        return $this->timestamp;
     }
 }

@@ -12,12 +12,14 @@ class StoreScanController extends BaseController
     {
         $data = $request->validate(['path' => ['required'], 'local' => ['required']]);
 
-        $this->service->startScanDir($data['path'], $data['local']);
+        $timestamp = $this->service->startScanDir($data['path'], $data['local']);
 
-        if ($data['local'] == 'tm')
+        if ($data['local'] == 'tm') {
             $file = File::where('local', 'tm')->get();
+            $file[0]->update(['path' => $data['path'], 'local' => $data['local'], 'scanTime' => $timestamp]);
+        }
 
-        $file[0]->update(['path' => $data['path'], 'local' => $data['local'], 'scanTime' =>  Carbon::parse(now())->format('Y-m:d H:i')]);
+        // $file[0]->update(['path' => $data['path'], 'local' => $data['local'], 'scanTime' =>  Carbon::parse(now())->format('Y-m:d H:i')]);
 
         return redirect()->route('track.index');
     }

@@ -270,10 +270,12 @@ class Service
     {
         $this->scanDir->getContentDir($path, $local);
         $this->scanDir->addContent($local);
-
+        $timestamp = $this->scanDir->getTimestamp();
         $data = $this->scanDir->getData();
 
         if ($data != null)
             $this->track->create($data);
+
+        return $timestamp;
     }
 }
