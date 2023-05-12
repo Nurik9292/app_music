@@ -95,13 +95,17 @@ class ScanCreateTrack
             unset($item['artists']);
             unset($item['album']);
 
-            $track = Track::create($item);
+            $track = Track::firstOrCreate($item);
 
-            if (isset($artists))
+            if (isset($artists)) {
+                $track->artists()->detach($artists->id);
                 $track->artists()->attach($artists->id);
+            }
 
-            if (isset($album))
+            if (isset($album)) {
+                $track->album()->detach($album->id);
                 $track->album()->attach($album->id);
+            }
         }
     }
 
