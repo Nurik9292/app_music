@@ -14,11 +14,27 @@ class ScanCreateTrack
 {
     private $helper;
     private $path_first;
+    private $scanDir;
 
     public function __construct()
     {
         $this->helper = new HelperService();
+        $this->scanDir = new ScanDir();
         $this->path_first = $this->helper->pathImageForServer;
+    }
+
+
+    public function start($path, $local)
+    {
+        $this->scanDir->getContentDir($path, $local);
+        $this->scanDir->addContent($local);
+        $timestamp = $this->scanDir->getTimestamp();
+        $data = $this->scanDir->getData();
+
+        if ($data != null)
+            $this->create($data);
+
+        return $timestamp;
     }
 
     public function create($data)
