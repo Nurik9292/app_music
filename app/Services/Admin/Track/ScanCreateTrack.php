@@ -23,9 +23,6 @@ class ScanCreateTrack
 
     public function create($data)
     {
-        ini_set('max_execution_time', '300');
-        set_time_limit(300);
-
         foreach ($data as $item) {
             $artists = null;
             $album = null;
