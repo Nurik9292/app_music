@@ -131,28 +131,16 @@
 
                 <div class="row">
                     <div class="block_one">
-                        <label for="inputFile_1">Изображение</label>
-
-                          <div class="custom-file">
-                              <label class="custom-file-label" for="inputFile_1">Выберите изображение</label>
-                            <input type="file" class="custom-file-input" id="inputFile_1" name="thumb_url" accept="image/png, image/jpg, image/jpeg">
-                            @error('thumb_url')
-                            <p class="text-danger">{{$message}}</p>
+                        <div class="block_one">
+                        <label for="artwork_url">Изображение</label>
+                          <input type="text" class="form-control" id="artwork_url" placeholder="Введите путь до трека" name="artwork_url" value="{{$track->artwork_url}}">
+                          @error('artwork_url')
+                          <p class="text-danger">{{$message}}</p>
                           @enderror
-                          </div>
 
+                          </div>
                       </div>
 
-                      {{-- <div class="block_one">
-                        <label for="inputFile_2">Трэк</label>
-                          <div class="custom-file">
-                              <label class="custom-file-label" for="inputFile_2">Выберите Трэк</label>
-                            <input type="file" class="custom-file-input"  id="inputFile_2" name="audio_url" accept="audio/mp4, audio/mpeg">
-                            @error('audio_url')
-                            <p class="text-danger">{{$message}}</p>
-                          @enderror
-                          </div>
-                      </div> --}}
 
                       <div class="block_one">
                         <label for="audio_url">Введите трек</label>

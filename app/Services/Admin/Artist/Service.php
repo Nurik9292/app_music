@@ -176,9 +176,8 @@ class Service
             $new_path = $this->helper->pathImageForServer . "tracks/{$data['name']}/";
 
         $image = substr($artist->artwork_url, strpos($artist->artwork_url, 'images'));
-        $path =  $this->helper->pathImageForServer . substr($image,  strpos($image, 'images'));
+        $path =  pathToServer() . substr($image,  strpos($image, 'images'));
         $path = substr($path, 0, strpos($path, 'artist_artWork/' . basename($path)));
-        $path = preg_replace('/images\//', '', $path);
 
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), array('.', '..'));

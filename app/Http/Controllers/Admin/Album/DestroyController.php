@@ -9,9 +9,10 @@ class DestroyController extends BaseController
     public function __invoke(Album $album)
     {
         $path = $album->artwork_url;
-        $path =  pathToServer() . substr($path,  strpos($path, 'images'));
         $path = substr($path, 0, strpos($path, "album_artWork/" . basename($path)));
-        // $path = preg_replace('/images\//', '', $path);
+        $path =  pathToServer() . substr($path,  strpos($path, 'images'));
+
+        $path = preg_replace('/album_artWork\//', '', $path);
 
         $this->service->delete($path);
 

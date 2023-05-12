@@ -4,10 +4,8 @@ namespace App\Services\Admin\Track;
 
 use App\Models\Album;
 use App\Models\Artist;
-use App\Services\Admin\HelperService;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Storage;
 use Owenoj\LaravelGetId3\GetId3;
+use App\Services\Admin\HelperService;
 use Intervention\Image\Facades\Image;
 
 class ManagerTrack
@@ -25,6 +23,8 @@ class ManagerTrack
     }
 
 
+
+
     public function saveTrack($data, $track = null)
     {
 
@@ -33,11 +33,9 @@ class ManagerTrack
             $name_artist = $artist[0]->name;
         }
 
-        list($type_album, $name_album) = $this->albumPath($data);
+        [$type_album, $name_album] = $this->albumPath($data);
 
-        $audio = $this->getContent($data['audio_url']);
-
-        $data['title'] = basename($data['audio_url']);
+        $data['title'] = preg_replace('/(.mp3)/', '', basename($data['audio_url']));
 
         if (isset($data['is_national'])) {
             if ($data['album'] != '0')
@@ -52,23 +50,26 @@ class ManagerTrack
             }
         }
 
-        if ($track == null || $track->audio_url != $data['audio_url']) {
-            Storage::disk('public')->put("tracks/{$data['title']}", $audio);
+        $item = new GetId3($data['audio_url']);
 
-            $track = new GetId3(storage_path("app/public/tracks/{$data['title']}"));
+        if ($item->getPlaytimeSeconds() != null)
+            $data['duration'] =  intval(round($item->getPlaytimeSeconds()));
 
-            if ($track->getPlaytimeSeconds() != null)
-                $data['duration'] =  intval(round($track->getPlaytimeSeconds()));
+        $data['bit_rate'] = intval(round($item->extractInfo()['bitrate']));
 
-            $data['bit_rate'] = intval(round($track->extractInfo()['bitrate']));
+        if (!isset($data['track_number']) && $item->getTrackNumber() != null)
+            $data['track_number'] = $item->getTrackNumber();
 
-            if (!isset($data['track_number']) && $track->getTrackNumber() != null)
-                $data['track_number'] = $track->getTrackNumber();
 
-            Storage::disk('public')->delete("tracks/{$data['title']}");
+        $data['audio_url'] = preg_replace('/:1000\/files/', '', $data['audio_url']);
 
-            $data['audio_url'] = preg_replace('/:1000\/files/', '', $data['audio_url']);
-        }
+        // dd($data);
+        if ($data['artwork_url'] != null) {
+            $this->deleteForUpdated($track);
+            $data['artwork_url'] = $this->resize($item->getArtwork(true));
+        } else
+            $this->move($track->artwork_url);
+
 
         return $data;
     }
@@ -76,33 +77,35 @@ class ManagerTrack
 
     public function resize($image, $track = null)
     {
-        if (is_string($image)) {
-            $image_name = basename($image);
-            $image = $this->getContent($image);
-        } else {
-            $image_name = $image->getClientOriginalName();
-            $image_name_base = substr($image_name, 0, strpos($image_name, '.'));
-        }
+        $image_name = $image->getClientOriginalName();
+        $image_name_base = substr($image_name, 0, strpos($image_name, '.'));
+
 
         if (isset($track))
             $this->deleteForUpdated($track);
 
+        $artwork = Image::make($image);
+        $artwork_webp =  Image::make($image)->encode('webp');
 
-        $thumb = Image::make($image)->encode('jpg');
-        $webp =  Image::make($image)->encode('webp');
+        $thumb = Image::make($image);
+        $thumb_webp =  Image::make($image)->encode('webp');
 
-        $path_thumb = $this->path_first . $this->path_second;
+        $path_artwork = $this->path_first . $this->path_second . "artwork/";
+        $path_thumb = $this->path_first . $this->path_second . "thumb/";
+
+        if (!file_exists($path_thumb))
+            mkdir($path_artwork, 0777, true);
 
         if (!file_exists($path_thumb))
             mkdir($path_thumb, 0777, true);
 
-        if (is_string($image)) {
-            $webp->fit(142, 166)->save($path_thumb . $image_name);
-            $thumb->fit(142, 166)->save($path_thumb . $webp->basename . '.jpg');
-        } else {
-            $thumb->fit(142, 166)->save($path_thumb . $image_name);
-            $webp->fit(142, 166)->save($path_thumb . $image_name_base . '.webp');
-        }
+
+        $thumb->fit(142, 166)->save($path_thumb . $thumb->basename);
+        $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_base . '.webp')->encode('webp');
+
+        $artwork->fit(142, 166)->save($path_artwork . $image_name);
+        $artwork_webp->fit(142, 166)->save($path_artwork . $image_name_base . '.webp')->encode('webp');
+
 
         $image = $this->helper->pathImageForDb . $this->path_second . $image_name;
 
@@ -112,10 +115,10 @@ class ManagerTrack
 
     public function move($path)
     {
+
         $image = $this->helper->pathImageForDb . $this->path_second . basename($path);
+
         $path = substr($path, 0, strpos($path, basename($path)));
-        $path = $this->helper->pathImageForServer . substr($path, strpos($path, "images"), strlen($path));
-        $path = preg_replace('/images\//', '', $path);
 
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), array('.', '..'));
@@ -129,13 +132,6 @@ class ManagerTrack
         }
 
         return $image;
-    }
-
-    private function getContent($url)
-    {
-        $client = new Client();
-        $res = $client->get($url);
-        return $res->getBody()->getContents();
     }
 
 
@@ -153,10 +149,11 @@ class ManagerTrack
 
     private function deleteForUpdated($track)
     {
-        $path = $track->thumb_url;
+        $path = $track->artwork_url;
         $path = substr($path, 0, strpos($path, basename($path)));
-        $path = $this->helper->pathImageForServer . substr($path, strpos($path, "images"));
-        $path = preg_replace('/images\//', '', $path);
+        $path = pathToServer() . substr($path, strpos($path, "images"));
+
+        $path = preg_replace('/artwork\//', '', $path);
 
         (new Service)->delete($path);
     }

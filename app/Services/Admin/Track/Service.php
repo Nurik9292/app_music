@@ -18,13 +18,10 @@ class Service
 
     public function store($data)
     {
-        // $data = $this->saveTrack($data);
         $data = $this->managerTrack->saveTrack($data);
 
         if ($data['title'] == null)
             $data['title'] = 'none';
-
-        $data['thumb_url'] = $this->managerTrack->resize($data['thumb_url']);
 
         $artists = $data['artists'];
         unset($data['artists']);
@@ -50,25 +47,10 @@ class Service
 
     public function updata($data, $track)
     {
-        if (isset($data['audio_url'])) {
-            if (count($track->artists) > 0 && $track->artists[0]->id != $data['artists'][0]) {
-                $data = $this->managerTrack->saveTrack($data, $track);
-                $data['thumb_url'] = $this->managerTrack->move($track->thumb_url);
-            } elseif (isset($data['album'])) {
-                if (count($track->album) == 0 || $data['album'] != $track->album[0]->id) {
-                    $data = $this->managerTrack->saveTrack($data, $track);
-                    $data['thumb_url'] = $this->managerTrack->move($track->thumb_url);
-                }
-            } elseif (!$track->where('audio_url', 'like', $data['audio_url']))
-                $data = $this->managerTrack->saveTrack($data, $track);
-        }
 
-        if (isset($data['thumb_url']) && $data['thumb_url'] != $track->audio_url)
-            $data['thumb_url'] = $this->managerTrack->resize($data['thumb_url']);
+        if ($data['artists'][0] != $track->artists[0]->id || $data['album'] != $track->album[0]->id || $data['title'] != $track->title)
+            $data = $this->managerTrack->saveTrack($data, $track);
 
-        if ($track->artists[0]->id == $data['artists'][0] && (count($track->album) > 0 && $track->album[0]->id == $data['album']))
-            if (isset($data['thumb_url']))
-                $data['thumb_url'] = $this->managerTrack->resize($data['thumb_url']);
 
         $artists = $data['artists'];
         unset($data['artists']);
@@ -104,7 +86,6 @@ class Service
 
     public function delete($path)
     {
-
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), ['.', '..']);
 

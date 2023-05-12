@@ -25,6 +25,7 @@ return new class extends Migration
         //     audio_url VARCHAR(255) NOT NULL,
         //     mbid VARCHAR(200) DEFAULT '',
         //     is_national BOOL DEFAULT false,
+        //     artwork_url VARCHAR(255) DEFAULT '',
         //     thumb_url VARCHAR(255) DEFAULT '',
         //     deleted_at timestamp(0) without time zone,
         //     lissen_count INT DEFAULT 0,

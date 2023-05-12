@@ -164,18 +164,18 @@ class ScanCreateTrack
     {
         if ($isNational) {
             if (isset($album)) {
-                $path_second_artwork = "tm_tracks/{$artist}/{$album->title}/{$title}/artwokr/";
+                $path_second_artwork = "tm_tracks/{$artist}/{$album->title}/{$title}/artwork/";
                 $path_second_thumb = "tm_tracks/{$artist}/{$album->title}/{$title}/thumb/";
             } else {
-                $path_second_artwork = "tm_tracks/{$artist}/{$title}/artwokr/";
+                $path_second_artwork = "tm_tracks/{$artist}/{$title}/artwork/";
                 $path_second_thumb = "tm_tracks/{$artist}/{$title}/thumb/";
             }
         } else {
             if (isset($album)) {
-                $path_second_artwork = "tracks/{$artist}/{$album->title}/{$title}/artwokr/";
+                $path_second_artwork = "tracks/{$artist}/{$album->title}/{$title}/artwork/";
                 $path_second_thumb = "tracks/{$artist}/{$album->title}/{$title}/thumb/";
             } else {
-                $path_second_artwork = "tracks/{$artist}/{$title}/artwokr/";
+                $path_second_artwork = "tracks/{$artist}/{$title}/artwork/";
                 $path_second_thumb = "tracks/{$artist}/{$title}/thumb/";
             }
         }

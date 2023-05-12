@@ -8,11 +8,11 @@ class DestroyController extends BaseController
 {
     public function __invoke(Track $track)
     {
-        $path = $track->thumb_url;
+        $path = $track->artwork_url;
         $path = substr($path, 0, strpos($path, basename($path)));
         $path = pathToServer() . substr($path, strpos($path, "images"));
 
-        // $path = preg_replace('/images\//', '', $path);
+        $path = preg_replace('/artwork\//', '', $path);
 
         $this->service->delete($path);
 

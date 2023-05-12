@@ -168,8 +168,7 @@ class Service
 
         $image = substr($playlist->artwork_url, strpos($playlist->artwork_url, 'images'));
         $path = substr($image, 0, strpos($image, 'playlist_artWork/' . basename($image)));
-        $path = $this->helper->pathImageForServer  . substr($path, strpos($path, "images"), strlen($path));
-        $path = preg_replace('/images\//', '', $path);
+        $path = pathToServer() . substr($path, strpos($path, "images"), strlen($path));
 
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), array('.', '..'));

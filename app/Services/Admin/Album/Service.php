@@ -42,7 +42,7 @@ class Service
     {
         $data = $this->type($data);
 
-        if (isset($data['artwork_url']))
+        if ($data['artwork_url'] != null)
             $data = $this->resize($data, $album);
 
         if ($data['title'] != $album->title || $data['artists'][0] != $album->artists[0]->id || $data['type'] != $album->type)
@@ -214,9 +214,8 @@ class Service
             $new_path = $this->helper->pathImageForServer . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/";
 
         $image = substr($album->artwork_url, strpos($album->artwork_url, 'images'));
-        $path =  $this->helper->pathImageForServer . substr($image,  strpos($image, 'images'));
+        $path =  pathToServer() . substr($image,  strpos($image, 'images'));
         $path = substr($path, 0, strpos($path, "album_artWork/" . basename($path)));
-        $path = preg_replace('/images\//', '', $path);
 
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), array('.', '..'));

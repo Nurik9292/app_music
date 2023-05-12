@@ -10,14 +10,14 @@ class DestroyController extends BaseController
     {
         $path = $playlist->thumb_url;
         $path = substr($path, 0, strpos($path,  basename($path)));
-        $path = pathToServer() . substr($path, strpos($path, "images"), strlen($path));
-        // $path = preg_replace('/images\//', '', $path);
+        $path = pathToServer() . substr($path, strpos($path, "images"));
+
         $this->service->delete($path);
 
         $path = $playlist->artwork_url;
         $path = substr($path, 0, strpos($path,  basename($path)));
-        $path = pathToServer() . substr($path, strpos($path, "images"), strlen($path));
-        // $path = preg_replace('/images\//', '', $path);
+        $path = pathToServer() . substr($path, strpos($path, "images"));
+
         $this->service->delete($path);
 
         $playlist->tracks()->detach();
