@@ -95,7 +95,7 @@ class ScanCreateTrack
             unset($item['artists']);
             unset($item['album']);
 
-            $track = Track::firstOrCreate($item);
+            $track = Track::firstOrCreate(['title' => $item['title']], $item);
 
             if (isset($artists)) {
                 $track->artists()->detach($artists->id);

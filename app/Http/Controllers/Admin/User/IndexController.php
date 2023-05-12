@@ -17,7 +17,11 @@ class IndexController extends Controller
     {
         $users = User::all();
 
-        $data = ['d', '2', '1', '2'];
+        $stat = 'dfsdfdsf/dfsfsdfsd/fsdsdfsdfsdf/dfsdfsdf/dfsd//';
+
+        $res = preg_replace('/(\/)(?=\1)/', '', $stat);
+
+        dd($res);
 
         return view('users.index', compact('users'));
     }
