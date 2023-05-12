@@ -48,10 +48,14 @@ class DatabaseSeeder extends Seeder
                 'role' => 2,
             ]);
 
-        Album::factory(5)->create();
-        Playlist::factory(5)->create();
-        Artist::factory(10)->create();
-        Genre::factory(10)->create();
+        if (count((Album::all())) == 0)
+            Album::factory(5)->create();
+        if (count((Artist::all())) == 0)
+            Artist::factory(10)->create();
+        if (count((Genre::all())) == 0)
+            Genre::factory(10)->create();
+        if (count((Playlist::all())) == 0)
+            Playlist::factory(5)->create();
 
 
         File::truncate();
