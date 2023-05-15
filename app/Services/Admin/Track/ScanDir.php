@@ -4,7 +4,6 @@ namespace App\Services\Admin\Track;
 
 use App\Models\File;
 use App\Services\Admin\HelperService;
-use Carbon\Carbon;
 use DirectoryIterator;
 use Owenoj\LaravelGetId3\GetId3;
 
@@ -13,7 +12,6 @@ class ScanDir
 
     private $data;
     private $mp3;
-    // private $wepb;
     private $helper;
     private $timestamp;
 
@@ -40,12 +38,10 @@ class ScanDir
 
                 if ($item->isFile()) {
 
-                    // if ($file[0]->scanTime < $item->getATime()) {
-                    if ($item->getSize() != 0) {
-                        str_ends_with($item->getBasename(), '.mp3') ? $this->mp3[] = $item->getRealPath() : '';
-                        // str_ends_with($item->getBasename(), '.webp') ? $this->wepb[] = $item->getRealPath() : '';
+                    if ($file[0]->scanTime < $item->getATime()) {
+                        if ($item->getSize() != 0)
+                            str_ends_with($item->getBasename(), '.mp3') ? $this->mp3[] = $item->getRealPath() : '';
                     }
-                    // }
 
                     $this->timestamp = $item->getATime();
                 }
@@ -85,43 +81,16 @@ class ScanDir
                 'audio_url' => $audio_url,
                 'is_national' => $local == 'tm' ? true : false,
                 'artwork_url' => $image,
-                // 'artwork_url' => $this->addImage($audio_url),
                 'status' =>  true
             ];
         }
     }
 
 
-    // private function addImage($audio_url)
-    // {
-    //     if (!is_array($this->wepb)) {
-    //         $image_name = substr(basename($this->wepb), 0, strpos(basename($this->wepb), '.webp'));
-    //         $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
-    //         return $this->wepb;
-    //     }
-
-    //     foreach ($this->wepb as $key => $image_url) {
-    //         $image_name = substr(basename($image_url), 0, strpos(basename($image_url), '.webp'));
-    //         $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
-    //         if ($image_name == $audio_name) {
-    //             unset($this->wepb[$key]);
-    //             return $image_url;
-    //         }
-    //     }
-    // }
-
-
-
-
     public function getMp3()
     {
         return $this->mp3;
     }
-
-    // public function getWepb()
-    // {
-    //     return $this->wepb;
-    // }
 
     public function getData()
     {
