@@ -13,7 +13,7 @@ class ScanDir
 
     private $data;
     private $mp3;
-    private $wepb;
+    // private $wepb;
     private $helper;
     private $timestamp;
 
@@ -40,12 +40,12 @@ class ScanDir
 
                 if ($item->isFile()) {
 
-                    if ($file[0]->scanTime < $item->getATime()) {
-                        if ($item->getSize() != 0) {
-                            str_ends_with($item->getBasename(), '.mp3') ? $this->mp3[] = $item->getRealPath() : '';
-                            str_ends_with($item->getBasename(), '.webp') ? $this->wepb[] = $item->getRealPath() : '';
-                        }
+                    // if ($file[0]->scanTime < $item->getATime()) {
+                    if ($item->getSize() != 0) {
+                        str_ends_with($item->getBasename(), '.mp3') ? $this->mp3[] = $item->getRealPath() : '';
+                        // str_ends_with($item->getBasename(), '.webp') ? $this->wepb[] = $item->getRealPath() : '';
                     }
+                    // }
 
                     $this->timestamp = $item->getATime();
                 }
@@ -68,6 +68,7 @@ class ScanDir
             $artist = $track->getArtist() ?? null;
             $title = $track->getTitle() ?? null;
             $album = $track->getAlbum() ?? null;
+            $image = $track->getArtwork(true) ?? null;
             if ($track->getPlaytimeSeconds())
                 $duration = intval(round($track->getPlaytimeSeconds()));
             if (isset($track->extractInfo()['bitrate']))
@@ -83,30 +84,31 @@ class ScanDir
                 'lyrics' => '',
                 'audio_url' => $audio_url,
                 'is_national' => $local == 'tm' ? true : false,
-                'thumb_url' => $this->addImage($audio_url),
+                'artwork_url' => $image,
+                // 'artwork_url' => $this->addImage($audio_url),
                 'status' =>  true
             ];
         }
     }
 
 
-    private function addImage($audio_url)
-    {
-        if (!is_array($this->wepb)) {
-            $image_name = substr(basename($this->wepb), 0, strpos(basename($this->wepb), '.webp'));
-            $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
-            return $this->wepb;
-        }
+    // private function addImage($audio_url)
+    // {
+    //     if (!is_array($this->wepb)) {
+    //         $image_name = substr(basename($this->wepb), 0, strpos(basename($this->wepb), '.webp'));
+    //         $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
+    //         return $this->wepb;
+    //     }
 
-        foreach ($this->wepb as $key => $image_url) {
-            $image_name = substr(basename($image_url), 0, strpos(basename($image_url), '.webp'));
-            $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
-            if ($image_name == $audio_name) {
-                unset($this->wepb[$key]);
-                return $image_url;
-            }
-        }
-    }
+    //     foreach ($this->wepb as $key => $image_url) {
+    //         $image_name = substr(basename($image_url), 0, strpos(basename($image_url), '.webp'));
+    //         $audio_name = substr(basename($audio_url), 0, strpos(basename($audio_url), '.mp3'));
+    //         if ($image_name == $audio_name) {
+    //             unset($this->wepb[$key]);
+    //             return $image_url;
+    //         }
+    //     }
+    // }
 
 
 
@@ -116,10 +118,10 @@ class ScanDir
         return $this->mp3;
     }
 
-    public function getWepb()
-    {
-        return $this->wepb;
-    }
+    // public function getWepb()
+    // {
+    //     return $this->wepb;
+    // }
 
     public function getData()
     {

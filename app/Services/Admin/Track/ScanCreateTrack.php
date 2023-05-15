@@ -7,7 +7,6 @@ use App\Models\Track;
 use App\Models\Artist;
 use App\Models\Country;
 use App\Services\Admin\HelperService;
-use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
 class ScanCreateTrack
@@ -58,8 +57,8 @@ class ScanCreateTrack
                 $artists->albums()->attach($album->id);
             }
 
-            if (isset($item['thumb_url']))
-                $image_name = basename($item['thumb_url']);
+            if (isset($item['artwork_url']))
+                $image_name = basename($item['artwork_url']);
             else $image_name = '';
 
             // $item['audio_url'] = "https://storage2.ma.st.com.tm" . $item['audio_url'];
@@ -67,15 +66,7 @@ class ScanCreateTrack
             $item['audio_url'] =  "https://storage2.ma.st.com.tm/" . preg_replace('/(\/nfs\/storage2\/)/', '', $item['audio_url']);;
 
 
-            if ($item['thumb_url'] != null) {
-                $artwork = Image::make($item['thumb_url']);
-                $artWork_webp =  Image::make($item['thumb_url']);
-
-                $thumb = Image::make($item['thumb_url']);
-                $thumb_webp =  Image::make($item['thumb_url']);
-            }
-
-            if (!isset($artist)) $artist = preg_replace('/(.webp)/', '', basename($item['thumb_url']));
+            if (!isset($artist)) $artist = preg_replace('/(.webp)/', '', basename($item['artwork_url']));
 
             [$path_second_artwork, $path_second_thumb] = $this->createPath($item['is_national'], $album, $artist, $item['title']);
 
@@ -89,18 +80,9 @@ class ScanCreateTrack
             if (!file_exists($path_artWork))
                 mkdir($path_artWork, 0777, true);
 
-            if ($item['thumb_url'] != null) {
-                $base_name  = preg_replace('/.webp/', '', $thumb_webp->basename) . ".jpg";
 
-                $thumb_webp->fit(142, 166)->save($path_thumb . $image_name)->encode('webp');
-                $thumb->fit(142, 166)->save($path_thumb . $base_name)->encode('jpg');
-
-                $artWork_webp->fit(375, 250)->save($path_artWork . $image_name)->encode('webp');
-                $artwork->fit(375, 250)->save($path_artWork . $base_name)->encode('jpg');
-
-                $image_thumb = $this->helper->pathImageForDb . $path_second_thumb . $base_name;
-                $image_artWork = $this->helper->pathImageForDb . $path_second_artwork . $base_name;
-            }
+            if ($item['artwork_url'] != null)
+                [$image_artWork, $image_thumb] = $this->pathForDatabase($item['artwork_url'], $path_artWork, $path_thumb, $image_name, $path_second_artwork, $path_second_thumb);
 
             $item['thumb_url'] = $image_thumb ?? '';
             $item['artwork_url'] = $image_artWork ?? '';
@@ -145,11 +127,10 @@ class ScanCreateTrack
 
     private function createAlbum($albums, $isNational)
     {
-        if (!$this->is_utf8($albums)) $albums = 'album';
-
-        Log::debug($albums);
         if (mb_detect_encoding($albums) == 'ASCII-8')
             $albums = iconv('ASCII', 'UTF-8//IGNORE', $albums);
+
+        if (!$this->is_utf8($albums)) $albums = 'album';
 
         $album = Album::firstOrCreate(['title' => $albums], [
             'title' => $albums,
@@ -183,6 +164,49 @@ class ScanCreateTrack
         $path_second_thumb = preg_replace('/(\/)(?=\1)/', '', $path_second_thumb);
 
         return [$path_second_artwork, $path_second_thumb];
+    }
+
+
+    private function pathForDatabase($image, $path_artWork, $path_thumb, $image_name, $path_second_artwork, $path_second_thumb)
+    {
+        $artwork = Image::make($image);
+        $artWork_webp =  Image::make($image);
+
+        $thumb = Image::make($image);
+        $thumb_webp =  Image::make($image);
+
+        if (str_ends_with($thumb_webp->basename, 'jpeg')) {
+            $base_name  = preg_replace('/.jpeg/', '', $thumb_webp->basename) . ".webp";
+
+            $thumb_webp->fit(142, 166)->save($path_thumb . $image_name)->encode('jpeg');
+            $thumb->fit(142, 166)->save($path_thumb . $base_name)->encode('webp');
+
+            $artWork_webp->fit(375, 250)->save($path_artWork . $image_name)->encode('jpeg');
+            $artwork->fit(375, 250)->save($path_artWork . $base_name)->encode('webp');
+        }
+        if (str_ends_with($thumb_webp->basename, 'jpg')) {
+            $base_name  = preg_replace('/.jpg/', '', $thumb_webp->basename) . ".webp";
+
+            $thumb_webp->fit(142, 166)->save($path_thumb . $image_name)->encode('jpg');
+            $thumb->fit(142, 166)->save($path_thumb . $base_name)->encode('webp');
+
+            $artWork_webp->fit(375, 250)->save($path_artWork . $image_name)->encode('jpg');
+            $artwork->fit(375, 250)->save($path_artWork . $base_name)->encode('webp');
+        }
+        if (str_ends_with($thumb_webp->basename, 'png')) {
+            $base_name  = preg_replace('/.png/', '', $thumb_webp->basename) . ".webp";
+
+            $thumb_webp->fit(142, 166)->save($path_thumb . $image_name)->encode('png');
+            $thumb->fit(142, 166)->save($path_thumb . $base_name)->encode('webp');
+
+            $artWork_webp->fit(375, 250)->save($path_artWork . $image_name)->encode('png');
+            $artwork->fit(375, 250)->save($path_artWork . $base_name)->encode('webp');
+        }
+
+        $image_thumb = $this->helper->pathImageForDb . $path_second_thumb . $base_name;
+        $image_artWork = $this->helper->pathImageForDb . $path_second_artwork . $base_name;
+
+        return [$image_artWork, $image_thumb];
     }
 
 
