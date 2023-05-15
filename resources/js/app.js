@@ -10,9 +10,10 @@ import router from './router';
 import PrimeVue from 'primevue/config';
 import MultiSelect from 'primevue/multiselect';
 import InputSwitch from 'primevue/inputswitch';
-import Dropdown from 'primevue/dropdown';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Checkbox from 'primevue/checkbox';
 
 import "primevue/resources/themes/lara-light-indigo/theme.css"
 import "primevue/resources/primevue.min.css";
@@ -30,9 +31,10 @@ const genre = createApp({components:{GenreIndex}});
 
 ovr.component('MultiSelect', MultiSelect);
 ovr.component('InputSwitch', InputSwitch);
-ovr.component('Dropdown', Dropdown);
 ovr.component('InputNumber', InputNumber);
 ovr.component('Button', Button);
+ovr.component('InputText', InputText);
+ovr.component('Checkbox', Checkbox);
 
 // app.use(router);
 ovr.use(router);

@@ -1,43 +1,93 @@
 <template>
-  <div class="content">
+    <div class="content">
+        <div class="card card-white">
+
+
+  <div class="card-body">
 
     <div class="row">
-    <div :class="isBlock() ? '' : 'd-none'">
-    <dir class="row">
         <div class="block_one">
-                    <div class="mb-3">
-                          <label for="new_album">Новые альбомы</label>
-                        <MultiSelect v-model="selectNewAlbums" :options="albums" filter  optionLabel="title"  placeholder="Выбирите Альбомы" :maxSelectedLabels="10" :selectionLimit="10" class="w-full md:w-40rem" id="new_album" />
-                      </div>
-                      <div class="mb-3">
-                          <label for="new_playlist">Новые плейлисты</label>
-                        <MultiSelect v-model="selectNewPlaylists" :options="playlists" filter optionLabel="title_ru"  placeholder="Выбирите Плейлисты" :maxSelectedLabels="10" :selectionLimit="10" class="w-full md:w-40rem" id="new_playlist" />
-                      </div>
-                      <div class="mb-3">
-                          <label for="updated_playlist">Обновленные плейлисты</label>
-                        <MultiSelect v-model="selectUpdatedPlaylists" :options="playlists" filter optionLabel="title_ru" placeholder="Выбирите Плейлисты" :maxSelectedLabels="10" :selectionLimit="10" class="w-full md:w-40rem" id="updated_playlist" />
-                      </div>
+            <label for="name">Название блока</label>
+            <InputText type="text" v-model="name" id="name" size="30"/>
         </div>
-    </dir>
-    <div class="row ml-4">
-                <div class="block_one">
-                     <label for="status">Нумерация</label>
-                     <InputNumber v-model="order_number" min="1"/>
-              </div>
-             <div class="block_one">
-                     <label for="status">Статус</label>
-                     <InputSwitch v-model="status" />
-             </div>
+        <div class="block_one">
+            <label for="name_status">Название статуса</label>
+            <InputText type="text" v-model="name_status" id="name_status" size="30"/>
+        </div>
     </div>
 
+    <div class="row">
+        <label class="mb-3">Выберите соодержание блока</label>
+    <div class="check">
+        <Checkbox v-model="body" inputId="album" name="body" value="album"/>
+        <label for="album" class="lable_item">Альбомы</label>
     </div>
-  </div>
+    <div class="check">
+        <Checkbox v-model="body" inputId="playlist" name="body" value="playlist"/>
+        <label for="playlist" class="lable_item">Плейлисты</label>
+        </div>
+    <div class="check">
+        <Checkbox v-model="body" inputId="track" name="body" value="track"/>
+        <label for="track" class="lable_item">Треки</label>
+    </div>
+    <div class="check">
+        <Checkbox v-model="body" inputId="genre" name="body" value="genre"/>
+        <label for="genre" class="lable_item">Жанры</label>
+    </div>
+    </div>
+
+    <!-- <span>{{ albums[3] }}</span>
+    ,<br>
+    <span>{{ selectAlbums[0] }}</span> -->
+
+<div class="row">
+    <div>
+        <div class="block_one">
+                        <div :class="isAlbum() ? 'mb-3' : 'd-none'">
+                          <label for="album">Альбомы</label>
+                        <MultiSelect v-model="selectAlbums" :options="albums" filter optionLabel="title" placeholder="Выбирите Альбомы" :maxSelectedLabels="10" :selectionLimit="10" class="w-full md:w-40rem" id="album" />
+                      </div>
+                      <div :class="isPlaylist() ? 'mb-3' : 'd-none'">
+                          <label for="playlist">Плейлисты</label>
+                        <MultiSelect v-model="selectPlaylists" :options="playlists" filter optionLabel="title_ru" placeholder="Выбирите Плейлисты" :maxSelectedLabels="10" :selectionLimit="10" class="w-full md:w-40rem" id="playlist" />
+                      </div>
+                      <div :class="isTrack() ? 'mb-3' : 'd-none'">
+                          <label for="track">Треки</label>
+                        <MultiSelect v-model="selectTracks" :options="tracks" filter optionLabel="title" placeholder="Выбирите Трек" :maxSelectedLabels="20" :selectionLimit="20" class="w-full md:w-40rem" id="track" />
+                      </div>
+                      <div :class="isGenre() ? 'mb-3' : 'd-none'">
+                          <label for="genre">Жанры</label>
+                        <MultiSelect v-model="selectGenres" :options="genres" filter optionLabel="name_ru" placeholder="Выбирите Жанры" :maxSelectedLabels="20" :selectionLimit="20" class="w-full md:w-40rem" id="genre" />
+                      </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="block_one">
+            <label for="status">Нумерация</label>
+            <InputNumber v-model="order_number" min="1"/>
+    </div>
+     <div class="block_one">
+            <label for="status">Статус</label>
+            <InputSwitch v-model="status" />
+    </div>
+</div>
+
+
+</div>
+    </div>
+
+
+  <!-- /.card-body -->
 
   <div class="card-footer ">
     <router-link :to="{name: 'overview.index'}" class="btn btn-primary btn-lg">Отмена</router-link>
     <a href="#" class="btn btn-primary btn-lg ml-3" @click.prevent="update()">Обновить</a>
   </div>
-</div>
+
+    </div>
 </template>
 
 <script>
@@ -48,15 +98,20 @@ import { RouterLink, RouterView } from 'vue-router'
 
         data(){
            return {
-            blocks: null,
-            albums: null,
-            selectNewAlbums: null,
-            playlists: null,
-            selectNewPlaylists: null,
-            selectUpdatedPlaylists: null,
-            block:null,
-            order_number: null,
-            status: false,
+            block: null,
+               albums: null,
+               tracks: null,
+               genres: null,
+               playlists: null,
+               name: null,
+               name_status: null,
+               selectAlbums: null,
+               selectPlaylists: null,
+               selectTracks: null,
+               selectGenres: null,
+               status: false,
+               order_number: null,
+               body: null
            }
         },
 
@@ -67,64 +122,137 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
         mounted() {
-            this.getBlock();
             this.getBlocks();
-            this.getPlaylists();
             this.getAlbumts();
+            this.getPlaylists();
+            this.getTracks();
+            this.getGenres();
+
         },
 
         methods: {
-            getBlock(){
-                axios.get(`/api/overviews/show/${this.$route.params.id}`).then(res => {
-                    console.log(res);
-                    this.block = res.data.data.block;
-                    this.status = res.data.data.block.status;
-                    this.order_number = res.data.data.block.order_number;
-                    this.selectNewAlbums = res.data.data.albums;
-                    this.selectNewPlaylists = res.data.data.newPlaylists;
-                    this.selectUpdatedPlaylists = res.data.data.updatePlaylists;
-                });
-            },
 
             getBlocks() {
-            axios.get("/api/overviews").then(res => { console.log(res.data.data); this.blocks = res.data.data });
-          },
+                axios.get(`/api/overviews/show/${this.$route.params.id}`).then(res => {
+                    this.name = res.data.data.block.name;
+                    this.order_number = res.data.data.block.order_number;
+                    this.status = res.data.data.block.status;
+                    this.selectAlbums = res.data.data.albums;
+                    this.selectPlaylists = res.data.data.playlists;
+                    this.selectTracks = res.data.data.tracks;
+                    this.selectGenres = res.data.data.genres;
+                    this.name_status = res.data.data.name_status;
 
-          getPlaylists() {
-            axios.get("/api/overviews/playlists").then(res => { console.log(res.data.data); this.playlists = res.data.data });
+
+                    for(let idx in this.selectAlbums){
+                        console.log(this.selectAlbums[idx]);
+                        for(let element in this.selectAlbums[idx]){
+                            if(this.selectAlbums[idx][element] == null)
+                            this.selectAlbums[idx][element] = "";
+                        }
+                    }
+
+                    for(let idx in this.selectPlaylists){
+                        console.log(this.selectPlaylists[idx]);
+                        for(let element in this.selectPlaylists[idx]){
+                            if(this.selectPlaylists[idx][element] == null)
+                            this.selectPlaylists[idx][element] = "";
+                        }
+                    }
+
+                    for(let idx in this.selectTracks){
+                        console.log(this.selectTracks[idx]);
+                        for(let element in this.selectTracks[idx]){
+                            if(this.selectTracks[idx][element] == null)
+                            this.selectTracks[idx][element] = "";
+                        }
+                    }
+
+                    for(let idx in this.selectGenres){
+                        console.log(this.selectGenres[idx]);
+                        for(let element in this.selectGenres[idx]){
+                            if(this.selectGenres[idx][element] == null)
+                            this.selectGenres[idx][element] = "";
+                        }
+                    }
+
+                    this.body = [];
+
+                    res.data.data.albums != '' ? this.body.push('album') : '';
+                    res.data.data.playlists != '' ? this.body.push('playlist') : '';
+                    res.data.data.tracks != '' ? this.body.push('track') : '';
+                    res.data.data.genres != '' ? this.body.push('genre') : '';
+
+
+                })
+            },
+
+            getPlaylists() {
+            axios.get("/api/overviews/playlists").then(res => { this.playlists = res.data.data });
           },
 
           getAlbumts() {
-            axios.get("/api/overviews/albums").then(res => { console.log(res.data.data); this.albums = res.data.data });
+            axios.get("/api/overviews/albums").then(res => { this.albums = res.data.data });
           },
 
+          getTracks() {
+            axios.get("/api/overviews/tracks").then(res => { this.tracks = res.data.data });
+          },
+
+          getGenres() {
+            axios.get("/api/overviews/genres").then(res => { this.genres = res.data.data });
+          },
+
+
           update(){
-            axios.patch(`/api/overviews/${this.block.id}`, {
+            axios.patch(`/api/overviews/${this.$route.params.id}`, {
                 status: this.status,
+                name_status: this.name_status,
+                name: this.name,
                 order_number: this.order_number,
-                newAlbums: this.selectNewAlbums,
-                newPlaylists: this.selectNewPlaylists,
-                updatedPlaylists: this.selectUpdatedPlaylists, }).then(res =>{
+                albums: this.selectAlbums,
+                playlists: this.selectPlaylists,
+                tracks: this.selectTracks,
+                genres: this.selectGenres, }).then(res =>{
                 this.$router.push({name: 'overview.index'});
             });
           },
 
-            isBlock() {
-                for(let bb in this.blocks){
-                    console.log(this.blocks[bb].id);
-                    if(this.block.id == this.blocks[bb].id){
-                        console.log(true);
-                        return true;
-
-                    }
+          isAlbum(){
+                for(let item in this.body){
+                    if("album" == this.body[item])
+                        return  true;
                 }
                 return false;
-            },
+             },
 
-            value(){
-                return this.albums[0];
-            }
-        },
+            isPlaylist(){
+                for(let item in this.body){
+                    if("playlist" == this.body[item])
+                        return  true;
+                }
+                return false;
+             },
+
+             isTrack(){
+                for(let item in this.body){
+                    if("track" == this.body[item])
+                        return  true;
+                }
+                return false;
+             },
+
+             isGenre(){
+                for(let item in this.body){
+                    if("genre" == this.body[item])
+                        return  true;
+                }
+                return false;
+             },
+
+
+
+        }
 
 
     }
@@ -147,6 +275,21 @@ import { RouterLink, RouterView } from 'vue-router'
         margin-bottom: 40px;
    }
 
+
+   .check {
+        float: left;
+        width: 140px;
+        margin-right: 50px;
+        margin-bottom: 40px;
+   }
+
+   .lable_item{
+       /* Other styling... */
+       text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+   }
 
    .text {
     float: left;

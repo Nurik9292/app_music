@@ -8,14 +8,10 @@ use Illuminate\Http\Request;
 
 class DestroyController extends Controller
 {
-    public function __invoke(BlockShema $blockShema)
+    public function __invoke(BlockShema $block)
     {
-        $blockShema->blockAlbums()->detach();
-        $blockShema->blockPlaylists()->detach();
-        $blockShema->blockUpdatedPlaylists()->detach();
-        $blockShema->blockNames()->detach();
 
-        $blockShema->delete();
+        $block->delete();
 
         return response([]);
     }

@@ -15,33 +15,17 @@ class StoreController extends Controller
 
         Log::debug($data);
 
-        $block = $data['block']['id'];
-        $data['name'] = $data['block']['name'];
-        unset($data['block']);
+        $data['body'] = json_encode([
+            "name_status" => $data['name_status'] ?? '',
+            'albums' => $data['albums'] ?? '',
+            'playlists' => $data['playlists'] ?? '',
+            'tracks' => $data['tracks'] ?? '',
+            'genres' => $data['genres'] ?? '',
+        ]);
 
-        foreach ($data['newAlbums'] as $newalbum)
-            $newAlbums[] = $newalbum['id'];
+        unset($data['playlists'], $data['albums'], $data['tracks'], $data['genres'], $data['name_status']);
 
-        foreach ($data['newPlaylists'] as $newPlaylist)
-            $newPlaylists[] = $newPlaylist['id'];
-
-        foreach ($data['updatedPlaylists'] as $updatedPlaylist)
-            $updatedPlaylists[] = $updatedPlaylist['id'];
-
-
-        $arr = array_merge(['newAlbums' => $data['newAlbums'],  'newPlaylists' => $data['newPlaylists'], 'updatedPlaylists' => $data['updatedPlaylists']]);
-        $data['body'] = json_encode($arr);
-
-        unset($data['newAlbums']);
-        unset($data['newPlaylists']);
-        unset($data['updatedPlaylists']);
-
-        $blockShema = BlockShema::create($data);
-
-        $blockShema->blockAlbums()->attach($newAlbums);
-        $blockShema->blockPlaylists()->attach($newPlaylists);
-        $blockShema->blockUpdatedPlaylists()->attach($updatedPlaylists);
-        $blockShema->blockNames()->attach($block);
+        BlockShema::create($data);
 
         return response([]);
     }

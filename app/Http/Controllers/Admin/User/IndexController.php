@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Artist;
-use App\Models\File;
 use App\Models\User;
-
-// use getID3;
+use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
 {

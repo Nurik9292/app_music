@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Resources\Admin\AlbumResource;
-use App\Http\Resources\Admin\BlockResource;
+use App\Http\Resources\Admin\GenreResource;
 use App\Http\Resources\Admin\PlaylistResource;
+use App\Http\Resources\Admin\TrackResource;
 use App\Models\Album;
-use App\Models\BlockName;
+use App\Models\Genre;
 use App\Models\Playlist;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,13 +42,19 @@ Route::prefix('overviews')->namespace('App\Http\Controllers\Admin\Block\Overview
     Route::get('/', IndexController::class)->name('index');
     Route::post('/', StoreController::class)->name('store');
     Route::get('/show/{block}', ShowController::class)->name('show');
-    Route::patch('/{blockShema}', UpdateController::class)->name('update');
-    Route::delete('/{blockShema}', DestroyController::class)->name('destroy');
+    Route::patch('/{block}', UpdateController::class)->name('update');
+    Route::put('sort', SortController::class)->name('sort');
+    Route::delete('/{block}', DestroyController::class)->name('destroy');
 
-    Route::get('/blocks', function () {
-        $blocks = BlockName::orderBy('name')->get();
-        return BlockResource::collection($blocks);
-    })->name('block');
+    Route::get('/tracks', function () {
+        $tracks = Track::orderBy('title')->get();
+        return TrackResource::collection($tracks);
+    })->name('track');
+
+    Route::get('/genres', function () {
+        $genres = Genre::orderBy('name_ru')->get();
+        return GenreResource::collection($genres);
+    })->name('genre');
 
     Route::get('/playlists', function () {
         $playlists = Playlist::orderByDesc('title_ru')->get();

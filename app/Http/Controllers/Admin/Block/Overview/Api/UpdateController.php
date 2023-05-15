@@ -9,41 +9,23 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateController extends Controller
 {
-    public function __invoke(Request $request, BlockShema $blockShema)
+    public function __invoke(Request $request, BlockShema $block)
     {
         $data = $request->all();
 
         Log::debug($data);
 
-        if ($data['newAlbums'])
-            foreach ($data['newAlbums'] as $newalbum)
-                $newAlbums[] = $newalbum['id'];
+        $data['body'] = json_encode([
+            "name_status" => $data['name_status'] ?? '',
+            'albums' => $data['albums'] ?? '',
+            'playlists' => $data['playlists'] ?? '',
+            'tracks' => $data['tracks'] ?? '',
+            'genres' => $data['genres'] ?? '',
+        ]);
 
-        if ($data['newPlaylists'])
-            foreach ($data['newPlaylists'] as $newPlaylist)
-                $newPlaylists[] = $newPlaylist['id'];
+        unset($data['playlists'], $data['albums'], $data['tracks'], $data['genres'], $data['name_status']);
 
-        if ($data['updatedPlaylists'])
-            foreach ($data['updatedPlaylists'] as $updatedPlaylist)
-                $updatedPlaylists[] = $updatedPlaylist['id'];
-
-
-        $arr = array_merge(['newAlbums' => $data['newAlbums'],  'newPlaylists' => $data['newPlaylists'], 'updatedPlaylists' => $data['updatedPlaylists']]);
-        $data['body'] = json_encode($arr);
-
-        unset($data['newAlbums']);
-        unset($data['newPlaylists']);
-        unset($data['updatedPlaylists']);
-
-
-        $blockShema->update($data);
-
-        if ($newAlbums)
-            $blockShema->blockAlbums()->sync($newAlbums);
-        if ($newPlaylists)
-            $blockShema->blockPlaylists()->sync($newPlaylists);
-        if ($updatedPlaylists)
-            $blockShema->blockUpdatedPlaylists()->sync($updatedPlaylists);
+        $block->update($data);
 
         return response([]);
     }

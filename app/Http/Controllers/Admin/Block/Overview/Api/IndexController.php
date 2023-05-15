@@ -12,7 +12,7 @@ class IndexController extends Controller
 {
     public function __invoke()
     {
-        $blocks = BlockShema::orderByDesc('order_number')->get();
+        $blocks = BlockShema::orderBy('order_number')->get();
 
         return BlockResource::collection($blocks);
     }

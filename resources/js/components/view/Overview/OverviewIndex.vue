@@ -33,15 +33,15 @@
                         <th scope="col">Delete</th>
                       </tr>
                     </thead>
-                    <draggable v-model="blocks" tag="tbody" item-key="id">
+                    <draggable v-model="blocks" tag="tbody" item-key="id" @change="changeOrder()">
 
                         <template #item="{element}">
-                            <tr>
+                            <tr v-if="element != null">
                                 <th scope="row">{{ element.order_number }}</th>
                                 <td>{{element.name}}</td>
-                                <td><InputSwitch  v-model="status[element.id]" @change="update(element.id)"/></td>
+                                <td ><InputSwitch  v-model="status[element.id]" @change.prevent="update(element.id)"/></td>
                                 <td>
-                                   <router-link :to="{name: 'overview.edit', params: {id: element.id}}" class="btn btn-outline-success">Edit</router-link>
+                                    <a href="#" class="btn btn-outline-success" @click.prevent="edit(element.id)" >Edit</a>
                                 </td>
                                 <td>
                                     <a href="#" class="btn btn-outline-danger" @click.prevent="deleteBlock(element.id)" >Delete</a>
@@ -50,10 +50,12 @@
                         </template>
                     </draggable>
      </table>
-                <div class="d-flex justify-content-end mb-3">
+                <!-- <div class="d-flex justify-content-end mb-3">
                      <input type="submit" class="btn btn-primary btn-lg" value="Отправить">
-                 </div>
+                 </div> -->
       </div>
+
+      <span>{{  }}</span>
     </section>
     <!-- /.content -->
     </div>
@@ -77,6 +79,7 @@ import { RouterLink, RouterView } from 'vue-router'
            return {
                blocks: null,
                status: [],
+               statusChange: [],
                 dragging: false
            }
         },
@@ -99,27 +102,29 @@ import { RouterLink, RouterView } from 'vue-router'
             },
 
             addStatus(){
-                for(let block in this.blocks){
-                   this.status[this.blocks[block].id] = this.blocks[block].status;
+                for(let idx in this.blocks){
+                    this.status[this.blocks[idx].id] = this.blocks[idx].status;
                 }
             },
 
             update(id){
-                let updateStatus = false;
+                axios.patch(`/api/overviews/${id}`, {status: this.status[id]}).then(res => { this.getBlocks()});
+        },
 
-                for(let block in this.blocks){
-                    updateStatus = this.status[this.blocks[block].id];
-                }
-
-                axios.patch(`/api/overviews/${id}`, {status: updateStatus}).then(res => { this.getBlocks()});
+        changeOrder(){
+          this.blocks.map((block, index) => {
+                block.order =  index + 1;
+                console.log(block);
+            })
+            axios.put("/api/overviews/sort", {blocks: this.blocks}).then(res => {this.getBlocks();})
         },
 
             deleteBlock(id){
                 axios.delete(`/api/overviews/${id}`).then(res => { this.getBlocks() })
             },
 
-            goEdit(){
-                this.$router.push({name: 'overview.edit'});
+            edit(id){
+                this.$router.push({name: 'overview.edit', params:{id: id}});
             }
 
         },
