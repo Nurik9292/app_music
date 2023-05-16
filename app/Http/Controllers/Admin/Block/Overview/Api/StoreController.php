@@ -25,6 +25,11 @@ class StoreController extends Controller
 
         unset($data['playlists'], $data['albums'], $data['tracks'], $data['genres'], $data['name_status']);
 
+        if (count(BlockShema::where('order_number', $data['order_number'])->get()) > 0)
+            $blocks = BlockShema::where('order_number', '>=', $data['order_number'])->get();
+
+        foreach ($blocks as $block) $block->increment('oreder_number');
+
         BlockShema::create($data);
 
         return response([]);
