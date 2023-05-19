@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Resources\Admin\AlbumResource;
+use App\Http\Resources\Admin\ArtistResource;
 use App\Http\Resources\Admin\GenreResource;
 use App\Http\Resources\Admin\PlaylistResource;
 use App\Http\Resources\Admin\TrackResource;
 use App\Models\Album;
+use App\Models\Artist;
 use App\Models\Genre;
 use App\Models\Playlist;
 use App\Models\Track;
@@ -25,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+// Route::middleware('auth:api', 'admin')->group(function () {
 Route::prefix('users')->namespace('App\Http\Controllers\Admin\User\Api')->name('api.user.')->group(function () {
     Route::get('/', IndexController::class)->name('index');
     Route::patch('/{user}', UpdateController::class)->name('update');
@@ -60,8 +62,36 @@ Route::prefix('overviews')->namespace('App\Http\Controllers\Admin\Block\Overview
         $playlists = Playlist::orderByDesc('title_ru')->get();
         return new PlaylistResource($playlists);
     })->name('playlist');
+
     Route::get('/albums', function () {
-        $playlists = Album::orderByDesc('title')->get();
-        return new AlbumResource($playlists);
+        $albums = Album::orderBy('title')->get();
+        return new AlbumResource($albums);
     })->name('album');
 });
+
+
+Route::prefix('tracks')->namespace('App\Http\Controllers\Admin\Track\Api')->name('api.track.')->group(function () {
+    Route::get('/', IndexController::class)->name('index');
+    Route::post('/', StoreController::class)->name('store');
+    Route::post('/scan', StoreScanController::class)->name('store.scan');
+    Route::get('/show/{track}', ShowController::class)->name('show');
+    Route::post('/filter', FilterController::class)->name('filter');
+    Route::patch('/{track}', UpdateController::class)->name('update');
+    Route::delete('/{track}', DestroyController::class)->name('destroy');
+
+    Route::get('/albums', function () {
+        $albums = Album::orderBy('title')->get();
+        return new AlbumResource($albums);
+    })->name('album');
+
+    Route::get('/artists', function () {
+        $artists = Artist::orderBy('name')->get();
+        return new ArtistResource($artists);
+    })->name('artist');
+
+    Route::get('/genres', function () {
+        $genres = Genre::orderBy('name_ru')->get();
+        return GenreResource::collection($genres);
+    })->name('genre');
+});
+// });

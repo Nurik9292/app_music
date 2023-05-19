@@ -7,6 +7,7 @@ use App\Models\Track;
 use App\Models\Artist;
 use App\Models\Country;
 use App\Services\Admin\HelperService;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
 class ScanCreateTrack
@@ -25,6 +26,7 @@ class ScanCreateTrack
 
     public function start($path, $local)
     {
+
         $this->scanDir->getContentDir($path, $local);
         $this->scanDir->addContent($local);
         $timestamp = $this->scanDir->getTimestamp();
@@ -61,10 +63,11 @@ class ScanCreateTrack
                 $image_name = basename($item['artwork_url']);
             else $image_name = '';
 
-            // $item['audio_url'] = "https://storage2.ma.st.com.tm" . $item['audio_url'];
-            $item['audio_url'] =  preg_replace('/(:1000\/files)/', '', $item['audio_url']);;
+            $item['audio_url'] =  preg_replace('/(:1000\/files)/', '', $item['audio_url']);
             $item['audio_url'] =  "https://storage2.ma.st.com.tm/" . preg_replace('/(\/nfs\/storage2\/)/', '', $item['audio_url']);;
+            $item['audio_url'] = preg_replace('/(\/)(?=\1)/', '', $item['audio_url']);
 
+            Log::debug($item['audio_url']);
 
             if (!isset($artist)) $artist = preg_replace('/(.webp)/', '', basename($item['artwork_url']));
 
@@ -91,6 +94,7 @@ class ScanCreateTrack
             unset($item['album']);
 
             $track = Track::firstOrCreate(['title' => $item['title']], $item);
+
 
             if (isset($artists)) {
                 $track->artists()->detach($artists->id);
@@ -213,6 +217,7 @@ class ScanCreateTrack
 
     function is_utf8($string)
     {
+        // Log::debug($string);
         return preg_match('%^(?:
         [\x09\x0A\x0D\x20-\x7E]
         | [\xC2-\xDF][\x80-\xBF]

@@ -5,6 +5,7 @@ namespace App\Services\Admin\Track;
 use App\Models\File;
 use App\Services\Admin\HelperService;
 use DirectoryIterator;
+use Illuminate\Support\Facades\Log;
 use Owenoj\LaravelGetId3\GetId3;
 
 class ScanDir
@@ -25,6 +26,7 @@ class ScanDir
         if (str_starts_with($path, "https://storage2.ma.st.com.tm:1000/files/"))
             $path = $this->helper->pathTrackForServer . preg_replace('/(https:\/\/storage2.ma.st.com.tm:1000\/files\/)/', '', $path);
 
+        Log::debug($path);
         if (!str_ends_with($path, '/'))
             $path = $path . '/';
 

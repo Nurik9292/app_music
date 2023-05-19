@@ -55,7 +55,7 @@
                  </div> -->
       </div>
 
-      <span>{{  }}</span>
+
     </section>
     <!-- /.content -->
     </div>
@@ -95,7 +95,6 @@ import { RouterLink, RouterView } from 'vue-router'
         methods: {
             getBlocks() {
                 axios.get("/api/overviews").then(res => {
-                    console.log(res);
                     this.blocks = res.data.data;
                     this.addStatus();
                 });

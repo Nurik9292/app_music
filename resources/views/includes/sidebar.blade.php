@@ -48,7 +48,7 @@
               </li>
 
               <li class="nav-item">
-                <a href="{{route('track.index')}}" class="nav-link">
+                <a href="{{route('track.index', 'index')}}" class="nav-link">
                   <i class="nav-icon fas fa-music"></i>
                   <p>
                     Треки

@@ -3,6 +3,8 @@
 namespace App\Services\Admin\Track;
 
 use App\Models\Track;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class Service
 {
@@ -23,53 +25,63 @@ class Service
         if ($data['title'] == null)
             $data['title'] = 'none';
 
-        $artists = $data['artists'];
+        if (isset($data['artists']))
+            $artists = $data['artists'];
         unset($data['artists']);
 
-        if (isset($data['genres']) && $data['genres'] != '0')
+
+        if (isset($data['genres']))
             $genres = $data['genres'];
         unset($data['genres']);
 
 
-        if (isset($data['album']) && $data['album'] != '0')
+        if (isset($data['album']))
             $album = $data['album'];
         unset($data['album']);
 
 
         $track = Track::create($data);
 
-        $track->artists()->attach($artists);
-        if (isset($genres) && $genres != '0')
+        if (isset($artists) && $genres != null)
+            $track->artists()->attach($artists);
+        if (isset($genres) && $genres != null)
             $track->genres()->attach($genres);
-        if (isset($album) && $album != '0')
+        if (isset($album) && $album != null)
             $track->album()->attach($album);
     }
 
     public function updata($data, $track)
     {
+        $albumId = count($track->album) > 0 ? $track->album[0]->id : null;
+        $artists = is_array($data['artists']) ? $data['artists'][0] : $data['artists'];
+        $album = $data['album'] == 'null' ? null : $data['album'];
 
-        if ($data['artists'][0] != $track->artists[0]->id || $data['album'] != $track->album[0]->id || $data['title'] != $track->title)
+
+        if ($data['artwork_url'] instanceof UploadedFile) {
+            $this->managerTrack->deleteForUpdated($track);
+            $data['artwork_url'] = $this->managerTrack->resize($data['artwork_url'], $track);
+        }
+
+        Log::debug($album != $albumId);
+        Log::debug($data['genres'] . " genres");
+
+        if ($artists != $track->artists[0]->id || ($album != null && $album != $albumId) || $data['title'] != $track->title)
             $data = $this->managerTrack->saveTrack($data, $track);
 
 
-        $artists = $data['artists'];
         unset($data['artists']);
+        unset($data['album']);
 
-        if (isset($data['genres']) && $data['genres'] != '0')
+        if (isset($data['genres']) && $data['genres'] != null)
             $genres = $data['genres'];
         unset($data['genres']);
-
-
-        if (isset($data['album']) && $data['album'] != '0')
-            $album = $data['album'];
-        unset($data['album']);
 
         $track->update($data);
 
         $track->artists()->sync($artists);
-        if (isset($album) && $album != '0')
+        if (isset($album) && $album != null)
             $track->album()->sync($album);
-        if (isset($genres) && $genres != '0')
+        if (isset($genres) && $genres != null)
             $track->genres()->sync($genres);
     }
 

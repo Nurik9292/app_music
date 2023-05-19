@@ -144,7 +144,7 @@
 
 
           store(){
-            console.log(this.name_status);
+
             axios.post('/api/overviews', {
                 status: this.status,
                 name_status: this.name_status,

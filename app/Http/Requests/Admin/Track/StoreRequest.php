@@ -22,9 +22,9 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['nullable', 'string'],
+            // 'title' => ['nullable', 'string'],
             'lyrics' => ['required', 'string'],
-            'artists' => ['required'],
+            // 'artists' => ['required'],
             'genres' => ['required'],
             'album' => ['nullable', 'numeric'],
             // 'artwork_url' => ['required', 'url'],

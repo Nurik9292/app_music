@@ -18,6 +18,26 @@ const router = createRouter({
             component: () =>  import('../components/view/Overview/OverviewEdit.vue'),
             name: 'overview.edit',
         },
+        {
+            path: '/tracks/index',
+            component: () =>  import('../components/view/Track/TrackIndex.vue'),
+            name: 'track.index',
+        },
+        {
+            path: '/tracks/scan',
+            component: () =>  import('../components/view/Track/TrackScan.vue'),
+            name: 'track.scan',
+        },
+        {
+            path: '/tracks/create',
+            component: () =>  import('../components/view/Track/TrackCreate.vue'),
+            name: 'track.create',
+        },
+        {
+            path: '/tracks/:id/edit',
+            component: () =>  import('../components/view/Track/TrackEdit.vue'),
+            name: 'track.edit',
+        },
 
 ]});
 

@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Track;
+namespace App\Http\Controllers\Admin\Track\Api;
 
+use App\Http\Controllers\Admin\Track\BaseController;
 use App\Models\Track;
+use Illuminate\Support\Facades\Log;
+
 
 class DestroyController extends BaseController
 {
     public function __invoke(Track $track)
     {
+        Log::debug($track);
         $path = $track->artwork_url;
         $path = substr($path, 0, strpos($path, basename($path)));
         $path = pathToServer() . substr($path, strpos($path, "images"));
@@ -22,6 +26,6 @@ class DestroyController extends BaseController
 
         $track->delete();
 
-        return redirect()->back();
+        return response([]);
     }
 }

@@ -14,7 +14,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{route('main')}}">Главная</a></li>
-              <li class="breadcrumb-item"><a href="{{route('track.index')}}">Артисты</a></li>
+              <li class="breadcrumb-item"><a href="{{route('artist.index')}}">Артисты</a></li>
               <li class="breadcrumb-item active">Добавить</li>
             </ol>
           </div><!-- /.col -->
