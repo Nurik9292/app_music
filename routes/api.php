@@ -74,6 +74,8 @@ Route::prefix('tracks')->namespace('App\Http\Controllers\Admin\Track\Api')->name
     Route::get('/', IndexController::class)->name('index');
     Route::post('/', StoreController::class)->name('store');
     Route::post('/scan', StoreScanController::class)->name('store.scan');
+    Route::post('/albums/{album}', StoreAlbumController::class)->name('store.album');
+    Route::post('/playlists/{playlist}', StorePlaylistController::class)->name('store.playlist');
     Route::get('/show/{track}', ShowController::class)->name('show');
     Route::post('/filter', FilterController::class)->name('filter');
     Route::patch('/{track}', UpdateController::class)->name('update');
@@ -93,5 +95,10 @@ Route::prefix('tracks')->namespace('App\Http\Controllers\Admin\Track\Api')->name
         $genres = Genre::orderBy('name_ru')->get();
         return GenreResource::collection($genres);
     })->name('genre');
+
+    Route::get('/playlists', function () {
+        $playlists = Playlist::orderBy('title_ru')->get();
+        return PlaylistResource::collection($playlists);
+    })->name('playlist');
 });
 // });

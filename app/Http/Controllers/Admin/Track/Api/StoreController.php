@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Admin\Track\Api;
 
 use App\Http\Controllers\Admin\Track\BaseController;
-use App\Http\Requests\Admin\Album\StoreRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class StoreController extends BaseController
 {

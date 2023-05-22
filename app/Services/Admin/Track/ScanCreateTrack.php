@@ -51,8 +51,8 @@ class ScanCreateTrack
                 $artist = $artists->name;
             else  $artist = $artist ?? 'none';
 
-            if (isset($item['album']))
-                $album = $this->createAlbum($item['album'], $item['is_national']);
+            if (isset($item['album']) && $item['is_national'] != 'tm')
+                $album = $this->createAlbum($item['album']);
 
             if (isset($artists) && isset($album)) {
                 $artists->albums()->detach($album->id);
@@ -129,7 +129,7 @@ class ScanCreateTrack
         return $artists;
     }
 
-    private function createAlbum($albums, $isNational)
+    private function createAlbum($albums, $isNational = null)
     {
         if (mb_detect_encoding($albums) == 'ASCII-8')
             $albums = iconv('ASCII', 'UTF-8//IGNORE', $albums);
@@ -139,7 +139,7 @@ class ScanCreateTrack
         $album = Album::firstOrCreate(['title' => $albums], [
             'title' => $albums,
             'status' => true,
-            'is_national' =>  $isNational ? true : false,
+            'is_national' => false,
         ]);
 
         return $album;
@@ -148,13 +148,8 @@ class ScanCreateTrack
     private function createPath($isNational, $album, $artist, $title)
     {
         if ($isNational) {
-            if (isset($album)) {
-                $path_second_artwork = "tm_tracks/{$artist}/{$album->title}/{$title}/artwork/";
-                $path_second_thumb = "tm_tracks/{$artist}/{$album->title}/{$title}/thumb/";
-            } else {
-                $path_second_artwork = "tm_tracks/{$artist}/{$title}/artwork/";
-                $path_second_thumb = "tm_tracks/{$artist}/{$title}/thumb/";
-            }
+            $path_second_artwork = "tm_tracks/{$artist}/{$title}/artwork/";
+            $path_second_thumb = "tm_tracks/{$artist}/{$title}/thumb/";
         } else {
             if (isset($album)) {
                 $path_second_artwork = "tracks/{$artist}/{$album->title}/{$title}/artwork/";

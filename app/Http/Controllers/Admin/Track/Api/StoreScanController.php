@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Track\Api;
 use App\Http\Controllers\Admin\Track\BaseController;
 use App\Models\File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class StoreScanController extends BaseController
 {
@@ -19,6 +18,15 @@ class StoreScanController extends BaseController
             $file[0]->update(['path' => $data['path'], 'local' => $data['local'], 'scanTime' => $timestamp]);
         }
 
+        if ($data['local'] == 'ru') {
+            $file = File::where('local', 'ru')->get();
+            $file[0]->update(['path' => $data['path'], 'local' => $data['local'], 'scanTime' => $timestamp]);
+        }
+
+        if ($data['local'] == 'en') {
+            $file = File::where('local', 'en')->get();
+            $file[0]->update(['path' => $data['path'], 'local' => $data['local'], 'scanTime' => $timestamp]);
+        }
 
         return response([]);
     }

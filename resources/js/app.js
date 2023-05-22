@@ -24,13 +24,11 @@ import TabMenu from 'primevue/tabmenu';
 import Textarea from 'primevue/textarea';
 import RadioButton from 'primevue/radiobutton';
 import SelectButton from 'primevue/selectbutton';
-import FileUpload from 'primevue/fileupload';
-
-
+import Dialog from 'primevue/dialog';
 
 import "primevue/resources/themes/lara-light-indigo/theme.css"
 import "primevue/resources/primevue.min.css";
-import 'primeicons/primeicons.css';
+import "primeicons/primeicons.css";
 
 import UserIndex from './components/view/User/UserIndex.vue';
 import GenreIndex from './components/view/Genre/GenreIndex.vue';
@@ -70,7 +68,8 @@ track.component('InputNumber', InputNumber);
 track.component('Checkbox', Checkbox);
 track.component('RadioButton', RadioButton);
 track.component('SelectButton', SelectButton);
-track.component('FileUpload', FileUpload);
+track.component('Button', Button);
+track.component('Dialog', Dialog);
 
 // app.use(router);
 ovr.use(router);
