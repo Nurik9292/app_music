@@ -60,12 +60,12 @@ Route::middleware('admin', 'auth')->group(function () {
 
         //============= ALBUM ========================
         Route::prefix('albums')->namespace('Album')->name('album.')->group(function () {
-            Route::get('/', IndexController::class)->name('index');
-            Route::get('/create', CreateController::class)->name("create");
-            Route::post('/', StoreController::class)->name('store');
-            Route::get('/{album}/edit', EditController::class)->name('edit');
-            Route::patch('/{album}', UpdateController::class)->name('update');
-            Route::delete('/{album}', DestroyController::class)->name('destroy');
+            Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
+            // Route::get('/create', CreateController::class)->name("create");
+            // Route::post('/', StoreController::class)->name('store');
+            // Route::get('/{album}/edit', EditController::class)->name('edit');
+            // Route::patch('/{album}', UpdateController::class)->name('update');
+            // Route::delete('/{album}', DestroyController::class)->name('destroy');
         });
         // ========== END ALBUM =====================
 
@@ -89,11 +89,6 @@ Route::middleware('admin', 'auth')->group(function () {
         //============= ARTIST ========================
         Route::prefix('artists')->namespace('Artist')->name('artist.')->group(function () {
             Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
-            // Route::get('/create', CreateController::class)->name('create');
-            // Route::post('/', StoreController::class)->name('store');
-            // Route::get('/{artist}/edit', EditController::class)->name('edit');
-            // Route::patch('/{artist}', UpdateController::class)->name('update');
-            // Route::delete('/{artist}', DestroyController::class)->name('destroy');
         });
         // ========== END ARTIST =====================
 

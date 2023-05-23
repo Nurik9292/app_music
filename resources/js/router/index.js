@@ -53,6 +53,12 @@ const router = createRouter({
             component: () =>  import('../components/view/Artist/ArtistEdit.vue'),
             name: 'artist.edit',
         },
+        {
+            path: '/albums/index',
+            component: () =>  import('../components/view/Album/AlbumIndex.vue'),
+
+            name: 'album.index',
+        },
 
 ]});
 

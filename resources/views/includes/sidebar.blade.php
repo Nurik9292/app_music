@@ -66,7 +66,7 @@
               </li>
               <i class="fas fa-music-slash"></i>
               <li class="nav-item">
-                <a href="{{route('album.index')}}" class="nav-link">
+                <a href="{{route('album.index', 'index')}}" class="nav-link">
                     <i class="nav-icon fas fa-record-vinyl"></i>
                   <p>
                     Альбомы

@@ -13,7 +13,6 @@ class StoreController extends Controller
     {
         $data = $request->all();
 
-        Log::debug($data);
 
         $data['body'] = json_encode([
             "name_status" => $data['name_status'] ?? '',
@@ -25,10 +24,11 @@ class StoreController extends Controller
 
         unset($data['playlists'], $data['albums'], $data['tracks'], $data['genres'], $data['name_status']);
 
-        if (count(BlockShema::where('order_number', $data['order_number'])->get()) > 0)
+        if (count(BlockShema::where('order_number', $data['order_number'])->get()) > 0) {
             $blocks = BlockShema::where('order_number', '>=', $data['order_number'])->get();
+            foreach ($blocks as $block) $block->increment('order_number');
+        }
 
-        foreach ($blocks as $block) $block->increment('oreder_number');
 
         BlockShema::create($data);
 

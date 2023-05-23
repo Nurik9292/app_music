@@ -73,7 +73,7 @@
 
 
                             <div class="block_one">
-                                <a  href="{{route('artist.create')}}" class="btn btn-outline-primary " >Добавить</a>
+                                {{-- <a  href="{{route('artist.create')}}" class="btn btn-outline-primary " >Добавить</a> --}}
                             </div>
 
                         </div>

@@ -45,12 +45,15 @@ import ArtistIndex from './components/view/Artist/ArtistIndex.vue';
 import ArtistBase from './components/view/Artist/ArtistBase.vue';
 import ArtistCreate from './components/view/Artist/ArtistCreate.vue';
 import ArtistEdit from './components/view/Artist/ArtistEdit.vue';
+import AlbumIndex from './components/view/Album/AlbumIndex.vue';
+import AlbumBase from './components/view/Album/AlbumBase.vue';
 
 const app = createApp({components:{UserIndex, OverviewBase}});
 const ovr = createApp({components:{OverviewIndex, OverviewCreate, OverviewEdit, OverviewBase}});
 const genre = createApp({components:{GenreIndex}});
 const track = createApp({components:{TrackIndex, TrackBase, TrackScan, TrackCreate}});
 const artist = createApp({components:{ArtistBase, ArtistIndex, ArtistCreate, ArtistEdit}});
+const album = createApp({components:{AlbumBase, AlbumIndex }});
 
 ovr.component('MultiSelect', MultiSelect);
 ovr.component('InputSwitch', InputSwitch);
@@ -91,7 +94,19 @@ artist.component('SelectButton', SelectButton);
 artist.component('Editor', Editor);
 
 
-// app.use(router);
+album.component('DataTable', DataTable);
+album.component('Column', Column);
+album.component('ColumnGroup', ColumnGroup);
+album.component('Row', Row);
+album.component('InputText', InputText);
+album.component('Paginator', Paginator);
+album.component('Dropdown', Dropdown);
+album.component('InputSwitch', InputSwitch);
+album.component('MultiSelect', MultiSelect);
+album.component('SelectButton', SelectButton);
+album.component('Editor', Editor);
+
+
 ovr.use(router);
 ovr.use(PrimeVue, { ripple: true });
 
@@ -101,8 +116,12 @@ track.use(PrimeVue, { ripple: true });
 artist.use(router);
 artist.use(PrimeVue, { ripple: true });
 
-app.mount('#app');
+album.use(router);
+album.use(PrimeVue, { ripple: true });
+
+album.mount('#album');
 artist.mount('#artist');
-ovr.mount('#ovr');
+app.mount('#app');
 genre.mount('#genre');
+ovr.mount('#ovr');
 track.mount('#track');
