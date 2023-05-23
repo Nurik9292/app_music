@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Artist;
+namespace App\Http\Controllers\Admin\Artist\Api;
 
+use App\Http\Controllers\Admin\Artist\BaseController;
 use App\Models\Artist;
 
 class DestroyController extends BaseController
@@ -9,7 +10,7 @@ class DestroyController extends BaseController
     public function __invoke(Artist $artist)
     {
         $path = $artist->artwork_url;
-        $path = substr($path, 0, strpos($path, "artist_artWork/" . basename($path)));
+        $path = substr($path, 0, strpos($path, basename($path)));
         $path = pathToServer() . substr($path, strpos($path, "images"));
 
         $path = preg_replace('/artist_artWork\//', '', $path);
@@ -21,6 +22,6 @@ class DestroyController extends BaseController
 
         $artist->delete();
 
-        return redirect()->back();
+        return response([]);
     }
 }

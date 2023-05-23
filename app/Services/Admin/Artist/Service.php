@@ -6,7 +6,7 @@ use App\Models\Artist;
 use App\Models\Country;
 use App\Services\Admin\HelperService;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
 
@@ -31,7 +31,7 @@ class Service
 
     public function update($data, $artist)
     {
-        if (isset($data['artwork_url']))
+        if (isset($data['artwork_url']) && $data['artwork_url'] != 'null')
             $data = $this->resize($data, $artist);
 
         if ($data['name'] != $artist->name)
@@ -55,27 +55,16 @@ class Service
             unset($path_temp);
         }
 
-        if (is_string($data['artwork_url'])) {
-            $image_name = basename($data['artwork_url']);
 
-            $client = new Client();
-            $res = $client->get($data['artwork_url']);
-            $image = $res->getBody()->getContents();
-        } else {
-            $image_name = $data['artwork_url']->getClientOriginalName();
-            $image = $data['artwork_url'];
-        }
+        $image_name = $data['artwork_url']->getClientOriginalName();
+        $image = $data['artwork_url'];
 
-        if (is_string($image)) {
-            $image_name_jpg = substr($image_name, 0, strpos($image_name, "webp") - 1);
-        } else {
-            if (str_ends_with($image_name, "png"))
-                $image_name_wepb = substr($image_name, 0, strpos($image_name, "png") - 1);
-            if (str_ends_with($image_name, "jpg"))
-                $image_name_wepb = substr($image_name, 0, strpos($image_name, "jpg") - 1);
-            if (str_ends_with($image_name, "jpeg"))
-                $image_name_wepb = substr($image_name, 0, strpos($image_name, "jpeg") - 1);
-        }
+        if (str_ends_with($image_name, "png"))
+            $image_name_wepb = substr($image_name, 0, strpos($image_name, "png") - 1);
+        if (str_ends_with($image_name, "jpg"))
+            $image_name_wepb = substr($image_name, 0, strpos($image_name, "jpg") - 1);
+        if (str_ends_with($image_name, "jpeg"))
+            $image_name_wepb = substr($image_name, 0, strpos($image_name, "jpeg") - 1);
 
 
         $artWork =  Image::make($image);
@@ -83,6 +72,8 @@ class Service
 
         $thumb = Image::make($image);
         $thumb_webp = Image::make($image);
+
+
 
         if ($this->getCountry($data) == 'Туркмения') {
             $path_artWork = "$path/tm_tracks/{$data['name']}/artist_artWork/";
@@ -99,19 +90,12 @@ class Service
             mkdir($path_artWork, 0777, true);
 
 
-        if (is_string($image)) {
-            $artWork->fit(375, 250)->save($path_artWork . $image_name_jpg . '.jpg');
-            $artWork_webp->fit(375, 250)->save($path_artWork . $image_name);
+        $artWork->fit(375, 250)->save($path_artWork . $image_name);
+        $artWork_webp->fit(375, 250)->save($path_artWork . $image_name_wepb . ".webp");
 
-            $thumb->fit(142, 166)->save($path_thumb . $image_name_jpg . '.jpg');
-            $thumb_webp->fit(142, 166)->save($path_thumb . $image_name);
-        } else {
-            $artWork->fit(375, 250)->save($path_artWork . $image_name);
-            $artWork_webp->fit(375, 250)->save($path_artWork . $image_name_wepb . ".webp");
+        $thumb->fit(142, 166)->save($path_thumb . $image_name);
+        $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_wepb . ".webp");
 
-            $thumb->fit(142, 166)->save($path_thumb . $image_name);
-            $thumb_webp->fit(142, 166)->save($path_thumb . $image_name_wepb . ".webp");
-        }
 
         $data = $this->getPathForDataBase($data, $image_name);
 
@@ -165,7 +149,7 @@ class Service
 
     public function move($data, $artist)
     {
-
+        Log::debug(3123122342342323423423423423232342342342342334);
         $image_name = basename($artist->artwork_url);
 
         $data = $this->getPathForDataBase($data, $image_name);

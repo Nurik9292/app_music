@@ -194,7 +194,7 @@ import { RouterLink, RouterView } from 'vue-router'
         },
 
         mounted() {
-            this.dropzone = new Dropzone(this.$refs.dropzone, {url: `/api/tracks/${this.$route.params.id}`, autoProcessQueue: false});
+            this.dropzone = new Dropzone(this.$refs.dropzone, {url: 'none', autoProcessQueue: false, acceptedFiles: 'image/*'});
             this.getTrack();
             this.getAlbumts();
             this.getArtists();
@@ -247,8 +247,6 @@ import { RouterLink, RouterView } from 'vue-router'
             for(let idx in this.selectedGenres)
                 genres.push(this.selectedGenres[idx].id)
 
-            // for(let idx in this.album)
-            //     album.push(this.album[idx].id)
 
             image.append('artwork_url', files[0]);
             image.append('title', this.title);

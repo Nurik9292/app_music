@@ -4,7 +4,7 @@
 
 @section('content')
 
-        <div class="row" id="track">
+        <div id="track">
             <track-base></track-base>
         </div>
 

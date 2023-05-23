@@ -38,6 +38,21 @@ const router = createRouter({
             component: () =>  import('../components/view/Track/TrackEdit.vue'),
             name: 'track.edit',
         },
+        {
+            path: '/artists/index',
+            component: () =>  import('../components/view/Artist/ArtistIndex.vue'),
+            name: 'artist.index',
+        },
+        {
+            path: '/artists/create',
+            component: () =>  import('../components/view/Artist/ArtistCreate.vue'),
+            name: 'artist.create',
+        },
+        {
+            path: '/artists/:id/edit',
+            component: () =>  import('../components/view/Artist/ArtistEdit.vue'),
+            name: 'artist.edit',
+        },
 
 ]});
 

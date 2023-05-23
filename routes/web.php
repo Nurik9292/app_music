@@ -83,25 +83,17 @@ Route::middleware('admin', 'auth')->group(function () {
         //============= TRACK ========================
         Route::prefix('tracks')->namespace('Track')->name('track.')->group(function () {
             Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
-            // Route::get('/two', TwoCreateController::class)->name('two');
-            // Route::get('/create', CreateController::class)->name('create');
-            // Route::get('/create/file', ScanCreateController::class)->name('create.scan');
-            // Route::post('/', StoreController::class)->name('store');
-            // Route::post('/store/file', StoreScanController::class)->name('store.scan');
-            // Route::get('/{track}/edit', EditController::class)->name('edit');
-            // Route::patch('/{track}', UpdateController::class)->name('update');
-            // Route::delete('/{track}', DestroyController::class)->name('destroy');
         });
         // ========== END TRACK =====================
 
         //============= ARTIST ========================
         Route::prefix('artists')->namespace('Artist')->name('artist.')->group(function () {
-            Route::get('/', IndexController::class)->name('index');
-            Route::get('/create', CreateController::class)->name('create');
-            Route::post('/', StoreController::class)->name('store');
-            Route::get('/{artist}/edit', EditController::class)->name('edit');
-            Route::patch('/{artist}', UpdateController::class)->name('update');
-            Route::delete('/{artist}', DestroyController::class)->name('destroy');
+            Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
+            // Route::get('/create', CreateController::class)->name('create');
+            // Route::post('/', StoreController::class)->name('store');
+            // Route::get('/{artist}/edit', EditController::class)->name('edit');
+            // Route::patch('/{artist}', UpdateController::class)->name('update');
+            // Route::delete('/{artist}', DestroyController::class)->name('destroy');
         });
         // ========== END ARTIST =====================
 

@@ -57,7 +57,7 @@
               </li>
 
               <li class="nav-item">
-                <a href="{{route('artist.index')}}" class="nav-link">
+                <a href="{{route('artist.index', 'index')}}" class="nav-link">
                     <i class="nav-icon fas fa-user-circle"></i>
                   <p>
                     Артисты

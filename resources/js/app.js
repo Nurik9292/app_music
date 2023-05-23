@@ -25,6 +25,7 @@ import Textarea from 'primevue/textarea';
 import RadioButton from 'primevue/radiobutton';
 import SelectButton from 'primevue/selectbutton';
 import Dialog from 'primevue/dialog';
+import Editor from 'primevue/editor';
 
 import "primevue/resources/themes/lara-light-indigo/theme.css"
 import "primevue/resources/primevue.min.css";
@@ -40,11 +41,16 @@ import TrackIndex from './components/view/Track/TrackIndex.vue';
 import TrackBase from './components/view/Track/TrackBase.vue';
 import TrackScan from './components/view/Track/TrackScan.vue';
 import TrackCreate from './components/view/Track/TrackCreate.vue';
+import ArtistIndex from './components/view/Artist/ArtistIndex.vue';
+import ArtistBase from './components/view/Artist/ArtistBase.vue';
+import ArtistCreate from './components/view/Artist/ArtistCreate.vue';
+import ArtistEdit from './components/view/Artist/ArtistEdit.vue';
 
 const app = createApp({components:{UserIndex, OverviewBase}});
 const ovr = createApp({components:{OverviewIndex, OverviewCreate, OverviewEdit, OverviewBase}});
 const genre = createApp({components:{GenreIndex}});
 const track = createApp({components:{TrackIndex, TrackBase, TrackScan, TrackCreate}});
+const artist = createApp({components:{ArtistBase, ArtistIndex, ArtistCreate, ArtistEdit}});
 
 ovr.component('MultiSelect', MultiSelect);
 ovr.component('InputSwitch', InputSwitch);
@@ -71,6 +77,20 @@ track.component('SelectButton', SelectButton);
 track.component('Button', Button);
 track.component('Dialog', Dialog);
 
+
+artist.component('DataTable', DataTable);
+artist.component('Column', Column);
+artist.component('ColumnGroup', ColumnGroup);
+artist.component('Row', Row);
+artist.component('InputText', InputText);
+artist.component('Paginator', Paginator);
+artist.component('Dropdown', Dropdown);
+artist.component('InputSwitch', InputSwitch);
+artist.component('MultiSelect', MultiSelect);
+artist.component('SelectButton', SelectButton);
+artist.component('Editor', Editor);
+
+
 // app.use(router);
 ovr.use(router);
 ovr.use(PrimeVue, { ripple: true });
@@ -78,7 +98,11 @@ ovr.use(PrimeVue, { ripple: true });
 track.use(router);
 track.use(PrimeVue, { ripple: true });
 
+artist.use(router);
+artist.use(PrimeVue, { ripple: true });
+
 app.mount('#app');
+artist.mount('#artist');
 ovr.mount('#ovr');
 genre.mount('#genre');
 track.mount('#track');

@@ -2,11 +2,13 @@
 
 use App\Http\Resources\Admin\AlbumResource;
 use App\Http\Resources\Admin\ArtistResource;
+use App\Http\Resources\Admin\CountryResource;
 use App\Http\Resources\Admin\GenreResource;
 use App\Http\Resources\Admin\PlaylistResource;
 use App\Http\Resources\Admin\TrackResource;
 use App\Models\Album;
 use App\Models\Artist;
+use App\Models\Country;
 use App\Models\Genre;
 use App\Models\Playlist;
 use App\Models\Track;
@@ -100,5 +102,19 @@ Route::prefix('tracks')->namespace('App\Http\Controllers\Admin\Track\Api')->name
         $playlists = Playlist::orderBy('title_ru')->get();
         return PlaylistResource::collection($playlists);
     })->name('playlist');
+});
+
+Route::prefix('artists')->namespace('App\Http\Controllers\Admin\Artist\Api')->name('api.artist.')->group(function () {
+    Route::get('/', IndexController::class)->name('index');
+    Route::post('/', StoreController::class)->name('store');
+    Route::get('/show/{artist}', ShowController::class)->name('show');
+    Route::patch('/{artist}', UpdateController::class)->name('update');
+    Route::delete('/{artist}', DestroyController::class)->name('destroy');
+
+
+    Route::get('/countries', function () {
+        $countries = Country::orderBy('name')->get();
+        return CountryResource::collection($countries);
+    })->name('country');
 });
 // });

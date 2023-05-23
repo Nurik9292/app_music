@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Track\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\TrackResource;
 use App\Models\Track;
-use Illuminate\Support\Facades\Log;
 
 class ShowController extends Controller
 {

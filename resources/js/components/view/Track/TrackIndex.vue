@@ -1,13 +1,12 @@
 <template>
-    <div >
+    <div>
         <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0">Треки</h1>
-          </div><!-- /.col -->
+          </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
@@ -15,20 +14,15 @@
                 </li>
               <li class="breadcrumb-item active">Треки</li>
             </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- /.content-header -->
 
-    <!-- Main content -->
+
     <section class="content">
 
         <div class="container-fluid">
-            <!-- <div class="d-flex justify-content-end mb-3">
-                <router-link :to="{name: 'track.option'}" class="btn btn-primary btn-lg">Добавить</router-link> -->
-                <!-- <a class="btn btn-primary btn-lg" href="#">Добавить</a> -->
-            <!-- </div> -->
 
                 <div class="card">
                     <TabMenu :model="items"/>
@@ -36,11 +30,11 @@
                 </div>
 
             <div class="card">
+
             <DataTable  v-model:selection="selectedTracks" v-model:filters="filters" :value="tracks" paginator :rows="10"
                 stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"  selectionMode="multiple"
                 dataKey="id" tableStyle="min-width: 50rem">
             <template #header>
-
                 <div class="d-flex justify-content-between">
                     <div class="d-flex flex-wrap gap-3">
                         <div class="d-flex align-items-between">
@@ -51,8 +45,9 @@
                             <InputText v-model="filters['global'].value" placeholder="Search" />
                         </div>
                     </div>
+
                 <div class="d-flex align-items-end">
-                    <div :class="isTracks() ? 'd-none' : ''">
+                    <div :class="isTracks() ? '' : 'd-none'">
                     <Button label="Добавить" @click="dialogVisible = true" />
                     <Dialog v-model:visible="dialogVisible" header="Добавить" :style="{ width: '30vw' }" maximizable modal :contentStyle="{ height: '200px' }">
                         <div class="mb-3">
@@ -79,7 +74,7 @@
                 </div>
               </div>
             </template>
-            <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+            <Column selectionMode="multiple" headerStyle="width: 3rem" @click="isTracks()"></Column>
             <Column field="id" header="№" sortable style="width: 10%"></Column>
             <Column field="title" header="Название" sortable style="width: 45%"></Column>
             <Column  header="Status" style="width: 15%">
@@ -111,11 +106,7 @@
         </div>
     </section>
 </div>
-
-
-
-
-
+    <span>{{    }}</span>
     </div>
 </template>
 
@@ -222,7 +213,7 @@ export default {
         },
 
         isTracks(){
-            return this.selectedTracks.length === 0;
+            return this.selectedTracks != null && this.selectedTracks.length > 0;
         }
     }
 }

@@ -3,9 +3,9 @@
 @section('title', 'Артисты')
 
 @section('content')
-<div class="content-wrapper">
+{{-- <div class="content-wrapper"> --}}
     <!-- Content Header (Page header) -->
-    <div class="content-header">
+    {{-- <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
@@ -71,9 +71,15 @@
 
           </div>
 
-    </section>
+    </section> --}}
+
+    <div id="artist">
+        <artist-base></artist-base>
+    </div>
+
+
     <!-- /.content -->
-  </div>
+  {{-- </div> --}}
 @endsection
 
 
