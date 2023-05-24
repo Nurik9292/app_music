@@ -124,6 +124,8 @@ Route::prefix('albums')->namespace('App\Http\Controllers\Admin\Album\Api')->name
     Route::get('/show/{album}', ShowController::class)->name('show');
     Route::patch('/{album}', UpdateController::class)->name('update');
     Route::delete('/{album}', DestroyController::class)->name('destroy');
+    Route::get('/tracks/{album}', ShowTrackController::class)->name('show.track');
+    Route::post('/tracks/delete/{album}', DeleteTrackController::class)->name('delete.track');
 
 
     Route::get('/artists', function () {

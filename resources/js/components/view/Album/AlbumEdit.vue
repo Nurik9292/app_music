@@ -6,7 +6,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Артисты</h1>
+                            <h1 class="m-0">Альбомы</h1>
                         </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -97,6 +97,35 @@
 
 
         </div>
+
+        <div class="card">
+
+<DataTable  v-model:selection="selectedTracks" v-model:filters="filters" :value="tracks" paginator :rows="10"
+    stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"  selectionMode="multiple"
+    dataKey="id" tableStyle="min-width: 50rem">
+<template #header>
+    <div class="d-flex justify-content-between">
+        <div class="d-flex flex-wrap gap-3">
+            <div class="d-flex align-items-between p-input-icon-left">
+                <i class="pi pi-search" />
+                <InputText v-model="filters['global'].value" placeholder="Search" />
+            </div>
+        </div>
+  </div>
+</template>
+<Column field="id" header="№" sortable style="width: 10%"></Column>
+<Column field="title" header="Название" sortable style="width: 45%"></Column>
+<Column header="Delete" style="width: 15%">
+    <template #body="{ data }">
+        <div class="flex align-items-center gap-2">
+            <a href="#" class="btn btn-outline-danger" @click.prevent="deleteTracks(data.id)" >Delete</a>
+        </div>
+    </template>
+</Column>
+<template #empty> No customers found. </template>
+</DataTable>
+</div>
+
       <!-- /.card-body -->
 
       <router-link class="btn btn-primary btn-lg mb-3" :to="{name: 'artist.index'}">Отмена</router-link>
@@ -111,6 +140,7 @@
 
 <script>
 import Dropzone from 'dropzone'
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import { RouterLink, RouterView } from 'vue-router'
 
     export default {
@@ -118,6 +148,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
         data(){
                 return {
+                    tracks: null,
+                    selectedTracks: null,
                     title: null,
                     description: null,
                     release_date: null,
@@ -130,6 +162,10 @@ import { RouterLink, RouterView } from 'vue-router'
                     is_national: false,
                     artists: null,
                     selectedArtists: null,
+                    filters: {
+                                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                                title: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] }
+                    },
              }
         },
 
@@ -138,6 +174,7 @@ import { RouterLink, RouterView } from 'vue-router'
             this.getArtists();
             this.getTypies();
             this.getAlbum();
+            this.getTracks();
         },
 
         methods: {
@@ -147,7 +184,6 @@ import { RouterLink, RouterView } from 'vue-router'
 
           getAlbum() {
             axios.get(`/api/albums/show/${this.$route.params.id}`).then(res => {
-                console.log(res);
                 this.title = res.data.data.title,
                 this.description = res.data.data.description,
                 this.release_date = res.data.data.release_date,
@@ -163,8 +199,13 @@ import { RouterLink, RouterView } from 'vue-router'
           },
 
           getTypies() {
-            axios.get("/api/albums/types").then(res => {console.log(res); this.types = res.data.data });
+            axios.get("/api/albums/types").then(res => { this.types = res.data.data });
           },
+
+          getTracks(){
+            axios.get(`/api/albums/tracks/${this.$route.params.id}`).then(res => { this.tracks = res.data.data });
+          },
+
 
           update() {
             let options = {
@@ -196,7 +237,11 @@ import { RouterLink, RouterView } from 'vue-router'
             axios.post(`/api/albums/${this.$route.params.id}`, data).then(res =>{
                 this.$router.push({name: 'album.index'});
             });
-          }
+          },
+
+          deleteTracks(id){
+            axios.post(`/api/albums/tracks/delete/${this.$route.params.id}`,{track: id}).then(res => { this.getTracks() });
+          },
 
         },
     }
