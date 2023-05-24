@@ -61,11 +61,6 @@ Route::middleware('admin', 'auth')->group(function () {
         //============= ALBUM ========================
         Route::prefix('albums')->namespace('Album')->name('album.')->group(function () {
             Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
-            // Route::get('/create', CreateController::class)->name("create");
-            // Route::post('/', StoreController::class)->name('store');
-            // Route::get('/{album}/edit', EditController::class)->name('edit');
-            // Route::patch('/{album}', UpdateController::class)->name('update');
-            // Route::delete('/{album}', DestroyController::class)->name('destroy');
         });
         // ========== END ALBUM =====================
 
