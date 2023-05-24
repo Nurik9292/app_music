@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Artist\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\ArtistResource;
 use App\Models\Artist;
-use Illuminate\Support\Facades\Log;
 
 class ShowController extends Controller
 {

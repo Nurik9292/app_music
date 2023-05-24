@@ -145,7 +145,6 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
                     for(let idx in this.selectAlbums){
-                        console.log(this.selectAlbums[idx]);
                         for(let element in this.selectAlbums[idx]){
                             if(this.selectAlbums[idx][element] == null)
                             this.selectAlbums[idx][element] = "";
@@ -153,7 +152,6 @@ import { RouterLink, RouterView } from 'vue-router'
                     }
 
                     for(let idx in this.selectPlaylists){
-                        console.log(this.selectPlaylists[idx]);
                         for(let element in this.selectPlaylists[idx]){
                             if(this.selectPlaylists[idx][element] == null)
                             this.selectPlaylists[idx][element] = "";
@@ -161,7 +159,6 @@ import { RouterLink, RouterView } from 'vue-router'
                     }
 
                     for(let idx in this.selectTracks){
-                        console.log(this.selectTracks[idx]);
                         for(let element in this.selectTracks[idx]){
                             if(this.selectTracks[idx][element] == null)
                             this.selectTracks[idx][element] = "";
@@ -169,7 +166,6 @@ import { RouterLink, RouterView } from 'vue-router'
                     }
 
                     for(let idx in this.selectGenres){
-                        console.log(this.selectGenres[idx]);
                         for(let element in this.selectGenres[idx]){
                             if(this.selectGenres[idx][element] == null)
                             this.selectGenres[idx][element] = "";

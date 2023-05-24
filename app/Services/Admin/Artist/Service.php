@@ -149,7 +149,6 @@ class Service
 
     public function move($data, $artist)
     {
-        Log::debug(3123122342342323423423423423232342342342342334);
         $image_name = basename($artist->artwork_url);
 
         $data = $this->getPathForDataBase($data, $image_name);

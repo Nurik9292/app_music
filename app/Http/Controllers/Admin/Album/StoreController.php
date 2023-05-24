@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Album;
 
 use App\Http\Requests\Admin\Album\StoreRequest;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class StoreController extends BaseController
 {

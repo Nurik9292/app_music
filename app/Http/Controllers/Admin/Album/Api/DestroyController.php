@@ -2,10 +2,26 @@
 
 namespace App\Http\Controllers\Admin\Album\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Admin\Album\BaseController;
+use App\Models\Album;
 
-class DestroyController extends Controller
+class DestroyController extends BaseController
 {
-    //
+    public function __invoke(Album $album)
+    {
+        $path = $album->artwork_url;
+        $path = substr($path, 0, strpos($path, basename($path)));
+        $path = pathToServer() . substr($path, strpos($path, "images"));
+
+        $path = preg_replace('/album_artWork\//', '', $path);
+
+        $this->service->delete($path);
+
+        $album->tracks()->detach();
+        $album->artists()->detach();
+
+        $album->delete();
+
+        return response([]);
+    }
 }

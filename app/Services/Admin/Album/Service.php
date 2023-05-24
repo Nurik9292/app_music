@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Album;
 use App\Models\Artist;
 use App\Services\Admin\HelperService;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
 
@@ -27,7 +28,7 @@ class Service
 
         $data['status'] = $this->status($data);
 
-        $data = $this->dateFormat($data);
+        // $data = $this->dateFormat($data);
 
         $artists = $data['artists'];
         unset($data['artists']);
@@ -40,27 +41,39 @@ class Service
 
     public function update($data, $album)
     {
-        $data = $this->type($data);
+        foreach ($data as $key => $value) {
+            if ($value == 'null') $data[$key] = null;
+        }
 
-        if ($data['artwork_url'] != null)
+        if (isset($data['type']) && $data['type'] != null)
+            $data = $this->type($data);
+
+        if ($data['artwork_url'] != null && $data['artwork_url'] != null)
             $data = $this->resize($data, $album);
-
-        if ($data['title'] != $album->title || $data['artists'][0] != $album->artists[0]->id || $data['type'] != $album->type)
-            $data = $this->move($data, $album);
-
-        if (isset($data['added_date']) || isset($data['release_date']))
-            $data = $this->dateFormat($data);
-
-        $data['status'] = $this->status($data);
 
         if (isset($data['artists'])) {
             $artists = $data['artists'];
             unset($data['artists']);
         }
 
+        if (count($album->artists) > 0)
+            $albumArtists = $album->artists[0]->id;
+        else  $albumArtists = 0;
+
+
+        if ($data['title'] != $album->title || (isset($artists) && $artists[0] != $albumArtists) || (isset($data['type']) && $data['type'] != $album->type))
+            $data = $this->move($data, $album);
+
+
+        $data['status'] = $this->status($data);
+
+
+        if ($data['type'] == null)
+            $data['type'] = 'album';
+
         $album->update($data);
 
-        if ($artists)
+        if (isset($artists))
             $album->artists()->sync($artists);
     }
 
@@ -161,10 +174,10 @@ class Service
         $release_dates = [];
 
         foreach ($albums as $album)
-            $added_dates[$album->id] = Carbon::parse($album->added_date)->format('d-m-Y');
+            $added_dates[] = ['id' => $album->id, 'time' => Carbon::parse($album->added_date)->format('d-m-Y')];
 
         foreach ($albums as $album)
-            $release_dates[$album->id] = Carbon::parse($album->release_date)->format('d-m-Y');
+            $release_dates[] = ['id' => $album->id, 'time' => Carbon::parse($album->release_date)->format('d-m-Y')];
 
 
         return [$added_dates, $release_dates];
@@ -201,9 +214,12 @@ class Service
 
     public function move($data, $album)
     {
+        $arist_name = '';
 
-        $artist = Artist::where("id", $data['artists'][0])->get();
-        $arist_name = $album->artists[0]->id == $data['artists'][0] ? $album->artists[0]->name : $artist[0]->name;
+        if (isset($data['artists']))
+            $artist = Artist::where("id", $data['artists'][0])->get();
+        if (count($album->artists) > 0)
+            $arist_name = $album->artists[0]->id == $data['artists'][0] ? $album->artists[0]->name : $artist[0]->name;
         $image_name = basename($album->artwork_url);
 
         $data = $this->getPathForDataBase($data, $arist_name, $image_name);
@@ -212,6 +228,8 @@ class Service
             $new_path = $this->helper->pathImageForServer . "tm_tracks/{$arist_name}/{$data['type']}/{$data['title']}/";
         else
             $new_path = $this->helper->pathImageForServer . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/";
+
+        $new_path = preg_replace('/(\/)(?=\1)/', '', $new_path);
 
         $image = substr($album->artwork_url, strpos($album->artwork_url, 'images'));
         $path =  pathToServer() . substr($image,  strpos($image, 'images'));
@@ -240,6 +258,9 @@ class Service
             $data['artwork_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_artWork/$image_name";
             $data['thumb_url'] = $this->helper->pathImageForDb . "tracks/{$arist_name}/{$data['type']}/{$data['title']}/album_thumb/$image_name";
         }
+
+        $data['artwork_url'] = preg_replace('/(\/)(?=\1)/', '', $data['artwork_url']);
+        $data['thumb_url'] = preg_replace('/(\/)(?=\1)/', '', $data['thumb_url']);
 
         return $data;
     }

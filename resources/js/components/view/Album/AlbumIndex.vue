@@ -27,11 +27,11 @@
 
         <div class="container-fluid">
             <div class="d-flex justify-content-end mb-3">
-                <!-- <router-link class="btn btn-primary btn-lg" :to="{name: 'artist.create', }">Добавить</router-link> -->
+                <router-link class="btn btn-primary btn-lg" :to="{name: 'album.create', }">Добавить</router-link>
             </div>
 
             <div class="card">
-            <DataTable v-model:filters="filters" :value="artists" paginator :rows="10"
+            <DataTable v-model:filters="filters" :value="albums" paginator :rows="10"
                 stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"  selectionMode="multiple"
                 dataKey="id" tableStyle="min-width: 50rem">
             <template #header>
@@ -45,8 +45,8 @@
               </div>
             </template>
             <Column field="id" header="#" sortable style="width: 10%"></Column>
-            <Column field="name" header="Название" sortable style="width: 20%"></Column>
-            <Column field="name" header="Тип" sortable style="width: 10%"></Column>
+            <Column field="title" header="Название" sortable style="width: 20%"></Column>
+            <Column field="type" header="Тип" sortable style="width: 10%"></Column>
             <Column  header="Статус" style="width: 10%">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
@@ -54,12 +54,24 @@
                     </div>
                 </template>
             </Column>
-            <Column field="name" header="Выпуска" sortable style="width: 15%"></Column>
-            <Column field="name" header="Добавлен" sortable style="width: 15%"></Column>
+            <Column field="release_date" header="Выпуска" sortable style="width: 15%">
+                <template #body="{ data }">
+                    <div class="flex align-items-center gap-2">
+                     {{ release_date(data.id) }}
+                    </div>
+                </template>
+            </Column>
+            <Column field="added_date" header="Добавлен" sortable style="width: 15%">
+                <template #body="{ data }">
+                    <div class="flex align-items-center gap-2">
+                     {{ added_date(data.id) }}
+                    </div>
+                </template>
+            </Column>
             <Column header="Edit" style="width: 10%">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
-                        <!-- <router-link :to="{name: 'artist.edit',  params: { id:  data.id}}" class="btn btn-outline-success">Edit</router-link> -->
+                        <router-link :to="{name: 'album.edit',  params: { id:  data.id}}" class="btn btn-outline-success">Edit</router-link>
                     </div>
                 </template>
 
@@ -67,7 +79,7 @@
             <Column header="Delete" style="width: 10%">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
-                        <a href="#" class="btn btn-outline-danger" @click.prevent="deleteArtists(data.id)" >Delete</a>
+                        <a href="#" class="btn btn-outline-danger" @click.prevent="deleteAlbums(data.id)" >Delete</a>
                     </div>
                 </template>
             </Column>
@@ -100,7 +112,8 @@ export default {
             release_dates: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-                title: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] }
+                title: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+                type: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] }
             },
             }
     },
@@ -112,7 +125,8 @@ export default {
     methods: {
 
         getAlbums() {
-            axios.get('/api/artists').then(res => {
+            axios.get('/api/albums').then(res => {
+                console.log(res);
                 this.albums = res.data.data.albums
                 this.added_dates = res.data.data.added_dates
                 this.release_dates = res.data.data.release_dates
@@ -121,31 +135,29 @@ export default {
 
 
         updateStatus(id) {
-            console.log(id);
+            let updateAlbum = null;
 
-            let updateArtist = null;
-
-            for(let idx in this.artists){
-                if(this.artists[idx].id == id) updateArtist = this.artists[idx];
+            for(let idx in this.albums){
+                if(this.albums[idx].id == id) updateAlbum = this.albums[idx];
             }
 
-            axios.patch(`/api/artists/${id}`, {status: updateArtist.status}).then(res => { this.getArtists()});
+
+
+            axios.patch(`/api/albums/${id}`, {status: updateAlbum.status}).then(res => { this.getAlbums()});
         },
 
-
-        edit(id){
-            return `/artists/${id}/edit`;
+        deleteAlbums(id){
+                axios.delete(`/api/albums/${id}`).then(res => { this.getAlbums() })
         },
 
-        deleteArtists(id){
-                axios.delete(`/api/artists/${id}`).then(res => { this.getArtists() })
+        added_date(id){
+            for(let idx in this.added_dates)
+                if(id  == this.added_dates[idx].id) return this.added_dates[idx].time;
         },
 
-        countryName(id){
-
-            for(let idx in this.countries)
-                if(id == this.countries[idx].id) return this.countries[idx].name;
-
+        release_date(id){
+            for(let idx in this.release_dates)
+            if(id  == this.release_dates[idx].id) return this.release_dates[idx].time;
         }
 
 

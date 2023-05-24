@@ -26,6 +26,7 @@ import RadioButton from 'primevue/radiobutton';
 import SelectButton from 'primevue/selectbutton';
 import Dialog from 'primevue/dialog';
 import Editor from 'primevue/editor';
+import Calendar from 'primevue/calendar';
 
 import "primevue/resources/themes/lara-light-indigo/theme.css"
 import "primevue/resources/primevue.min.css";
@@ -47,13 +48,15 @@ import ArtistCreate from './components/view/Artist/ArtistCreate.vue';
 import ArtistEdit from './components/view/Artist/ArtistEdit.vue';
 import AlbumIndex from './components/view/Album/AlbumIndex.vue';
 import AlbumBase from './components/view/Album/AlbumBase.vue';
+import AlbumCreate from './components/view/Album/AlbumCreate.vue';
+import AlbumEdit from './components/view/Album/AlbumEdit.vue';
 
 const app = createApp({components:{UserIndex, OverviewBase}});
 const ovr = createApp({components:{OverviewIndex, OverviewCreate, OverviewEdit, OverviewBase}});
 const genre = createApp({components:{GenreIndex}});
 const track = createApp({components:{TrackIndex, TrackBase, TrackScan, TrackCreate}});
 const artist = createApp({components:{ArtistBase, ArtistIndex, ArtistCreate, ArtistEdit}});
-const album = createApp({components:{AlbumBase, AlbumIndex }});
+const album = createApp({components:{AlbumBase, AlbumIndex, AlbumCreate, AlbumEdit}});
 
 ovr.component('MultiSelect', MultiSelect);
 ovr.component('InputSwitch', InputSwitch);
@@ -100,7 +103,7 @@ album.component('ColumnGroup', ColumnGroup);
 album.component('Row', Row);
 album.component('InputText', InputText);
 album.component('Paginator', Paginator);
-album.component('Dropdown', Dropdown);
+album.component('Calendar', Calendar);
 album.component('InputSwitch', InputSwitch);
 album.component('MultiSelect', MultiSelect);
 album.component('SelectButton', SelectButton);

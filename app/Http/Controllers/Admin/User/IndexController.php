@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\BlockShema;
-use App\Models\Track;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
 {
@@ -16,8 +13,6 @@ class IndexController extends Controller
     public function __invoke()
     {
         $users = User::all();
-
-        $track = Track::where('id', 50)->get();
 
         return view('users.index', compact('users'));
     }

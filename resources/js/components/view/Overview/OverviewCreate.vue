@@ -127,19 +127,19 @@
         methods: {
 
             getPlaylists() {
-            axios.get("/api/overviews/playlists").then(res => { console.log(res.data.data); this.playlists = res.data.data });
+            axios.get("/api/overviews/playlists").then(res => { this.playlists = res.data.data });
           },
 
           getAlbumts() {
-            axios.get("/api/overviews/albums").then(res => { console.log(res.data.data); this.albums = res.data.data });
+            axios.get("/api/overviews/albums").then(res => { this.albums = res.data.data });
           },
 
           getTracks() {
-            axios.get("/api/overviews/tracks").then(res => { console.log(res.data.data); this.tracks = res.data.data });
+            axios.get("/api/overviews/tracks").then(res => { this.tracks = res.data.data });
           },
 
           getGenres() {
-            axios.get("/api/overviews/genres").then(res => { console.log(res.data.data); this.genres = res.data.data });
+            axios.get("/api/overviews/genres").then(res => { this.genres = res.data.data });
           },
 
 

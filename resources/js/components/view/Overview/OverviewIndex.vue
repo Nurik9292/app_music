@@ -113,7 +113,6 @@ import { RouterLink, RouterView } from 'vue-router'
         changeOrder(){
           this.blocks.map((block, index) => {
                 block.order =  index + 1;
-                console.log(block);
             })
             axios.put("/api/overviews/sort", {blocks: this.blocks}).then(res => {this.getBlocks();})
         },

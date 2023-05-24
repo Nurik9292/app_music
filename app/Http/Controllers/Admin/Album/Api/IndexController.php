@@ -12,8 +12,6 @@ class IndexController extends BaseController
     {
         $albums = Album::all();
 
-        $this->service->statusChangetoString($albums);
-
         [$added_dates, $release_dates] = array_values($this->service->dateFormateForIndex($albums));
 
         return new AlbumResource([

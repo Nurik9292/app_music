@@ -117,4 +117,27 @@ Route::prefix('artists')->namespace('App\Http\Controllers\Admin\Artist\Api')->na
         return CountryResource::collection($countries);
     })->name('country');
 });
+
+Route::prefix('albums')->namespace('App\Http\Controllers\Admin\Album\Api')->name('api.album.')->group(function () {
+    Route::get('/', IndexController::class)->name('index');
+    Route::post('/', StoreController::class)->name('store');
+    Route::get('/show/{album}', ShowController::class)->name('show');
+    Route::patch('/{album}', UpdateController::class)->name('update');
+    Route::delete('/{album}', DestroyController::class)->name('destroy');
+
+
+    Route::get('/artists', function () {
+        $artists = Artist::orderBy('name')->get();
+        return new ArtistResource($artists);
+    })->name('artist');
+
+    Route::get('/types', function () {
+        $album = new Album();
+        foreach ($album->getTypes() as $idx => $name)
+            $types[] = ['id' => $idx, 'name' => $name];
+        return new AlbumResource($types);
+    })->name('type');
+});
+
+
 // });

@@ -45,7 +45,7 @@
             </template>
             <Column field="id" header="№" sortable style="width: 10%"></Column>
             <Column field="name" header="Name" sortable style="width: 35%"></Column>
-            <Column  header="Countries" filterField="country.name" style="width: 15%">
+            <Column field="" header="Countries" filterField="country_id" style="width: 15%">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
                       {{countryName(data.country_id)}}
@@ -102,7 +102,6 @@ export default {
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-                'country.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             },
             }
     },
@@ -132,11 +131,6 @@ export default {
             }
 
             axios.patch(`/api/artists/${id}`, {status: updateArtist.status}).then(res => { this.getArtists()});
-        },
-
-
-        edit(id){
-            return `/artists/${id}/edit`;
         },
 
         deleteArtists(id){

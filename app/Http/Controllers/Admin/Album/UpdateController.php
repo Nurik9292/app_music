@@ -10,7 +10,7 @@ class UpdateController extends BaseController
     public function __invoke(UpdateRequest $request, Album $album)
     {
         $data = $request->validated();
-        // dd($album);
+
         $this->service->update($data, $album);
 
         return redirect()->route('album.index');
