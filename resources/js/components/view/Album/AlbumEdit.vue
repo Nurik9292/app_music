@@ -16,7 +16,7 @@
                             <li class="breadcrumb-item">
                                 <router-link :to="{name: 'album.index'}">Альбомы</router-link>
                             </li>
-                            <li class="breadcrumb-item active">Добавить</li>
+                            <li class="breadcrumb-item active">Обновить</li>
                         </ol>
                     </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -128,7 +128,7 @@
 
       <!-- /.card-body -->
 
-      <router-link class="btn btn-primary btn-lg mb-3" :to="{name: 'artist.index'}">Отмена</router-link>
+      <router-link class="btn btn-primary btn-lg mb-3" :to="{name: 'album.index'}">Отмена</router-link>
         <a href="#" class="btn btn-primary btn-lg mb-3 ml-3" @click.prevent="update()">Обновить</a>
 
     </div>

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Playlist;
+namespace App\Http\Controllers\Admin\Playlist\Api;
 
+use App\Http\Controllers\Admin\Playlist\BaseController;
 use App\Models\Playlist;
 
 class DestroyController extends BaseController
@@ -25,6 +26,6 @@ class DestroyController extends BaseController
 
         $playlist->delete();
 
-        return redirect()->back();
+        return response([]);
     }
 }

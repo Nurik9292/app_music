@@ -7,14 +7,14 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Альбомы</h1>
+            <h1 class="m-0">Плейлисты</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
-                    <router-link :to="{name: 'album.index'}">Главная</router-link>
+                    <a href="\">Главная</a>
                 </li>
-              <li class="breadcrumb-item active">Альбомы</li>
+              <li class="breadcrumb-item active">Плейлисты</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -27,11 +27,11 @@
 
         <div class="container-fluid">
             <div class="d-flex justify-content-end mb-3">
-                <router-link class="btn btn-primary btn-lg" :to="{name: 'album.create', }">Добавить</router-link>
+                <router-link class="btn btn-primary btn-lg" :to="{name: 'playlist.create', }">Добавить</router-link>
             </div>
 
             <div class="card">
-            <DataTable v-model:filters="filters" :value="albums" paginator :rows="10"
+            <DataTable v-model:filters="filters" :value="playlists" paginator :rows="10"
                 stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"  selectionMode="multiple"
                 dataKey="id" tableStyle="min-width: 50rem">
             <template #header>
@@ -45,20 +45,16 @@
               </div>
             </template>
             <Column field="id" header="#" sortable style="width: 10%"></Column>
-            <Column field="title" header="Название" sortable style="width: 20%"></Column>
-            <Column field="type" header="Тип" sortable style="width: 10%"></Column>
-            <Column  header="Статус" style="width: 10%">
+            <Column field="title_tm" header="Название Tm" sortable style="width: 20%"></Column>
+            <Column field="title_ru" header="Название Ru" sortable style="width: 20%"></Column>
+            <Column field="genre" header="Жанр" sortable style="width: 10%">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
-                        <InputSwitch v-model="data.status" @change.prevent="updateStatus(data.id)"/>
-                    </div>
-                </template>
-            </Column>
-            <Column field="release_date" header="Выпуска" sortable style="width: 15%">
-                <template #body="{ data }">
-                    <div class="flex align-items-center gap-2">
-                     {{ release_date(data.id) }}
-                    </div>
+                    <template v-for="name in genres(data.id)">
+                        {{ name }}
+                    </template>
+                </div>
+
                 </template>
             </Column>
             <Column field="added_date" header="Добавлен" sortable style="width: 15%">
@@ -68,10 +64,17 @@
                     </div>
                 </template>
             </Column>
+            <Column  header="Статус" style="width: 10%">
+                <template #body="{ data }">
+                    <div class="flex align-items-center gap-2">
+                        <InputSwitch v-model="data.status" @change.prevent="updateStatus(data.id)"/>
+                    </div>
+                </template>
+            </Column>
             <Column header="Edit" style="width: 10%">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
-                        <router-link :to="{name: 'album.edit',  params: { id:  data.id}}" class="btn btn-outline-success">Edit</router-link>
+                        <router-link :to="{name: 'playlist.edit',  params: { id:  data.id}}" class="btn btn-outline-success">Edit</router-link>
                     </div>
                 </template>
 
@@ -79,7 +82,7 @@
             <Column header="Delete" style="width: 10%">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
-                        <a href="#" class="btn btn-outline-danger" @click.prevent="deleteAlbums(data.id)" >Delete</a>
+                        <a href="#" class="btn btn-outline-danger" @click.prevent="deletePlaylists(data.id)" >Delete</a>
                     </div>
                 </template>
             </Column>
@@ -101,62 +104,66 @@
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 export default {
-    name: "AlbumIndex",
+    name: "PlaylistIndex",
 
     data(){
         return {
-            countries: null,
-            albums: null,
-            selectedAlbum: null,
+            genres:null,
+            playlists: null,
+            selectedPlaylist: null,
             added_dates: null,
-            release_dates: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-                title: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+                title_tm: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+                title_ru: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
                 type: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] }
             },
             }
     },
 
     mounted() {
-        this.getAlbums();
+        this.getPlaylists();
     },
 
     methods: {
 
-        getAlbums() {
-            axios.get('/api/albums').then(res => {
-                this.albums = res.data.data.albums
+        getPlaylists() {
+            axios.get('/api/playlists').then(res => {
+                this.playlists = res.data.data.playlists
                 this.added_dates = res.data.data.added_dates
-                this.release_dates = res.data.data.release_dates
+                this.genres = res.data.data.genres
              });
         },
 
 
         updateStatus(id) {
-            let updateAlbum = null;
+            let updatePlaylist = null;
 
-            for(let idx in this.albums){
-                if(this.albums[idx].id == id) updateAlbum = this.albums[idx];
+            for(let idx in this.playlists){
+                if(this.playlists[idx].id == id) updatePlaylist = this.playlists[idx];
             }
+            axios.patch(`/api/playlists/${id}`, {status: updatePlaylist.status}).then(res => { this.getPlaylists()});
+        },
 
-
-
-            axios.patch(`/api/albums/${id}`, {status: updateAlbum.status}).then(res => { this.getAlbums()});
+        deletePlaylists(id){
+                axios.delete(`/api/playlists/${id}`).then(res => { this.getPlaylists() })
         },
 
         deleteAlbums(id){
                 axios.delete(`/api/albums/${id}`).then(res => { this.getAlbums() })
         },
 
+
         added_date(id){
             for(let idx in this.added_dates)
                 if(id  == this.added_dates[idx].id) return this.added_dates[idx].time;
         },
 
-        release_date(id){
-            for(let idx in this.release_dates)
-            if(id  == this.release_dates[idx].id) return this.release_dates[idx].time;
+        genres(id){
+            for(let idx in this.genres)
+            if(id  == this.genres[idx].id) {
+                return this.genres[idx].name;
+            }
         }
 
 

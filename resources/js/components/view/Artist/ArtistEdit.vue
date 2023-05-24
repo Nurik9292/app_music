@@ -11,9 +11,12 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">
-                                <router-link :to="{name: 'artist.create'}">Добавить</router-link>
+                               <a href="/">Главная</a>
                             </li>
-                            <li class="breadcrumb-item active">Артисты</li>
+                            <li class="breadcrumb-item">
+                                <router-link :to="{name: 'artist.index'}">Артисты</router-link>
+                            </li>
+                            <li class="breadcrumb-item active">Обновить</li>
                         </ol>
                     </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -127,10 +130,6 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
           update() {
-
-            console.log(this.name);
-            console.log(131212);
-
             const data = new FormData();
             let image = this.dropzone.getAcceptedFiles();
 

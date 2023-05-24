@@ -141,5 +141,25 @@ Route::prefix('albums')->namespace('App\Http\Controllers\Admin\Album\Api')->name
     })->name('type');
 });
 
+Route::prefix('playlists')->namespace('App\Http\Controllers\Admin\Playlist\Api')->name('api.playlist.')->group(function () {
+    Route::get('/', IndexController::class)->name('index');
+    Route::post('/', StoreController::class)->name('store');
+    Route::get('/show/{playlist}', ShowController::class)->name('show');
+    Route::patch('/{playlist}', UpdateController::class)->name('update');
+    Route::delete('/{playlist}', DestroyController::class)->name('destroy');
+    Route::post('/tracks/delete/{playlist}', DeleteTrackController::class)->name('delete.track');
+
+
+    Route::get('/tracks', function () {
+        $tracks = Track::orderBy('title')->get();
+        return new TrackResource($tracks);
+    })->name('tracks');
+
+    Route::get('/genres', function () {
+        $genres = Genre::orderBy('name_ru')->get();
+        return GenreResource::collection($genres);
+    })->name('genre');
+});
+
 
 // });

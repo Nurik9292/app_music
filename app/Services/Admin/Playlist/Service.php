@@ -5,6 +5,7 @@ namespace App\Services\Admin\Playlist;
 use App\Models\Playlist;
 use App\Services\Admin\HelperService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
 
@@ -39,8 +40,9 @@ class Service
 
     public function update($data, $playlist)
     {
-        if (isset($data['artwokr_url']))
-            $data = $this->resize($data);
+
+        if (isset($data['artwork_url']))
+            $data = $this->resize($data, $playlist);
 
         if (isset($data['tracks'])) {
             $tracks = $data['tracks'];
@@ -68,10 +70,8 @@ class Service
     {
         $path = $this->helper->pathImageForServer;
 
-        if (isset($playlist)) {
-            $this->deleteForUpdate($playlist->thumb_url);
+        if (isset($playlist))
             $this->deleteForUpdate($playlist->artwork_url);
-        }
 
         $image_name = $data['artwork_url']->getClientOriginalName();
 
@@ -132,12 +132,12 @@ class Service
 
     public function dateFormate($playlists)
     {
-        $dates = [];
+        $added_dates = [];
 
         foreach ($playlists as $playlist)
-            $dates[$playlist->id] = Carbon::parse($playlist->created_at)->format('d-m-Y');
+            $added_dates[] = ['id' => $playlist->id, 'time' => Carbon::parse($playlist->added_date)->format('d-m-Y')];
 
-        return $dates;
+        return $added_dates;
     }
 
     public function delete($path)
@@ -197,8 +197,8 @@ class Service
     private function deleteForUpdate($image)
     {
         $path = substr($image, 0, strpos($image,  basename($image)));
-        $path = $this->helper->pathImageForServer  . substr($path, strpos($path, "images"), strlen($path));
-        $path = preg_replace('/images\//', '', $path);
+        $path = pathToServer()  . substr($path, strpos($path, "images"));
+        $path = preg_replace('/playlist_artWork\//', '', $path);
         $this->delete($path);
     }
 }

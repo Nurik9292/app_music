@@ -68,6 +68,21 @@ const router = createRouter({
             component: () =>  import('../components/view/Album/AlbumEdit.vue'),
             name: 'album.edit',
         },
+        {
+            path: '/playlists/index',
+            component: () =>  import('../components/view/Playlist/PlaylistIndex.vue'),
+            name: 'playlist.index',
+        },
+        {
+            path: '/playlists/create',
+            component: () =>  import('../components/view/Playlist/PlaylistCreate.vue'),
+            name: 'playlist.create',
+        },
+        {
+            path: '/playlists/:id/edit',
+            component: () =>  import('../components/view/Playlist/PlaylistEdit.vue'),
+            name: 'playlist.edit',
+        },
 
 ]});
 

@@ -13,9 +13,6 @@
                 <li class="breadcrumb-item">
                     <a href="/">Главная</a>
                 </li>
-                <li class="breadcrumb-item">
-                    <router-link :to="{name: 'artist.index'}">Главная</router-link>
-                </li>
               <li class="breadcrumb-item active">Артисты</li>
             </ol>
           </div><!-- /.col -->
@@ -125,7 +122,6 @@ export default {
 
 
         updateStatus(id) {
-            console.log(id);
 
             let updateArtist = null;
 

@@ -6,7 +6,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Артисты</h1>
+                            <h1 class="m-0">Плейлисты</h1>
                         </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -14,7 +14,7 @@
                                <a href="/">Главная</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <router-link :to="{name: 'artist.index'}">Артисты</router-link>
+                                <router-link :to="{name: 'playlist.index'}">Плейлисты</router-link>
                             </li>
                             <li class="breadcrumb-item active">Добавить</li>
                         </ol>
@@ -32,26 +32,32 @@
 
     <!-- form start -->
       <div class="card">
-
         <br>
         <div class="row ml-3">
             <div class="block_two">
-                <label>Имя</label>
-                <InputText type="text" v-model="name" id="name" placeholder="Введите имя артиста" style="width: 400px;"/>
+                <label>Название Tm</label>
+                <InputText type="text" v-model="title_tm" placeholder="Введите имя артиста" style="width: 400px;"/>
             </div>
+
+            <div class="block_two">
+                <label>Название Ru</label>
+                <InputText type="text" v-model="title_ru" placeholder="Введите имя артиста" style="width: 400px;"/>
+            </div>
+
         </div>
 
         <div class="row ml-3">
             <div class="block_two">
-                <label>Биография Tm</label>
-                <Editor v-model="bio_tk" editorStyle="height: 320px" />
+                <label>Треки</label>
+                <MultiSelect v-model="selectedTracks" :options="tracks" optionLabel="title"  filter placeholder="Выберите трек" :maxSelectedLabels="2" class="w-full md:w-14rem" />
             </div>
 
             <div class="block_two">
-                <label>Биография Ru</label>
-                <Editor v-model="bio_ru" editorStyle="height: 320px" />
+                <label>Жанры</label>
+                <MultiSelect v-model="selectedGenres" :options="genres" optionLabel="name_ru" filter placeholder="Выберите жанр плейлиста" :maxSelectedLabels="3" class="w-full md:w-14rem" />
             </div>
         </div>
+
 
         <div class="row ml-3">
             <div class="block_one" style="width: 420px;">
@@ -62,25 +68,17 @@
             </div>
 
             <div class="block_one">
-                <label>Страна</label>
-                <MultiSelect v-model="selectedCountry" :options="countries" optionLabel="name"  filter placeholder="Выберите страну" :maxSelectedLabels="1" :selectionLimit="1"  class="w-full md:w-14rem" />
-            </div>
-        </div>
-
-        <div class="row ml-3">
-            <div class="block_one">
                 <label for="status">Статуc</label>
                 <InputSwitch v-model="status" />
-              </div>
-        </div>
-
+            </div>
 
         </div>
 
+        </div>
 
       <!-- /.card-body -->
 
-      <router-link class="btn btn-primary btn-lg mb-3" :to="{name: 'artist.index'}">Отмена</router-link>
+      <router-link class="btn btn-primary btn-lg mb-3" :to="{name: 'playlist.index'}">Отмена</router-link>
         <a href="#" class="btn btn-primary btn-lg mb-3 ml-3" @click.prevent="store()">Добавить</a>
 
     </div>
@@ -95,44 +93,63 @@ import Dropzone from 'dropzone'
 import { RouterLink, RouterView } from 'vue-router'
 
     export default {
-        name: "ArtistCreate",
+        name: "AlbumCreate",
 
         data(){
                 return {
-                    bio_tk: null,
-                    bio_ru: null,
+                    title_tm: null,
+                    title_ru: null,
                     status: false,
-                    countries: null,
-                    selectedCountry: null,
-                    artwork_url: null,
+                    genres: null,
+                    selectedGenres: null,
+                    tracks: null,
+                    selectedTracks: null,
              }
         },
 
         mounted() {
             this.dropzone = new Dropzone(this.$refs.dropzone, {url: 'none', autoProcessQueue: false, acceptedFiles: 'image/*'});
-            this.getCountries();
+            this.getTracks();
+            this.getGenres();
         },
 
         methods: {
-            getCountries() {
-            axios.get("/api/artists/countries").then(res => { this.countries = res.data.data });
+            getTracks() {
+            axios.get("/api/playlists/tracks").then(res => { this.tracks = res.data.data });
           },
 
+          getGenres() {
+            axios.get("/api/playlists/genres").then(res => {this.genres = res.data.data });
+          },
 
           store() {
+
+            let tracksId = [];
+            let genresId = [];
+
+            for(let idx in this.selectedTracks)
+                tracksId.push(this.selectedTracks[idx].id);
+
+            for(let idx in this.selectedGenres)
+                genresId.push(this.selectedGenres[idx].id);
+
 
             const data = new FormData();
             let image = this.dropzone.getAcceptedFiles();
 
             data.append('artwork_url', image[0]);
-            data.append('name', this.name);
-            data.append('bio_tk', this.bio_tk);
-            data.append('bio_ru', this.bio_ru);
+            data.append('title_tm', this.title_tm);
+            data.append('title_ru', this.title_ru);
             data.append('status', this.status);
-            data.append('country_id', this.selectedCountry[0].id);
+            for (var i = 0; i < tracksId.length; i++){
+                data.append('tracks[]',tracksId[i]);
+            }
+            for (var i = 0; i < genresId.length; i++){
+                data.append('genres[]',genresId[i]);
+            }
 
-            axios.post('/api/artists/', data).then(res =>{
-                this.$router.push({name: 'artist.index'});
+            axios.post('/api/playlists/', data).then(res =>{
+                this.$router.push({name: 'playlist.index'});
             });
           }
 

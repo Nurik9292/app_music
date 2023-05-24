@@ -50,6 +50,10 @@ import AlbumIndex from './components/view/Album/AlbumIndex.vue';
 import AlbumBase from './components/view/Album/AlbumBase.vue';
 import AlbumCreate from './components/view/Album/AlbumCreate.vue';
 import AlbumEdit from './components/view/Album/AlbumEdit.vue';
+import PlaylistIndex from './components/view/Playlist/PlaylistIndex.vue';
+import PlaylistBase from './components/view/Playlist/PlaylistBase.vue';
+import PlaylistCreate from './components/view/Playlist/PlaylistCreate.vue';
+import PlaylistEdit from './components/view/Playlist/PlaylistEdit.vue';
 
 const app = createApp({components:{UserIndex, OverviewBase}});
 const ovr = createApp({components:{OverviewIndex, OverviewCreate, OverviewEdit, OverviewBase}});
@@ -57,6 +61,7 @@ const genre = createApp({components:{GenreIndex}});
 const track = createApp({components:{TrackIndex, TrackBase, TrackScan, TrackCreate}});
 const artist = createApp({components:{ArtistBase, ArtistIndex, ArtistCreate, ArtistEdit}});
 const album = createApp({components:{AlbumBase, AlbumIndex, AlbumCreate, AlbumEdit}});
+const playlist = createApp({components:{PlaylistBase, PlaylistIndex, PlaylistCreate, PlaylistEdit}});
 
 ovr.component('MultiSelect', MultiSelect);
 ovr.component('InputSwitch', InputSwitch);
@@ -96,7 +101,6 @@ artist.component('MultiSelect', MultiSelect);
 artist.component('SelectButton', SelectButton);
 artist.component('Editor', Editor);
 
-
 album.component('DataTable', DataTable);
 album.component('Column', Column);
 album.component('ColumnGroup', ColumnGroup);
@@ -108,6 +112,15 @@ album.component('InputSwitch', InputSwitch);
 album.component('MultiSelect', MultiSelect);
 album.component('SelectButton', SelectButton);
 album.component('Editor', Editor);
+
+playlist.component('DataTable', DataTable);
+playlist.component('Column', Column);
+playlist.component('ColumnGroup', ColumnGroup);
+playlist.component('Row', Row);
+playlist.component('InputText', InputText);
+playlist.component('Paginator', Paginator);
+playlist.component('InputSwitch', InputSwitch);
+playlist.component('MultiSelect', MultiSelect);
 
 
 ovr.use(router);
@@ -122,9 +135,13 @@ artist.use(PrimeVue, { ripple: true });
 album.use(router);
 album.use(PrimeVue, { ripple: true });
 
+playlist.use(router);
+playlist.use(PrimeVue, { ripple: true });
+
 album.mount('#album');
 artist.mount('#artist');
 app.mount('#app');
 genre.mount('#genre');
+playlist.mount('#playlist');
 ovr.mount('#ovr');
 track.mount('#track');

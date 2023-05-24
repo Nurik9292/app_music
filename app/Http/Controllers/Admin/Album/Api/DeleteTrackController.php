@@ -10,7 +10,6 @@ class DeleteTrackController extends Controller
 {
     public function __invoke(Request $request, Album $album)
     {
-
         $album->tracks()->detach($request->all());
 
         return response([]);

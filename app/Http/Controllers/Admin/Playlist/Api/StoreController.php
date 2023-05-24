@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Playlist;
+namespace App\Http\Controllers\Admin\Playlist\Api;
 
+use App\Http\Controllers\Admin\Playlist\BaseController;
 use App\Http\Requests\Admin\Playlist\StoreRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StoreController extends BaseController
 {
@@ -12,6 +15,6 @@ class StoreController extends BaseController
 
         $this->service->store($data);
 
-        return redirect()->route('playlist.index');
+        return response([]);
     }
 }
