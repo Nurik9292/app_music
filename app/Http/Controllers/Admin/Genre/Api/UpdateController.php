@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\Genre\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Genre\Api\UpdateRequest;
-use App\Http\Resources\Admin\GenreResource;
 use App\Models\Genre;
 
 class UpdateController extends Controller
@@ -15,6 +14,6 @@ class UpdateController extends Controller
 
         $genre->update($data);
 
-        return new GenreResource($genre);
+        return response([]);
     }
 }

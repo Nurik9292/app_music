@@ -83,6 +83,17 @@ const router = createRouter({
             component: () =>  import('../components/view/Playlist/PlaylistEdit.vue'),
             name: 'playlist.edit',
         },
+        {
+            path: '/genres/index',
+            component: () =>  import('../components/view/Genre/GenreIndex.vue'),
+            name: 'genre.index',
+        },
+        {
+            path: '/genres/create',
+            component: () =>  import('../components/view/Genre/GenreCreate.vue'),
+            name: 'genre.create',
+        },
+
 
 ]});
 

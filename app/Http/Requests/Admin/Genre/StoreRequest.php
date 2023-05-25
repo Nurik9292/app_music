@@ -26,4 +26,17 @@ class StoreRequest extends FormRequest
             'name_ru' => ['required', 'string'],
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'name_tm.required' => 'Заполните поле',
+            'name_ru.required' => 'Заполните поле',
+        ];
+    }
 }

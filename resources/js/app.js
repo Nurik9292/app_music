@@ -34,6 +34,7 @@ import "primeicons/primeicons.css";
 
 import UserIndex from './components/view/User/UserIndex.vue';
 import GenreIndex from './components/view/Genre/GenreIndex.vue';
+import GenreBase from './components/view/Genre/GenreBase.vue';
 import OverviewBase from './components/view/Overview/OverviewBase.vue';
 import OverviewIndex from './components/view/Overview/OverviewIndex.vue';
 import OverviewCreate from './components/view/Overview/OverviewCreate.vue';
@@ -57,7 +58,7 @@ import PlaylistEdit from './components/view/Playlist/PlaylistEdit.vue';
 
 const app = createApp({components:{UserIndex, OverviewBase}});
 const ovr = createApp({components:{OverviewIndex, OverviewCreate, OverviewEdit, OverviewBase}});
-const genre = createApp({components:{GenreIndex}});
+const genre = createApp({components:{GenreIndex, GenreBase}});
 const track = createApp({components:{TrackIndex, TrackBase, TrackScan, TrackCreate}});
 const artist = createApp({components:{ArtistBase, ArtistIndex, ArtistCreate, ArtistEdit}});
 const album = createApp({components:{AlbumBase, AlbumIndex, AlbumCreate, AlbumEdit}});
@@ -69,6 +70,15 @@ ovr.component('InputNumber', InputNumber);
 ovr.component('Button', Button);
 ovr.component('InputText', InputText);
 ovr.component('Checkbox', Checkbox);
+
+
+genre.component('DataTable', DataTable);
+genre.component('Column', Column);
+genre.component('ColumnGroup', ColumnGroup);
+genre.component('Row', Row);
+genre.component('InputText', InputText);
+genre.component('Button', Button);
+genre.component('Paginator', Paginator);
 
 track.component('DataTable', DataTable);
 track.component('Column', Column);
@@ -125,6 +135,9 @@ playlist.component('MultiSelect', MultiSelect);
 
 ovr.use(router);
 ovr.use(PrimeVue, { ripple: true });
+
+genre.use(router);
+genre.use(PrimeVue, { ripple: true });
 
 track.use(router);
 track.use(PrimeVue, { ripple: true });

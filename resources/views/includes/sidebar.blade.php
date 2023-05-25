@@ -94,7 +94,7 @@
               </li>
 
               <li class="nav-item">
-                <a href="{{route('genre.index')}}" class="nav-link">
+                <a href="{{route('genre.index', 'index')}}" class="nav-link">
                   <i class="nav-icon fas fa-tags"></i>
                   <p>
                     Жанры

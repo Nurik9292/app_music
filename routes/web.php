@@ -67,11 +67,6 @@ Route::middleware('admin', 'auth')->group(function () {
         //============= PLAYLIST ========================
         Route::prefix('playlists')->namespace('Playlist')->name('playlist.')->group(function () {
             Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
-            // Route::get('/create', CreateController::class)->name("create");
-            // Route::post('/', StoreController::class)->name('store');
-            // Route::get('/{playlist}/edit', EditController::class)->name('edit');
-            // Route::patch('/{playlist}', UpdateController::class)->name('update');
-            // Route::delete('/{playlist}', DestroyController::class)->name('destroy');
         });
         // ========== END PLAYLIST =====================
 
@@ -89,12 +84,7 @@ Route::middleware('admin', 'auth')->group(function () {
 
         //============= GENRE ========================
         Route::prefix('genres')->namespace('Genre')->name('genre.')->group(function () {
-            Route::get('/', IndexController::class)->name('index');
-            Route::get('/create', CreateController::class)->name('create');
-            Route::post('/', StoreController::class)->name('store');
-            // Route::get('/{artist}/edit', EditController::class)->name('edit');
-            // Route::patch('/{artist}', UpdateController::class)->name('update');
-            // Route::delete('/{artist}', DestroyController::class)->name('destroy');
+            Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
         });
         // ========== END GENRE =====================
     });

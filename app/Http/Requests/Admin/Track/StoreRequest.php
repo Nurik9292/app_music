@@ -24,7 +24,7 @@ class StoreRequest extends FormRequest
         return [
             // 'title' => ['nullable', 'string'],
             'lyrics' => ['required', 'string'],
-            // 'artists' => ['required'],
+            'artists' => ['required', 'numeric'],
             'genres' => ['required'],
             'album' => ['nullable', 'numeric'],
             // 'artwork_url' => ['required', 'url'],

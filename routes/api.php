@@ -38,6 +38,7 @@ Route::prefix('users')->namespace('App\Http\Controllers\Admin\User\Api')->name('
 
 Route::prefix('genres')->namespace('App\Http\Controllers\Admin\Genre\Api')->name('api.genre.')->group(function () {
     Route::get('/', IndexController::class)->name('index');
+    Route::post('/', StoreController::class)->name('store');
     Route::patch('/{genre}', UpdateController::class)->name('update');
     Route::delete('/{genre}', DestroyController::class)->name('destroy');
 });
@@ -160,6 +161,7 @@ Route::prefix('playlists')->namespace('App\Http\Controllers\Admin\Playlist\Api')
         return GenreResource::collection($genres);
     })->name('genre');
 });
+
 
 
 // });
