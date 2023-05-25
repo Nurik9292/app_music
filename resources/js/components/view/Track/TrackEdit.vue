@@ -42,7 +42,10 @@
         <div class="row ml-3">
             <div class="block_two">
                 <label for="audio_url">Трека</label>
-                <InputText type="text" v-model="audio_url" id="audio_url" placeholder="Введите url трека" style="width: 500px;"/>
+                <InputText type="text" v-model="audio_url" id="audio_url" placeholder="Введите url трека" :class="isErrorUrl() ? 'p-invalid' : ''" style="width: 500px;"/>
+                <div v-if="isErrorUrl()">
+                    <p class="text-danger">{{ errorMessageUrl() }}</p>
+                </div>
               </div>
         </div>
 
@@ -74,7 +77,9 @@
                     <div ref="dropzone"  class="btn d-block p-5 bg-dark text-center text-light">
                         Upload
                     </div>
-
+                    <div v-if="isErrorImage()">
+                    <p class="text-danger">{{ errorMessageImage() }}</p>
+                </div>
               </div>
             </div>
 
@@ -170,6 +175,7 @@ import { RouterLink, RouterView } from 'vue-router'
                     selectedAlbum: null,
                     genres: null,
                     selectedGenres: null,
+                    errors: null,
 
                 items: [{
                     label: 'Главная',
@@ -262,12 +268,35 @@ import { RouterLink, RouterView } from 'vue-router'
 
             axios.post(`/api/tracks/${this.$route.params.id}`, image).then(res =>{
                 this.$router.back();
-            });
+            }).catch(error => {
+                this.errors = error.response.data.errors
+            })
           },
 
         isFile(){
             return this.value == 'Yes';
         },
+
+        isErrorUrl(){
+            for(let error in this.errors)
+                    if(error == 'audio_url') return true;
+                return false;
+          },
+
+
+        isErrorImage(){
+            for(let error in this.errors)
+                    if(error == 'artwork_url') return true;
+                return false;
+          },
+
+          errorMessageUrl(){
+            if(this.isErrorUrl()) return this.errors.audio_url[0];
+          },
+
+          errorMessageImage(){
+            if(this.isErrorImage()) return this.errors.artwork_url[0];
+          }
     }
     }
 </script>

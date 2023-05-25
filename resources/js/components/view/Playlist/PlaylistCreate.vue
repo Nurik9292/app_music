@@ -36,12 +36,18 @@
         <div class="row ml-3">
             <div class="block_two">
                 <label>Название Tm</label>
-                <InputText type="text" v-model="title_tm" placeholder="Введите имя артиста" style="width: 400px;"/>
+                <InputText type="text" v-model="title_tm" placeholder="Введите имя артиста" style="width: 400px;" :class="isErrorTitleTm() ? 'p-invalid' : ''"/>
+                <div v-if="isErrorTitleTm()">
+                    <p class="text-danger">{{ errorMessageTitleTm() }}</p>
+                    </div>
             </div>
 
             <div class="block_two">
                 <label>Название Ru</label>
-                <InputText type="text" v-model="title_ru" placeholder="Введите имя артиста" style="width: 400px;"/>
+                <InputText type="text" v-model="title_ru" placeholder="Введите имя артиста" style="width: 400px;" :class="isErrorTitleRu() ? 'p-invalid' : ''"/>
+                <div v-if="isErrorTitleRu()">
+                    <p class="text-danger">{{ errorMessageTitleRu() }}</p>
+                    </div>
             </div>
 
         </div>
@@ -49,12 +55,18 @@
         <div class="row ml-3">
             <div class="block_two">
                 <label>Треки</label>
-                <MultiSelect v-model="selectedTracks" :options="tracks" optionLabel="title"  filter placeholder="Выберите трек" :maxSelectedLabels="2" class="w-full md:w-14rem" />
+                <MultiSelect v-model="selectedTracks" :options="tracks" optionLabel="title"  filter placeholder="Выберите трек" :maxSelectedLabels="2" :class="isErrorTracks() ? 'p-invalid' : '', 'w-full md:w-14rem'"  />
+                <div v-if="isErrorTracks()">
+                    <p class="text-danger">{{ errorMessageTracks() }}</p>
+                    </div>
             </div>
 
             <div class="block_two">
                 <label>Жанры</label>
-                <MultiSelect v-model="selectedGenres" :options="genres" optionLabel="name_ru" filter placeholder="Выберите жанр плейлиста" :maxSelectedLabels="3" class="w-full md:w-14rem" />
+                <MultiSelect v-model="selectedGenres" :options="genres" optionLabel="name_ru" filter placeholder="Выберите жанр плейлиста" :maxSelectedLabels="3" :class="isErrorGenres() ? 'p-invalid' : '', 'w-full md:w-14rem'" />
+                <div v-if="isErrorGenres()">
+                    <p class="text-danger">{{ errorMessageGenres() }}</p>
+                    </div>
             </div>
         </div>
 
@@ -64,6 +76,9 @@
                 <label>Выберите изображение</label>
                     <div ref="dropzone"  class="btn d-block p-5 bg-dark text-center text-light">
                         Upload
+                    </div>
+                    <div v-if="isErrorArtwork()">
+                    <p class="text-danger">{{ errorMessageArtwork() }}</p>
                     </div>
             </div>
 
@@ -104,6 +119,7 @@ import { RouterLink, RouterView } from 'vue-router'
                     selectedGenres: null,
                     tracks: null,
                     selectedTracks: null,
+                    errors: null,
              }
         },
 
@@ -137,9 +153,9 @@ import { RouterLink, RouterView } from 'vue-router'
             const data = new FormData();
             let image = this.dropzone.getAcceptedFiles();
 
-            data.append('artwork_url', image[0]);
-            data.append('title_tm', this.title_tm);
-            data.append('title_ru', this.title_ru);
+            data.append('artwork_url', image.length > 0 ? image[0] : '');
+            data.append('title_tm', this.title_tm ? this.title_tm : '');
+            data.append('title_ru', this.title_ru ? this.title_ru : '');
             data.append('status', this.status);
             for (var i = 0; i < tracksId.length; i++){
                 data.append('tracks[]',tracksId[i]);
@@ -150,9 +166,60 @@ import { RouterLink, RouterView } from 'vue-router'
 
             axios.post('/api/playlists/', data).then(res =>{
                 this.$router.push({name: 'playlist.index'});
+            }).catch(error => {
+                this.errors = error.response.data.errors
             });
-          }
+          },
 
+          isErrorTitleTm(){
+                for(let error in this.errors)
+                    if(error == 'title_tm') return true;
+                return false;
+          },
+
+          isErrorTitleRu(){
+                for(let error in this.errors)
+                    if(error == 'title_ru') return true;
+                return false;
+          },
+
+          isErrorArtwork(){
+                for(let error in this.errors)
+                    if(error == 'artwork_url') return true;
+                return false;
+          },
+
+          isErrorTracks(){
+                for(let error in this.errors)
+                    if(error == 'tracks') return true;
+                return false;
+          },
+
+          isErrorGenres(){
+                for(let error in this.errors)
+                    if(error == 'genres') return true;
+                return false;
+          },
+
+          errorMessageTitleTm(){
+            if(this.isErrorTitleTm) return this.errors.title_tm[0];
+          },
+
+          errorMessageTitleRu(){
+            if(this.isErrorTitleTm) return this.errors.title_ru[0];
+          },
+
+          errorMessageArtwork(){
+            if(this.isErrorTitleTm) return this.errors.artwork_url[0];
+          },
+
+          errorMessageTracks(){
+            if(this.isErrorTitleTm) return this.errors.tracks[0];
+          },
+
+          errorMessageGenres(){
+            if(this.isErrorTitleTm) return this.errors.genres[0];
+          },
         },
     }
 </script>

@@ -42,39 +42,26 @@
         <div class="row ml-3">
             <div class="block_two">
                 <label for="audio_url">Введите трек</label>
-                <InputText type="text" v-model="audio_url" id="audio_url" placeholder="Введите url трека" style="width: 500px;"/>
+                <InputText type="text" v-model="audio_url" id="audio_url" placeholder="Введите url трека" :class="isErrorUrl() ? 'p-invalid' : ''" style="width: 500px;"/>
+                <div v-if="isErrorUrl()">
+                    <p class="text-danger">{{ errorMessageUrl() }}</p>
+                </div>
               </div>
               <div class="text">
                 <label for="lyrics">Текст Песни</label>
-                <Textarea v-model="lyrics" autoResize rows="5" cols="30" id="lyrics" placeholder="Введите текст трека"/>
-                <!-- <textarea class="form-control" id="lyrics" name="lyrics" placeholder="Введите текст" rows="6"></textarea> -->
-
+                <Textarea v-model="lyrics" autoResize rows="5" cols="50" id="lyrics" placeholder="Введите текст трека"/>
               </div>
         </div>
-
-
-            <!-- <div class="row ml-3">
-                <label>Исполнитель</label>
-                  <div class="block_one">
-                    <MultiSelect v-model="selectedArtists" :options="artists" filter optionLabel="name" optionValue="id" placeholder="Выбирите артиста" :maxSelectedLabels="5" :selectionLimit="5" class="w-full md:w-40rem" id="album" />
-                </div>
-
-
-                <div class="block_one">
-                    <a  href="/artists/create" class="btn btn-outline-primary " >Добавить</a>
-                </div>
-
-            </div> -->
 
         <div class="row ml-3">
             <div class="block_one">
                 <label>Альбомы</label>
-                <Dropdown v-model="selectedAlbum" :options="albums" optionLabel="title" filter placeholder="Выберите альбом" class="w-full md:w-14rem" />
+                <MultiSelect v-model="selectedAlbum" :options="albums" filter optionLabel="title" optionValue="id" placeholder="Выбирите альбом" :maxSelectedLabels="1" :selectionLimit="1" class="w-full md:w-40rem" />
               </div>
 
               <div class="block_one">
                 <label>Жанры</label>
-                <MultiSelect v-model="selectedGenres" :options="genres" filter optionLabel="name_ru" optionValue="id" placeholder="Выбирите жанр" :maxSelectedLabels="5" :selectionLimit="5" class="w-full md:w-40rem" id="album" />
+                <MultiSelect v-model="selectedGenres" :options="genres" filter optionLabel="name_ru" optionValue="id" placeholder="Выбирите жанр" :maxSelectedLabels="5" :selectionLimit="5" class="w-full md:w-40rem"/>
           </div>
 
           <div class="block_one">
@@ -134,6 +121,7 @@ import { RouterLink, RouterView } from 'vue-router'
                     selectedAlbum: null,
                     genres: null,
                     selectedGenres: null,
+                    errors: null,
 
                 items: [{
                     label: 'Главная',
@@ -178,12 +166,25 @@ import { RouterLink, RouterView } from 'vue-router'
                 status: this.status,
                 lyrics: this.lyrics,
                 is_national: this.is_national,
-                album: this.selectedAlbum.id,
+                album: this.selectedAlbum != null ? this.selectedAlbum.id : '',
                 artists: this.selectedArtists,
                 track_number: this.track_number,
                 genres: this.selectedGenres,}).then(res =>{
                 this.$router.back();
-            });
+            }).catch(error => {
+                console.log(error.response);
+                this.errors = error.response.data.errors
+            })
+          },
+
+          isErrorUrl(){
+            for(let error in this.errors)
+                    if(error == 'audio_url') return true;
+                return false;
+          },
+
+          errorMessageUrl(){
+            if(this.isErrorUrl()) return this.errors.audio_url[0];
           }
 
         },

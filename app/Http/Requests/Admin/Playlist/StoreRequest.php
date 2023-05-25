@@ -30,4 +30,21 @@ class StoreRequest extends FormRequest
             'genres' => ['required'],
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title_tm.required' => 'Заполните поле',
+            'title_ru.required' => 'Заполните поле',
+            'tracks.required' => 'Выберите трек',
+            'genres.required' => 'Выберите жанр',
+            'artwork_url.required' => 'Выберите изображение',
+            'artwork_url.image' => 'Файл должен быть изображение',
+        ];
+    }
 }

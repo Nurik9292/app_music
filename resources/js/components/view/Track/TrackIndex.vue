@@ -181,7 +181,7 @@ export default {
                 if(this.tracks[track].id == id) updateTrack = this.tracks[track];
             }
 
-            axios.patch(`/api/tracks/${id}`, {status: updateTrack.status}).then(res => { this.getTracks()});
+            axios.patch(`/api/tracks/status/${id}`, {status: updateTrack.status}).then(res => { this.getTracks()});
         },
 
         storeAlbum() {

@@ -142,7 +142,7 @@ export default {
             for(let idx in this.playlists){
                 if(this.playlists[idx].id == id) updatePlaylist = this.playlists[idx];
             }
-            axios.patch(`/api/playlists/${id}`, {status: updatePlaylist.status}).then(res => { this.getPlaylists()});
+            axios.patch(`/api/playlists/status/${id}`, {status: updatePlaylist.status}).then(res => { this.getPlaylists()});
         },
 
         deletePlaylists(id){

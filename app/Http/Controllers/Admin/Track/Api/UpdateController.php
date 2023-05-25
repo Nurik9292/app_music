@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\Admin\Track\Api;
 
 use App\Http\Controllers\Admin\Track\BaseController;
+use App\Http\Requests\Admin\Track\UpdateRequest;
 use App\Models\Track;
-use GuzzleHttp\Psr7\UploadedFile;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class UpdateController extends BaseController
 {
-    public function __invoke(Request $request, Track $track)
+    public function __invoke(UpdateRequest $request, Track $track)
     {
-        $data = $request->all();
+        $data = $request->validated();
 
         if (count($data) == 1)
             $track->update($data);

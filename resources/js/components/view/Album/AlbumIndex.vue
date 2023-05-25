@@ -142,7 +142,7 @@ export default {
 
 
 
-            axios.patch(`/api/albums/${id}`, {status: updateAlbum.status}).then(res => { this.getAlbums()});
+            axios.patch(`/api/albums/status/${id}`, {status: updateAlbum.status}).then(res => { this.getAlbums()});
         },
 
         deleteAlbums(id){

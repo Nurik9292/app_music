@@ -36,17 +36,26 @@
         <div class="row ml-3">
             <div class="block_two">
                 <label>Название</label>
-                <InputText type="text" v-model="title" placeholder="Введите имя артиста" style="width: 400px;"/>
+                <InputText type="text" v-model="title" placeholder="Введите имя артиста" style="width: 400px;" :class="isErrorTitle() ? 'p-invalid' : ''"/>
+                <div v-if="isErrorTitle()">
+                    <p class="text-danger">{{ errorMessageTitle() }}</p>
+                    </div>
             </div>
 
             <div class="block_two">
                 <label>Дата добавление:</label>
-                <Calendar v-model="release_date" showIcon  showTime hourFormat="24" dateFormat="dd/mm/yy"/>
+                <Calendar v-model="release_date" showIcon  showTime hourFormat="24" dateFormat="dd/mm/yy" :class="isErrorReleaseDate() ? 'p-invalid' : ''"/>
+                <div v-if="isErrorReleaseDate()">
+                    <p class="text-danger">{{ errorMessageReleaseDate() }}</p>
+                    </div>
             </div>
 
             <div class="block_two">
                 <label>Дата выпуска:</label>
-                <Calendar v-model="added_date" showIcon  showTime hourFormat="24" dateFormat="dd/mm/yy"/>
+                <Calendar v-model="added_date" showIcon  showTime hourFormat="24" dateFormat="dd/mm/yy" :class="isErrorReleaseDate() ? 'p-invalid' : ''"/>
+                <div v-if="isErrorAddedDate()">
+                    <p class="text-danger">{{ errorMessageAddedDate() }}</p>
+                    </div>
             </div>
 
 
@@ -63,6 +72,9 @@
                     <div ref="dropzone"  class="btn d-block p-5 bg-dark text-center text-light">
                         Upload
                     </div>
+                    <div v-if="isErrorArtwork()">
+                    <p class="text-danger">{{ errorMessageArtwork() }}</p>
+                    </div>
             </div>
 
         </div>
@@ -70,7 +82,10 @@
         <div class="row ml-3">
             <label>Исполнитель</label>
             <div class="block_one">
-                <MultiSelect v-model="selectedArtists" :options="artists" optionLabel="name"  filter placeholder="Выберите артиста" :maxSelectedLabels="4" :selectionLimit="4"  class="w-full md:w-14rem" />
+                <MultiSelect v-model="selectedArtists" :options="artists" optionLabel="name"  filter placeholder="Выберите артиста" :maxSelectedLabels="4" :selectionLimit="4" :class="isErrorArtists() ? 'p-invalid' : '', 'w-full md:w-14rem'"  />
+                <div v-if="isErrorArtists()">
+                    <p class="text-danger">{{ errorMessageArtists() }}</p>
+                </div>
             </div>
 
             <div class="block_one">
@@ -81,7 +96,10 @@
         <div class="row ml-3">
             <div class="block_one">
                 <label>Тип</label>
-                <MultiSelect v-model="selectedType" :options="types" optionLabel="name" optionValue="id" filter placeholder="Выберите тип альбома" :maxSelectedLabels="1" :selectionLimit="1"  class="w-full md:w-14rem" />
+                <MultiSelect v-model="selectedType" :options="types" optionLabel="name" optionValue="id" filter placeholder="Выберите тип альбома" :maxSelectedLabels="1" :selectionLimit="1"  :class="isErrorType() ? 'p-invalid' : '', 'w-full md:w-14rem'" />
+                <div v-if="isErrorType()">
+                    <p class="text-danger">{{ errorMessageType() }}</p>
+                </div>
             </div>
 
             <div class="block_one">
@@ -129,6 +147,7 @@ import { RouterLink, RouterView } from 'vue-router'
                     is_national: false,
                     artists: null,
                     selectedArtists: null,
+                    errors: null,
              }
         },
 
@@ -156,24 +175,20 @@ import { RouterLink, RouterView } from 'vue-router'
 
             let date = new Intl.DateTimeFormat('en-GB', options);
 
-
             let artistsId = [];
 
             for(let idx in this.selectedArtists)
                 artistsId.push(this.selectedArtists[idx].id);
 
-            console.log(artistsId);
-            console.log(this.selectedType);
-
             const data = new FormData();
             let image = this.dropzone.getAcceptedFiles();
 
-            data.append('artwork_url', image[0]);
-            data.append('title', this.title);
+            data.append('artwork_url', image.length == 0 ? '' : image[0]);
+            data.append('title', this.title ? this.title : '');
             data.append('description', this.description);
-            data.append('release_date', date.format(this.release_date));
-            data.append('added_date', date.format(this.added_date));
-            data.append('type',  this.selectedType);
+            data.append('release_date', this.release_date ? date.format(this.release_date) : '');
+            data.append('added_date', this.added_date ? date.format(this.added_date) : '');
+            data.append('type',  this.selectedType ? this.selectedType : '');
             data.append('status', this.status);
             data.append('is_national', this.is_national);
             for (var i = 0; i < artistsId.length; i++)
@@ -181,8 +196,71 @@ import { RouterLink, RouterView } from 'vue-router'
 
             axios.post('/api/albums/', data).then(res =>{
                 this.$router.push({name: 'album.index'});
+            }).catch(error => {
+                this.errors = error.response.data.errors
             });
-          }
+          },
+
+          isErrorArtists(){
+            for(let error in this.errors)
+                    if(error == 'artists') return true;
+                return false;
+          },
+
+          isErrorArtwork(){
+            for(let error in this.errors)
+                    if(error == 'artwork_url') return true;
+                return false;
+          },
+
+          isErrorAddedDate(){
+            for(let error in this.errors)
+                    if(error == 'added_date') return true;
+                return false;
+          },
+
+          isErrorReleaseDate(){
+            for(let error in this.errors)
+                    if(error == 'release_date') return true;
+                return false;
+          },
+
+          isErrorTitle(){
+            for(let error in this.errors)
+                    if(error == 'title') return true;
+                return false;
+          },
+
+          isErrorType(){
+            for(let error in this.errors)
+                    if(error == 'type') return true;
+                return false;
+          },
+
+          errorMessageArtists(){
+                if(this.isErrorArtists()) return this.errors.artists[0];
+          },
+
+          errorMessageArtwork(){
+                if(this.isErrorArtwork()) return this.errors.artwork_url[0];
+          },
+
+          errorMessageAddedDate(){
+                if(this.isErrorAddedDate()) return this.errors.added_date[0];
+          },
+
+          errorMessageReleaseDate(){
+                if(this.isErrorReleaseDate()) return this.errors.release_date[0];
+          },
+
+
+          errorMessageTitle(){
+                if(this.isErrorTitle()) return this.errors.title[0];
+          },
+
+          errorMessageType(){
+                if(this.isErrorType()) return this.errors.type[0];
+          },
 
         },
     }

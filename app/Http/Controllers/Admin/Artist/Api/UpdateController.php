@@ -3,19 +3,16 @@
 namespace App\Http\Controllers\Admin\Artist\Api;
 
 use App\Http\Controllers\Admin\Artist\BaseController;
+use App\Http\Requests\Admin\Artist\UpdateRequest;
 use App\Models\Artist;
-use Illuminate\Http\Request;
 
 class UpdateController extends BaseController
 {
-    public function __invoke(Request $request, Artist $artist)
+    public function __invoke(UpdateRequest $request, Artist $artist)
     {
-        $data = $request->all();
+        $data = $request->validated();
 
-        if (count($data) == 1)
-            $artist->update($data);
-        else
-            $this->service->update($data, $artist);
+        $this->service->update($data, $artist);
 
         return response([]);
     }

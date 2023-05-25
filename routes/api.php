@@ -82,6 +82,7 @@ Route::prefix('tracks')->namespace('App\Http\Controllers\Admin\Track\Api')->name
     Route::get('/show/{track}', ShowController::class)->name('show');
     Route::post('/filter', FilterController::class)->name('filter');
     Route::patch('/{track}', UpdateController::class)->name('update');
+    Route::patch('/status/{track}', UpdateStatusController::class)->name('update.statuss');
     Route::delete('/{track}', DestroyController::class)->name('destroy');
 
     Route::get('/albums', function () {
@@ -110,6 +111,7 @@ Route::prefix('artists')->namespace('App\Http\Controllers\Admin\Artist\Api')->na
     Route::post('/', StoreController::class)->name('store');
     Route::get('/show/{artist}', ShowController::class)->name('show');
     Route::patch('/{artist}', UpdateController::class)->name('update');
+    Route::patch('/status/{artist}', UpdateStatusController::class)->name('update.statuss');
     Route::delete('/{artist}', DestroyController::class)->name('destroy');
 
 
@@ -124,6 +126,7 @@ Route::prefix('albums')->namespace('App\Http\Controllers\Admin\Album\Api')->name
     Route::post('/', StoreController::class)->name('store');
     Route::get('/show/{album}', ShowController::class)->name('show');
     Route::patch('/{album}', UpdateController::class)->name('update');
+    Route::patch('/status/{album}', UpdateStatusController::class)->name('update.statuss');
     Route::delete('/{album}', DestroyController::class)->name('destroy');
     Route::get('/tracks/{album}', ShowTrackController::class)->name('show.track');
     Route::post('/tracks/delete/{album}', DeleteTrackController::class)->name('delete.track');
@@ -147,6 +150,7 @@ Route::prefix('playlists')->namespace('App\Http\Controllers\Admin\Playlist\Api')
     Route::post('/', StoreController::class)->name('store');
     Route::get('/show/{playlist}', ShowController::class)->name('show');
     Route::patch('/{playlist}', UpdateController::class)->name('update');
+    Route::patch('/status/{playlist}', UpdateStatusController::class)->name('update.statuss');
     Route::delete('/{playlist}', DestroyController::class)->name('destroy');
     Route::post('/tracks/delete/{playlist}', DeleteTrackController::class)->name('delete.track');
 

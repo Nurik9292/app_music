@@ -28,8 +28,6 @@ class Service
 
         $data['status'] = $this->status($data);
 
-        // $data = $this->dateFormat($data);
-
         $artists = $data['artists'];
         unset($data['artists']);
 

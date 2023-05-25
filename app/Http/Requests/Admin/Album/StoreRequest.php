@@ -23,14 +23,35 @@ class StoreRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string'],
-            'description' => ['required', 'string'],
-            'release_date' => ['required', 'date'],
-            'added_date' => ['required', 'date'],
+            'description' => ['nullable', 'string'],
+            'release_date' => ['required'],
+            'added_date' => ['required'],
             'artists' => ['required'],
             'artwork_url' => ['required', 'image'],
-            'type' => ['required', 'numeric'],
+            'type' => ['required'],
             'status' => ['nullable'],
             'is_national' => ['nullable'],
+        ];
+    }
+
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Заполните поле',
+            'type.required' => 'Выберите тип альбома',
+            'artists.required' => 'Выберите артиста',
+            'artwork_url.required' => 'Выберите изображение',
+            'artwork_url.image' => 'Файл должен быть изображение',
+            'release_date.required' => 'Заполните поле',
+            'added_date.required' => 'Заполните поле',
+            'release_date.date' => 'Поле длжно быть заполнено датой',
+            'added_date.date' => 'Поле длжно быть заполнено датой',
         ];
     }
 }

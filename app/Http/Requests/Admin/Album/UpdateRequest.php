@@ -22,15 +22,35 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['nullable', 'string'],
+            'title' => ['required', 'string'],
             'description' => ['nullable', 'string'],
-            'release_date' => ['nullable', 'date'],
-            'added_date' => ['nullable', 'date'],
-            'artists' => ['nullable'],
+            'release_date' => ['required'],
+            'added_date' => ['required'],
+            'artists' => ['required'],
             'artwork_url' => ['nullable', 'image'],
-            'type' => ['nullable', 'numeric'],
+            'type' => ['required', 'numeric'],
             'status' => ['nullable'],
             'is_national' => ['nullable'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Заполните поле',
+            'type.required' => 'Выберите тип альбома',
+            'artists.required' => 'Выберите артиста',
+            'artwork_url.required' => 'Выберите изображение',
+            'artwork_url.image' => 'Файл должен быть изображение',
+            'release_date.required' => 'Заполните поле',
+            'added_date.required' => 'Заполните поле',
+            'release_date.date' => 'Поле длжно быть заполнено датой',
+            'added_date.date' => 'Поле длжно быть заполнено датой',
         ];
     }
 }

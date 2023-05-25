@@ -23,15 +23,28 @@ class StoreRequest extends FormRequest
     {
         return [
             // 'title' => ['nullable', 'string'],
-            'lyrics' => ['required', 'string'],
-            'artists' => ['required', 'numeric'],
-            'genres' => ['required'],
+            'lyrics' => ['nullable', 'string'],
+            // 'artists' => ['required', 'numeric'],
+            'genres' => ['nullable', 'numeric'],
             'album' => ['nullable', 'numeric'],
             // 'artwork_url' => ['required', 'url'],
-            'audio_url' => ['required', 'string'],
+            'audio_url' => ['required', 'url'],
             'status' => ['nullable'],
             'is_national' => ['nullable'],
             'track_number' => ['nullable', 'numeric'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'audio_url.required' => 'Заполните поле',
+            'audio_url.url' => 'Введите правельный адресс ссылки',
         ];
     }
 }

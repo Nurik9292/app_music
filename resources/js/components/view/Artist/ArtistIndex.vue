@@ -129,7 +129,7 @@ export default {
                 if(this.artists[idx].id == id) updateArtist = this.artists[idx];
             }
 
-            axios.patch(`/api/artists/${id}`, {status: updateArtist.status}).then(res => { this.getArtists()});
+            axios.patch(`/api/artists/status/${id}`, {status: updateArtist.status}).then(res => { this.getArtists()});
         },
 
         deleteArtists(id){

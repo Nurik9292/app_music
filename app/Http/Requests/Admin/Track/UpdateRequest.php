@@ -27,11 +27,25 @@ class UpdateRequest extends FormRequest
             'artists' => ['nullable'],
             'genres' => ['nullable'],
             'album' => ['nullable', 'numeric'],
-            'artwork_url' => ['nullable', 'string'],
-            'audio_url' => ['nullable', 'string'],
+            'artwork_url' => ['nullable', 'image'],
+            'audio_url' => ['nullable', 'url'],
             'status' => ['nullable'],
             'is_national' => ['nullable'],
             'track_number' => ['nullable', 'numeric'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'audio_url.required' => 'Заполните поле',
+            'audio_url.url' => 'Введите правельный адресс ссылки',
+            'artwork_url.image' => 'Выберите изображеие',
         ];
     }
 }

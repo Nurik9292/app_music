@@ -22,12 +22,28 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['nullable', 'string'],
+            'name' => ['required', 'string'],
             'bio_tk' => ['nullable', 'string'],
             'bio_ru' => ['nullable', 'string'],
             'artwork_url' => ['nullable', 'image'],
-            'country_id' => ['nullable', 'numeric'],
+            'country_id' => ['required', 'numeric'],
             'status' => ['nullable']
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Заполните поле',
+            'artists.required' => 'Выберите артиста',
+            'artwork_url.required' => 'Выберите изображение',
+            'artwork_url.image' => 'Файл должен быть изображение',
+            'country_id.required' => 'Выберите страну артиста'
         ];
     }
 }

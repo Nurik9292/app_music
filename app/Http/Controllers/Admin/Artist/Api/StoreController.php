@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin\Artist\Api;
 
 use App\Http\Controllers\Admin\Artist\BaseController;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\Artist\StoreRequest;
 
 class StoreController extends BaseController
 {
-    public function __invoke(Request $request)
+    public function __invoke(StoreRequest $request)
     {
-        $data = $request->all();
+        $data = $request->validated();
 
         $this->service->store($data);
 
