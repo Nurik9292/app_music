@@ -19,10 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::middleware('admin', 'auth')->get('/', MainController::class)->name('main');
-Route::get('/', MainController::class)->name('main');
+
 
 Route::middleware('admin', 'auth')->group(function () {
+    Route::get('/', MainController::class)->name('main');
     Route::namespace('App\Http\Controllers\Admin')->group(function () {
 
 
