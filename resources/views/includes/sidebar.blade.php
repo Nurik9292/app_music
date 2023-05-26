@@ -15,7 +15,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-
+               @can('view', auth()->user())
                <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-th"></i>
@@ -46,7 +46,9 @@
                   </li>
                 </ul>
               </li>
+              @endcan
 
+              @can('view', auth()->user())
               <li class="nav-item">
                 <a href="{{route('track.index', 'index')}}" class="nav-link">
                   <i class="nav-icon fas fa-music"></i>
@@ -55,7 +57,10 @@
                   </p>
                 </a>
               </li>
+              @endcan
 
+
+              @can('view', auth()->user())
               <li class="nav-item">
                 <a href="{{route('artist.index', 'index')}}" class="nav-link">
                     <i class="nav-icon fas fa-user-circle"></i>
@@ -64,7 +69,9 @@
                   </p>
                 </a>
               </li>
-              <i class="fas fa-music-slash"></i>
+              @endcan
+
+              @can('view', auth()->user())
               <li class="nav-item">
                 <a href="{{route('album.index', 'index')}}" class="nav-link">
                     <i class="nav-icon fas fa-record-vinyl"></i>
@@ -73,8 +80,9 @@
                   </p>
                 </a>
               </li>
+              @endcan
 
-
+              @can('view', auth()->user())
               <li class="nav-item">
                 <a href="{{route('playlist.index', 'index')}}" class="nav-link">
                   <i class="nav-icon far fa-file-audio"></i>
@@ -83,7 +91,9 @@
                   </p>
                 </a>
               </li>
+              @endcan
 
+              @can('view', auth()->user())
               <li class="nav-item">
                 <a href="pages/widgets.html" class="nav-link">
                   <i class="nav-icon fas fa-comments"></i>
@@ -92,7 +102,9 @@
                   </p>
                 </a>
               </li>
+              @endcan
 
+              @can('view', auth()->user())
               <li class="nav-item">
                 <a href="{{route('genre.index', 'index')}}" class="nav-link">
                   <i class="nav-icon fas fa-tags"></i>
@@ -101,25 +113,31 @@
                   </p>
                 </a>
               </li>
+              @endcan
 
+              @can('view', auth()->user())
               <li class="nav-item">
                 <a href="pages/widgets.html" class="nav-link">
                   <i class="nav-icon fas fa-eye"></i>
                   <p>
-                    Слешка за модератором
+                    Запрос от модератора
                   </p>
                 </a>
               </li>
+              @endcan
 
+              @cannot('view', auth()->user())
               <li class="nav-item">
-                <a href="{{route('user.index')}}" class="nav-link">
-                  <i class="nav-icon fas fa-users"></i>
-                  <p>
+                  <a href="{{route('user.index')}}" class="nav-link">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p>
                         Users
-                 </p>
+                    </p>
                 </a>
-              </li>
+            </li>
+            @endcannot
 
+            @can('view', auth()->user())
               <li class="nav-item">
                 <a href="pages/widgets.html" class="nav-link">
                   <i class="nav-icon fas fa-cog"></i>
@@ -128,6 +146,7 @@
                   </p>
                 </a>
               </li>
+            @endcan
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

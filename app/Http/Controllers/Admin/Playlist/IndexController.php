@@ -8,6 +8,9 @@ class IndexController extends BaseController
 {
     public function __invoke()
     {
+        if (auth()->user()->role !== 2)
+            return redirect()->route('main');
+
         $playlists = Playlist::orderByDesc('title_ru')->get();
 
         $this->service->statusChangetoString($playlists);

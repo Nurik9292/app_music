@@ -13,6 +13,9 @@ class IndexController extends Controller
      */
     public function __invoke()
     {
+        if (auth()->user()->role !== 1)
+            return redirect()->route('main');
+
         $users = User::all();
 
         return view('users.index', compact('users'));

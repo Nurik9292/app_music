@@ -8,6 +8,9 @@ class IndexController extends BaseController
 {
     public function __invoke()
     {
+        if (auth()->user()->role !== 2)
+            return redirect()->route('main');
+
         $artists = Artist::all();
 
         $this->service->statusChangetoString($artists);
