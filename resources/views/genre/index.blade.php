@@ -6,6 +6,7 @@
   <div class="row" id="genre">
         <genre-base></genre-base>
   </div>
+
 @endsection
 
 

@@ -13,8 +13,17 @@
   <link rel="stylesheet" href="{{asset('admins/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('admins/dist/css/adminlte.min.css')}}">
+
+  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
+
 <body class="hold-transition login-page">
+
+      {{-- <div class="row" id="auth">
+        <login-base></login-base>
+      </div> --}}
+
+
 <div class="login-box">
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
@@ -65,11 +74,13 @@
 </div>
 <!-- /.login-box -->
 
+
 <!-- jQuery -->
+
+</body>
 <script src="{{asset('admins/plugins/jquery/jquery.min.js')}}"></script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('admins/dist/js/adminlte.min.js')}}"></script>
-</body>
 </html>

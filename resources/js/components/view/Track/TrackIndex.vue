@@ -163,7 +163,7 @@ export default {
             if(this.selectedArtist != null)
             axios.post('/api/tracks/filter', {artist: this.selectedArtist.id}).then(res => { this.tracks = res.data.data.tracks; this.artists =res.data.data.artists });
             else
-            axios.get('/api/tracks').then(res => { this.tracks = res.data.data.tracks; this.artists =res.data.data.artists });
+            axios.get('/api/tracks').then(res => {console.log(res); this.tracks = res.data.data.tracks; this.artists =res.data.data.artists });
         },
 
         getAlbumts() {

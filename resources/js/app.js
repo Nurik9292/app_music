@@ -27,6 +27,7 @@ import SelectButton from 'primevue/selectbutton';
 import Dialog from 'primevue/dialog';
 import Editor from 'primevue/editor';
 import Calendar from 'primevue/calendar';
+import Password from 'primevue/password';
 
 import "primevue/resources/themes/lara-light-indigo/theme.css"
 import "primevue/resources/primevue.min.css";
@@ -70,7 +71,6 @@ ovr.component('InputNumber', InputNumber);
 ovr.component('Button', Button);
 ovr.component('InputText', InputText);
 ovr.component('Checkbox', Checkbox);
-
 
 genre.component('DataTable', DataTable);
 genre.component('Column', Column);

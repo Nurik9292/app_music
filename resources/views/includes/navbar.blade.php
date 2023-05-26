@@ -13,8 +13,9 @@
     <ul class="navbar-nav ml-auto mr-3" >
 
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Выход</a>
+            <a href="{{route('logout')}}" rel="logout" class="nav-link">Выход</a>
           </li>
 
     </ul>
   </nav>
+

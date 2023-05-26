@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="{{asset('admins/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('admins/dist/css/adminlte.min.css')}}">
+
    {{-- <link rel="stylesheet" href="{{asset('admins/dist/css/adminlte.css')}}"> --}}
 
  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -62,6 +63,8 @@
 <script src= "{{asset('admins/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<!-- daterangepicker -->
+<script src="{{asset('admins/plugins/moment/moment.min.js')}}"></script>
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{asset('admins/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <!-- AdminLTE App -->
@@ -73,11 +76,12 @@
 <script>
     $.widget.bridge('uibutton', $.ui.button)
 
-    $(function () {
-        bsCustomFileInput.init();
-      })
-
-
+//     document.addEventListener('click', function(evt){
+//     if (evt.target.rel == 'logout') {
+//   	let link = evt.target
+//         localStorage.removeItem('x_xsrf_token', res.config.headers['X-XSRF-TOKEN']);
+//   }
+// })
 
   </script>
 </body>
