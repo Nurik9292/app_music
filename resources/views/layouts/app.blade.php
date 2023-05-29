@@ -76,13 +76,6 @@
 <script>
     $.widget.bridge('uibutton', $.ui.button)
 
-//     document.addEventListener('click', function(evt){
-//     if (evt.target.rel == 'logout') {
-//   	let link = evt.target
-//         localStorage.removeItem('x_xsrf_token', res.config.headers['X-XSRF-TOKEN']);
-//   }
-// })
-
   </script>
 </body>
 </html>

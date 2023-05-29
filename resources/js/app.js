@@ -27,7 +27,8 @@ import SelectButton from 'primevue/selectbutton';
 import Dialog from 'primevue/dialog';
 import Editor from 'primevue/editor';
 import Calendar from 'primevue/calendar';
-import Password from 'primevue/password';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 
 import "primevue/resources/themes/lara-light-indigo/theme.css"
 import "primevue/resources/primevue.min.css";
@@ -56,6 +57,11 @@ import PlaylistIndex from './components/view/Playlist/PlaylistIndex.vue';
 import PlaylistBase from './components/view/Playlist/PlaylistBase.vue';
 import PlaylistCreate from './components/view/Playlist/PlaylistCreate.vue';
 import PlaylistEdit from './components/view/Playlist/PlaylistEdit.vue';
+import ModeratorIndex from './components/view/Moderator/ModeratorIndex.vue';
+import ModeratorBase from './components/view/Moderator/ModeratorBase.vue';
+import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
+import Tag from 'primevue/tag';
 
 const app = createApp({components:{UserIndex, OverviewBase}});
 const ovr = createApp({components:{OverviewIndex, OverviewCreate, OverviewEdit, OverviewBase}});
@@ -64,6 +70,16 @@ const track = createApp({components:{TrackIndex, TrackBase, TrackScan, TrackCrea
 const artist = createApp({components:{ArtistBase, ArtistIndex, ArtistCreate, ArtistEdit}});
 const album = createApp({components:{AlbumBase, AlbumIndex, AlbumCreate, AlbumEdit}});
 const playlist = createApp({components:{PlaylistBase, PlaylistIndex, PlaylistCreate, PlaylistEdit}});
+const moder = createApp({components:{ModeratorBase, ModeratorIndex}});
+
+
+moder.component('TabView', TabView);
+moder.component('TabPanel', TabPanel);
+moder.component('DataTable', DataTable);
+moder.component('Column', Column);
+moder.component('ColumnGroup', ColumnGroup);
+moder.component('Row', Row);
+moder.component('Tag', Tag);
 
 ovr.component('MultiSelect', MultiSelect);
 ovr.component('InputSwitch', InputSwitch);
@@ -97,6 +113,7 @@ track.component('RadioButton', RadioButton);
 track.component('SelectButton', SelectButton);
 track.component('Button', Button);
 track.component('Dialog', Dialog);
+track.component('Toast', Toast);
 
 
 artist.component('DataTable', DataTable);
@@ -136,11 +153,16 @@ playlist.component('MultiSelect', MultiSelect);
 ovr.use(router);
 ovr.use(PrimeVue, { ripple: true });
 
+moder.use(router);
+moder.use(PrimeVue, { ripple: true });
+
+
 genre.use(router);
 genre.use(PrimeVue, { ripple: true });
 
 track.use(router);
 track.use(PrimeVue, { ripple: true });
+track.use(ToastService);
 
 artist.use(router);
 artist.use(PrimeVue, { ripple: true });
@@ -158,3 +180,4 @@ genre.mount('#genre');
 playlist.mount('#playlist');
 ovr.mount('#ovr');
 track.mount('#track');
+moder.mount('#moder');

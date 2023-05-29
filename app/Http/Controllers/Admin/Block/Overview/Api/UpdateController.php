@@ -13,8 +13,6 @@ class UpdateController extends Controller
     {
         $data = $request->all();
 
-        Log::debug($data);
-
         $data['body'] = json_encode([
             "name_status" => $data['name_status'] ?? '',
             'albums' => $data['albums'] ?? '',

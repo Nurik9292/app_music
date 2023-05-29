@@ -88,6 +88,12 @@ Route::middleware('admin', 'auth')->group(function () {
             Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
         });
         // ========== END GENRE =====================
+
+        //============= MODERATOR ========================
+        Route::prefix('moders')->namespace('RequestModerator')->name('moder.')->group(function () {
+            Route::get('/{page}', IndexController::class)->name('index')->where('page', ".*");
+        });
+        // ========== END MODERATOR =====================
     });
 });
 Route::get('/login', [LoginController::class, 'index'])->name('login.index')->where('page', ".*");

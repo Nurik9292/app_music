@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-// Route::middleware('auth:api', 'admin')->group(function () {
+// Route::middleware('auth:sanctum', 'admin')->group(function () {
 Route::prefix('users')->namespace('App\Http\Controllers\Admin\User\Api')->name('api.user.')->group(function () {
     Route::get('/', IndexController::class)->name('index');
     Route::patch('/{user}', UpdateController::class)->name('update');
@@ -166,6 +166,8 @@ Route::prefix('playlists')->namespace('App\Http\Controllers\Admin\Playlist\Api')
     })->name('genre');
 });
 
-
-
+Route::prefix('moderators')->namespace('App\Http\Controllers\Admin\RequestModerator')->name('api.request.')->group(function () {
+    Route::post('/tracks/{track}', RequestTrackController::class)->name('track');
+    Route::get('/tracks/show', ShowController::class)->name('show');
+});
 // });

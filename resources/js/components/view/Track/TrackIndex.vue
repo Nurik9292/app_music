@@ -96,6 +96,7 @@
             <Column header="Delete" style="width: 15%">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
+                                <Toast />
                         <a href="#" class="btn btn-outline-danger" @click.prevent="deleteTracks(data.id)" >Delete</a>
                     </div>
                 </template>
@@ -106,15 +107,17 @@
         </div>
     </section>
 </div>
-    <span>{{    }}</span>
     </div>
 </template>
 
 <script>
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { useToast } from "primevue/usetoast";
 
 export default {
     name: "TrackIndex",
+
+    props:['data'],
 
     data(){
         return {
@@ -129,6 +132,7 @@ export default {
             selectedTracks: null,
             artists: null,
             selectedArtist: null,
+            toast: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 title: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] }
@@ -156,6 +160,7 @@ export default {
         this.getTracks();
         this.getAlbumts();
         this.getPlaylists();
+        this.toast = useToast();
     },
 
     methods: {
@@ -163,7 +168,7 @@ export default {
             if(this.selectedArtist != null)
             axios.post('/api/tracks/filter', {artist: this.selectedArtist.id}).then(res => { this.tracks = res.data.data.tracks; this.artists =res.data.data.artists });
             else
-            axios.get('/api/tracks').then(res => {console.log(res); this.tracks = res.data.data.tracks; this.artists =res.data.data.artists });
+            axios.get('/api/tracks').then(res => { this.tracks = res.data.data.tracks; this.artists =res.data.data.artists });
         },
 
         getAlbumts() {
@@ -173,6 +178,7 @@ export default {
         getPlaylists() {
             axios.get("/api/tracks/playlists").then(res => { this.playlists = res.data.data });
           },
+
 
         updateStatus(id) {
             let updateTrack = null;
@@ -201,7 +207,12 @@ export default {
         },
 
         deleteTracks(id){
+            if(this.data === 3){
+                this.toast.add({ severity: 'info', summary: 'Info', detail: 'Ваш запрос отправлен администратору', life: 3000 });
+                axios.post(`/api/moderators/tracks/${id}`, {track_id: this.data, actions: 'delete'}).then(res => { this.getTracks() })
+            }else{
                 axios.delete(`/api/tracks/${id}`).then(res => { this.getTracks() })
+            }
         },
 
         isAlbum(){
@@ -214,7 +225,8 @@ export default {
 
         isTracks(){
             return this.selectedTracks != null && this.selectedTracks.length > 0;
-        }
+        },
+
     }
 }
 </script>

@@ -149,9 +149,6 @@ export default {
                 axios.delete(`/api/playlists/${id}`).then(res => { this.getPlaylists() })
         },
 
-        deleteAlbums(id){
-                axios.delete(`/api/albums/${id}`).then(res => { this.getAlbums() })
-        },
 
 
         added_date(id){

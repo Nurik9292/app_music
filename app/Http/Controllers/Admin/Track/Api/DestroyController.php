@@ -9,6 +9,7 @@ class DestroyController extends BaseController
 {
     public function __invoke(Track $track)
     {
+
         $path = $track->artwork_url;
         $path = substr($path, 0, strpos($path, basename($path)));
         $path = pathToServer() . substr($path, strpos($path, "images"));

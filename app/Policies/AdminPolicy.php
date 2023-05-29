@@ -44,7 +44,7 @@ class AdminPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return true;
+        return $model->role === 2;
     }
 
     /**

@@ -93,6 +93,12 @@ const router = createRouter({
             component: () =>  import('../components/view/Genre/GenreCreate.vue'),
             name: 'genre.create',
         },
+        {
+            path: '/moders/index',
+            component: () =>  import('../components/view/Moderator/ModeratorIndex.vue'),
+            name: 'moder.index',
+        },
+
 
 
 

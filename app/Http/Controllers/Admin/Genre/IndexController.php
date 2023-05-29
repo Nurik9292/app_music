@@ -9,7 +9,7 @@ class IndexController extends Controller
 {
     public function __invoke()
     {
-        if (auth()->user()->role !== 2)
+        if (auth()->user()->role !== 2 && auth()->user()->role !== 3)
             return redirect()->route('main');
 
         $genres =  Genre::all();

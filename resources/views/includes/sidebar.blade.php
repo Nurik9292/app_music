@@ -116,14 +116,16 @@
               @endcan
 
               @can('view', auth()->user())
+              @if(auth()->user()->role !== 3)
               <li class="nav-item">
-                <a href="pages/widgets.html" class="nav-link">
+                <a href="{{route('moder.index', 'index')}}" class="nav-link">
                   <i class="nav-icon fas fa-eye"></i>
                   <p>
                     Запрос от модератора
                   </p>
                 </a>
               </li>
+              @endif
               @endcan
 
               @cannot('view', auth()->user())
