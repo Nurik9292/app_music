@@ -11,6 +11,8 @@ class PlaylistTrack extends Model
 
     protected $connection = 'pgsql_prod';
 
+    protected $table = 'playlist_tracks';
+
     protected $guarded = false;
 
     public $timestamps = false;

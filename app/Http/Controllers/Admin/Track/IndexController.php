@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\Admin\Track;
 
+use App\Models\BlockShema;
+use App\Models\RequestTrack;
 use App\Models\Track;
 
 class IndexController extends BaseController
 {
     public function __invoke()
     {
+        $block =  BlockShema::all();
+
+        dd($block[0]->body);
+
         if (auth()->user()->role !== 2 && auth()->user()->role !== 3)
             return redirect()->route('main');
 
