@@ -37,7 +37,7 @@
                         <Column header="Действие" style="width: 35%">
                             <template #body="{data}">
 						<div class="danger">
-                            <Tag :value="data.actions" severity="danger" style="width: 100px; height: 50px;"/>
+                            <Tag :value="data.actions" :severity="actions(data.actions)" style="width: 100px; height: 50px;"/>
                         </div>
 
 					</template>
@@ -46,7 +46,7 @@
                         <template #body="{ data }">
                             <div class="flex align-items-center gap-2">
                                      <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.actions, data.id)">Ok</a>
-                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.request)">No</a>
+                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.response)">No</a>
                             </div>
                         </template>
                         </Column>
@@ -122,17 +122,22 @@ import { RouterLink, RouterView } from 'vue-router'
         methods:{
             getTracks(){
             axios.get('/api/moderators/tracks/show').then(res => {
+                console.log(res);
                 if(res.data.length != 0)
-                this.tracks.push(res.data.data);
+                this.tracks.push(res.data);
                 else this.tracks = null
             })
             },
 
             yes(actions, id){
+
+                console.log(this.tracks[0].data);
+
                 if(actions == 'delete')
-                axios.delete(`/api/tracks/${id}`).then(res => {
-                    this.getTracks()
-                })
+                axios.delete(`/api/tracks/${id}`).then(res => {this.getTracks()})
+
+                if(actions == 'update')
+                axios.patch(`/api/tracks/${id}`, this.tracks[0].data).then(res => { this.getTracks()})
             },
 
             no(id){
@@ -140,6 +145,13 @@ import { RouterLink, RouterView } from 'vue-router'
                     this.getTracks()
                 })
             },
+
+            actions(actions){
+                switch(actions){
+                    case 'update': return 'primary';
+                    case 'delete': return 'danger';
+                }
+            }
         }
     }
 </script>

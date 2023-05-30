@@ -10,8 +10,8 @@ class DestroyController extends BaseController
 {
     public function __invoke(Track $track)
     {
-        if (($request = RequestTrack::where('id', $track->id)->get()) > 0)
-            $request->update(['response' => 'одобрено']);
+        if (count($requestTrack = RequestTrack::where('track_id', $track->id)->get()) > 0)
+            $requestTrack[0]->update(['response' => 'одобрено']);
 
         $path = $track->artwork_url;
         $path = substr($path, 0, strpos($path, basename($path)));

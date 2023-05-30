@@ -19,6 +19,7 @@ class ShowController extends Controller
         $track_number = $track->track_number;
         $title = $track->title;
         $is_national = $track->is_national;
+        $lyrics = $track->lyrics;
 
 
         if (count($album) > 0)
@@ -43,6 +44,7 @@ class ShowController extends Controller
             'artwork_url' => $artwork_url,
             'audio_url' => $audio_url,
             'is_national' => $is_national,
+            'lyrics' => $lyrics
         ]);
     }
 }

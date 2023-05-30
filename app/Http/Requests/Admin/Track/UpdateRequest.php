@@ -27,7 +27,7 @@ class UpdateRequest extends FormRequest
             'artists' => ['nullable'],
             'genres' => ['nullable'],
             'album' => ['nullable', 'numeric'],
-            'artwork_url' => ['nullable', 'image'],
+            'artwork_url' => ['nullable',],
             'audio_url' => ['nullable', 'url'],
             'status' => ['nullable'],
             'is_national' => ['nullable'],

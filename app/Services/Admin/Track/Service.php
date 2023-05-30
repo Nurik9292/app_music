@@ -4,7 +4,6 @@ namespace App\Services\Admin\Track;
 
 use App\Models\Track;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
 
 class Service
 {
@@ -61,9 +60,10 @@ class Service
             $this->managerTrack->deleteForUpdated($track);
             $data['artwork_url'] = $this->managerTrack->resize($data['artwork_url'], $track);
         }
-
-        Log::debug($album != $albumId);
-        Log::debug($data['genres'] . " genres");
+        if (is_string($data['artwork_url'])) {
+            $this->managerTrack->deleteForUpdated($track);
+            $data['artwork_url'] = $this->managerTrack->resize(storage_path('app/public/' . $data['artwork_url']), $track);
+        }
 
         if ($artists != $track->artists[0]->id || ($album != null && $album != $albumId) || $data['title'] != $track->title)
             $data = $this->managerTrack->saveTrack($data, $track);

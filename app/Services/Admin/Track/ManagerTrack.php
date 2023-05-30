@@ -7,6 +7,7 @@ use App\Models\Artist;
 use Owenoj\LaravelGetId3\GetId3;
 use App\Services\Admin\HelperService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 class ManagerTrack
@@ -30,9 +31,6 @@ class ManagerTrack
     {
         $type_album = null;
         $name_album = null;
-
-        Log::alert('save');
-
 
         $item = new GetId3($data['audio_url']);
 
@@ -81,9 +79,8 @@ class ManagerTrack
 
     public function resize($image, $track = null, $data = null)
     {
-        $image_name = $image->getClientOriginalName();
+        $image_name =  is_string($image) ? basename($image) : $image->getClientOriginalName();
         $image_name_base = substr($image_name, 0, strpos($image_name, '.'));
-
 
         if (isset($track)) {
             $this->deleteForUpdated($track);
@@ -122,6 +119,9 @@ class ManagerTrack
 
 
         $image = $this->helper->pathImageForDb . $this->path_second . $image_name;
+
+        if (is_string($image))
+            Storage::disk('public')->delete($image);
 
         return $image;
     }

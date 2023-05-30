@@ -37,7 +37,7 @@
                         <Column header="Действие" style="width: 30%">
                             <template #body="{data}">
 						        <div class="danger">
-                                    <Tag :value="data.actions" severity="danger" style="width: 100px; height: 50px;"/>
+                                    <Tag :value="data.actions" :severity="actions(data.actions)" style="width: 100px; height: 50px;"/>
                                 </div>
 					        </template>
                         </Column>
@@ -151,6 +151,13 @@ import { RouterLink, RouterView } from 'vue-router'
 
             deleteRequest(id){
                 axios.delete(`/api/moderators/tracks/delete/${id}`).then( this.getTracks());
+            },
+
+            actions(actions){
+                switch(actions){
+                    case 'update': return 'primary';
+                    case 'delete': return 'danger';
+                }
             }
         }
     }

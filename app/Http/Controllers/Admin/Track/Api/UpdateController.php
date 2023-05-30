@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Track\Api;
 
 use App\Http\Controllers\Admin\Track\BaseController;
 use App\Http\Requests\Admin\Track\UpdateRequest;
+use App\Models\RequestTrack;
 use App\Models\Track;
 
 class UpdateController extends BaseController
@@ -12,10 +13,11 @@ class UpdateController extends BaseController
     {
         $data = $request->validated();
 
-        if (count($data) == 1)
-            $track->update($data);
-        else
-            $this->service->updata($data, $track);
+        if (count($requestTrack = RequestTrack::where('track_id', $track->id)->get()) > 0) {
+            $requestTrack[0]->update(['response' => 'одобрено']);
+        }
+
+        $this->service->updata($data, $track);
 
         return response([]);
     }

@@ -113,6 +113,7 @@ track.component('RadioButton', RadioButton);
 track.component('SelectButton', SelectButton);
 track.component('Button', Button);
 track.component('Dialog', Dialog);
+track.component('Tag', Tag);
 track.component('Toast', Toast);
 
 

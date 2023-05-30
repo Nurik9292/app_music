@@ -15,13 +15,14 @@ class ShowController extends Controller
         $tracks = RequestTrack::all();
 
         foreach ($tracks as $idx => $item) {
-            if ($item->response != 'отказано') {
+            if ($item->response != 'отказано' && $item->response != 'одобрено') {
                 $track = Track::where('id', $item->track_id)->get()[0];
                 $data['id'] = $track->id;
                 $data['title'] = $track->title;
                 $data['actions'] = $item->actions;
                 $data['request'] = $item->id;
                 $data['response'] = $item->response;
+                $data['data'] = unserialize($item->data);
             }
         }
 

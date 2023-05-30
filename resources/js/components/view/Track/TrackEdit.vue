@@ -38,7 +38,7 @@
       <div class="card">
 
         <br>
-
+        <Toast />
         <div class="row ml-3">
             <div class="block_two">
                 <label for="audio_url">Трека</label>
@@ -153,9 +153,12 @@
 <script>
 import Dropzone from 'dropzone'
 import { RouterLink, RouterView } from 'vue-router'
+import { useToast } from "primevue/usetoast"
 
     export default {
         name: "TrackEdit",
+
+        props: ['data'],
 
         data(){
                 return {
@@ -176,6 +179,7 @@ import { RouterLink, RouterView } from 'vue-router'
                     genres: null,
                     selectedGenres: null,
                     errors: null,
+                    toast: null,
 
                 items: [{
                     label: 'Главная',
@@ -205,11 +209,15 @@ import { RouterLink, RouterView } from 'vue-router'
             this.getAlbumts();
             this.getArtists();
             this.getGenres();
+            this.toast = useToast();
         },
 
         methods: {
             getTrack() {
                 axios.get(`/api/tracks/show/${this.$route.params.id}`).then(res => {
+                    console.log(res);
+
+
                     this.title = res.data.data.title;
                     this.status = res.data.data.status;
                     // this.artwork_url = res.data.data.artwork_url;
@@ -254,23 +262,32 @@ import { RouterLink, RouterView } from 'vue-router'
                 genres.push(this.selectedGenres[idx].id)
 
 
-            image.append('artwork_url', files[0]);
+            image.append('artwork_url', files.length > 0 ? files[0] : '');
             image.append('title', this.title);
             image.append('audio_url', this.audio_url);
             image.append('status', this.status);
             image.append('lyrics', this.lyrics);
             image.append('is_national', this.is_national);
             image.append('genres', genres);
-            image.append('album', album);
+            image.append('album', album ? album : '');
             image.append('artists', artists);
             image.append('is_national', this.is_national);
-            image.append('_method', 'PATCH');
 
-            axios.post(`/api/tracks/${this.$route.params.id}`, image).then(res =>{
-                this.$router.back();
+
+            if(this.data === 3){
+                this.toast.add({ severity: 'info', summary: 'Info', detail: 'Ваш запрос отправлен администратору', life: 3000 });
+                image.append('track_id', this.data);
+                image.append('actions', 'update');
+                axios.post(`/api/moderators/tracks/${this.$route.params.id}`, image).then(res => { this.getTrack() })
+            }else{
+                image.append('_method', 'PATCH');
+                axios.post(`/api/tracks/${this.$route.params.id}`, image).then(res =>{
+                    this.$router.push({name: 'track.index'});
             }).catch(error => {
                 this.errors = error.response.data.errors
             })
+            }
+
           },
 
         isFile(){
