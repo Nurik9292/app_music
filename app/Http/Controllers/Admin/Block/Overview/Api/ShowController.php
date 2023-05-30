@@ -15,7 +15,7 @@ class ShowController extends Controller
         $albums = $body->albums ?? null;
         $playlists = $body->playlists ?? null;
         $tracks = $body->tracks ?? null;
-        $genres = $body->genres ?? null;
+        $artists = $body->artists ?? null;
         $name_status = $body->name_status;
 
         return new BlockResource([
@@ -23,7 +23,7 @@ class ShowController extends Controller
             'albums' => $albums,
             'playlists' => $playlists,
             'tracks' => $tracks,
-            'genres' => $genres,
+            'artists' => $artists,
             'name_status' => $name_status
         ]);
     }

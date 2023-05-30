@@ -18,21 +18,17 @@
 
     <div class="row">
         <label class="mb-3">Выберите соодержание блока</label>
-    <div class="check">
-        <Checkbox v-model="body" inputId="album" name="body" value="album"/>
-        <label for="album" class="lable_item">Альбомы</label>
+        <div class="check">
+        <label for="album_and_playlist" >Альбомы и Плейлисты</label>
+        <RadioButton v-model="body" inputId="album_and_playlist" name="body" value="album_and_playlist" />
     </div>
     <div class="check">
-        <Checkbox v-model="body" inputId="playlist" name="body" value="playlist"/>
-        <label for="playlist" class="lable_item">Плейлисты</label>
-        </div>
-    <div class="check">
-        <Checkbox v-model="body" inputId="track" name="body" value="track"/>
-        <label for="track" class="lable_item">Треки</label>
+        <label for="track" >Треки</label>
+        <RadioButton v-model="body" inputId="track" name="body" value="track" />
     </div>
     <div class="check">
-        <Checkbox v-model="body" inputId="genre" name="body" value="genre"/>
-        <label for="genre" class="lable_item">Жанры</label>
+        <label for="artist" >Аритсты</label>
+        <RadioButton v-model="body" inputId="artist" name="body" value="artist" />
     </div>
     </div>
 
@@ -43,21 +39,24 @@
 <div class="row">
     <div>
         <div class="block_one">
-                        <div :class="isAlbum() ? 'mb-3' : 'd-none'">
-                          <label for="album">Альбомы</label>
-                        <MultiSelect v-model="selectAlbums" :options="albums" filter optionLabel="title" placeholder="Выбирите Альбомы" :maxSelectedLabels="10" :selectionLimit="10" class="w-full md:w-40rem" id="album" />
-                      </div>
-                      <div :class="isPlaylist() ? 'mb-3' : 'd-none'">
-                          <label for="playlist">Плейлисты</label>
-                        <MultiSelect v-model="selectPlaylists" :options="playlists" filter optionLabel="title_ru" placeholder="Выбирите Плейлисты" :maxSelectedLabels="10" :selectionLimit="10" class="w-full md:w-40rem" id="playlist" />
-                      </div>
+            <div :class="isAlbumAndPlaylist() ? 'mb-3' : 'd-none'">
+                            <div class="block_one">
+                                <label for="album">Альбомы</label>
+                              <MultiSelect v-model="selectAlbums" :options="albums" filter optionLabel="title" placeholder="Выбирите Альбомы" :maxSelectedLabels="10" :selectionLimit="10" class="w-full md:w-40rem" id="album" />
+                            </div>
+                        <div class="block_onw">
+                            <label for="playlist">Плейлисты</label>
+                          <MultiSelect v-model="selectPlaylists" :options="playlists" filter optionLabel="title_ru" placeholder="Выбирите Плейлисты" :maxSelectedLabels="10" :selectionLimit="10" class="w-full md:w-40rem" id="playlist" />
+                        </div>
+                    </div>
+
                       <div :class="isTrack() ? 'mb-3' : 'd-none'">
                           <label for="track">Треки</label>
                         <MultiSelect v-model="selectTracks" :options="tracks" filter optionLabel="title" placeholder="Выбирите Трек" :maxSelectedLabels="20" :selectionLimit="20" class="w-full md:w-40rem" id="track" />
                       </div>
-                      <div :class="isGenre() ? 'mb-3' : 'd-none'">
-                          <label for="genre">Жанры</label>
-                        <MultiSelect v-model="selectGenres" :options="genres" filter optionLabel="name_ru" placeholder="Выбирите Жанры" :maxSelectedLabels="20" :selectionLimit="20" class="w-full md:w-40rem" id="genre" />
+                      <div :class="isArtist() ? 'mb-3' : 'd-none'">
+                          <label for="genre">Артисты</label>
+                        <MultiSelect v-model="selectArtists" :options="artists" filter optionLabel="name" placeholder="Выбирите Артиста" :maxSelectedLabels="20" :selectionLimit="20" class="w-full md:w-40rem" id="artist" />
                       </div>
         </div>
     </div>
@@ -101,14 +100,14 @@ import { RouterLink, RouterView } from 'vue-router'
             block: null,
                albums: null,
                tracks: null,
-               genres: null,
+               artists: null,
                playlists: null,
                name: null,
                name_status: null,
                selectAlbums: null,
                selectPlaylists: null,
                selectTracks: null,
-               selectGenres: null,
+               selectArtists: null,
                status: false,
                order_number: null,
                body: null
@@ -126,7 +125,7 @@ import { RouterLink, RouterView } from 'vue-router'
             this.getAlbumts();
             this.getPlaylists();
             this.getTracks();
-            this.getGenres();
+            this.getArtists();
 
         },
 
@@ -165,19 +164,19 @@ import { RouterLink, RouterView } from 'vue-router'
                         }
                     }
 
-                    for(let idx in this.selectGenres){
-                        for(let element in this.selectGenres[idx]){
-                            if(this.selectGenres[idx][element] == null)
-                            this.selectGenres[idx][element] = "";
+                    for(let idx in this.selectArtists){
+                        for(let element in this.selectArtists[idx]){
+                            if(this.selectArtists[idx][element] == null)
+                            this.selectArtists[idx][element] = "";
                         }
                     }
 
                     this.body = [];
 
-                    res.data.data.albums != '' ? this.body.push('album') : '';
-                    res.data.data.playlists != '' ? this.body.push('playlist') : '';
-                    res.data.data.tracks != '' ? this.body.push('track') : '';
-                    res.data.data.genres != '' ? this.body.push('genre') : '';
+                    res.data.data.albums != '' ? this.body = 'album_and_playlist' : '';
+                    res.data.data.playlists != '' ? this.body = 'album_and_playlist' : '';
+                    res.data.data.tracks != '' ? this.body = 'track' : '';
+                    res.data.data.artists != '' ? this.body = 'artist' : '';
 
 
                 })
@@ -195,8 +194,8 @@ import { RouterLink, RouterView } from 'vue-router'
             axios.get("/api/overviews/tracks").then(res => { this.tracks = res.data.data });
           },
 
-          getGenres() {
-            axios.get("/api/overviews/genres").then(res => { this.genres = res.data.data });
+          getArtists() {
+            axios.get("/api/overviews/artists").then(res => { this.artists = res.data.data });
           },
 
 
@@ -209,45 +208,23 @@ import { RouterLink, RouterView } from 'vue-router'
                 albums: this.selectAlbums,
                 playlists: this.selectPlaylists,
                 tracks: this.selectTracks,
-                genres: this.selectGenres, }).then(res =>{
+                artists: this.selectArtists, }).then(res =>{
                 this.$router.push({name: 'overview.index'});
             });
           },
 
-          isAlbum(){
-                for(let item in this.body){
-                    if("album" == this.body[item])
-                        return  true;
-                }
-                return false;
-             },
 
-            isPlaylist(){
-                for(let item in this.body){
-                    if("playlist" == this.body[item])
-                        return  true;
-                }
-                return false;
+          isAlbumAndPlaylist(){
+                return  "album_and_playlist" == this.body;
              },
 
              isTrack(){
-                for(let item in this.body){
-                    if("track" == this.body[item])
-                        return  true;
-                }
-                return false;
+                return "track" == this.body;
              },
 
-             isGenre(){
-                for(let item in this.body){
-                    if("genre" == this.body[item])
-                        return  true;
-                }
-                return false;
+             isArtist(){
+                return "artist" == this.body;
              },
-
-
-
         }
 
 
@@ -274,7 +251,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
    .check {
         float: left;
-        width: 140px;
+        width: 240px;
         margin-right: 50px;
         margin-bottom: 40px;
    }

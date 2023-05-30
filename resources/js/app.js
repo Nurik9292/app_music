@@ -87,6 +87,7 @@ ovr.component('InputNumber', InputNumber);
 ovr.component('Button', Button);
 ovr.component('InputText', InputText);
 ovr.component('Checkbox', Checkbox);
+ovr.component('RadioButton', RadioButton);
 
 genre.component('DataTable', DataTable);
 genre.component('Column', Column);

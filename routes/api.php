@@ -56,10 +56,10 @@ Route::prefix('overviews')->namespace('App\Http\Controllers\Admin\Block\Overview
         return TrackResource::collection($tracks);
     })->name('track');
 
-    Route::get('/genres', function () {
-        $genres = Genre::orderBy('name_ru')->get();
-        return GenreResource::collection($genres);
-    })->name('genre');
+    Route::get('/artists', function () {
+        $artists = Artist::orderBy('name')->get();
+        return ArtistResource::collection($artists);
+    })->name('artist');
 
     Route::get('/playlists', function () {
         $playlists = Playlist::orderByDesc('title_ru')->get();

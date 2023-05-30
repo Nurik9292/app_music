@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Block\Overview\Api;
 use App\Http\Controllers\Controller;
 use App\Models\BlockShema;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class StoreController extends Controller
 {
@@ -19,10 +18,10 @@ class StoreController extends Controller
             'albums' => $data['albums'] ?? '',
             'playlists' => $data['playlists'] ?? '',
             'tracks' => $data['tracks'] ?? '',
-            'genres' => $data['genres'] ?? '',
+            'artists' => $data['artists'] ?? '',
         ]);
 
-        unset($data['playlists'], $data['albums'], $data['tracks'], $data['genres'], $data['name_status']);
+        unset($data['playlists'], $data['albums'], $data['tracks'], $data['artists'], $data['name_status']);
 
         if (count(BlockShema::where('order_number', $data['order_number'])->get()) > 0) {
             $blocks = BlockShema::where('order_number', '>=', $data['order_number'])->get();
