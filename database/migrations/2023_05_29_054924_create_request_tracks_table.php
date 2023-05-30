@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('track_id');
             $table->string('actions');
+            $table->string('response')->default('ожидает');
             $table->timestamps();
         });
     }

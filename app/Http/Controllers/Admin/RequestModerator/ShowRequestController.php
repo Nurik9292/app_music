@@ -7,7 +7,7 @@ use App\Http\Resources\Admin\TrackResource;
 use App\Models\RequestTrack;
 use App\Models\Track;
 
-class ShowController extends Controller
+class ShowRequestController extends Controller
 {
     public function __invoke()
     {
@@ -15,14 +15,12 @@ class ShowController extends Controller
         $tracks = RequestTrack::all();
 
         foreach ($tracks as $idx => $item) {
-            if ($item->response != 'отказано') {
-                $track = Track::where('id', $item->track_id)->get()[0];
-                $data['id'] = $track->id;
-                $data['title'] = $track->title;
-                $data['actions'] = $item->actions;
-                $data['request'] = $item->id;
-                $data['response'] = $item->response;
-            }
+            $track = Track::where('id', $item->track_id)->get()[0];
+            $data['id'] = $track->id;
+            $data['title'] = $track->title;
+            $data['actions'] = $item->actions;
+            $data['request'] = $item->id;
+            $data['response'] = $item->response;
         }
 
         if (count($data) == 0) return response([]);

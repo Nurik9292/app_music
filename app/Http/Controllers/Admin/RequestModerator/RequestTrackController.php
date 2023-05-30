@@ -13,6 +13,7 @@ class RequestTrackController extends Controller
     {
         $data = $request->only('actions');
         $data['track_id'] = $track->id;
+        $data['response'] = 'ожидает';
 
         RequestTrack::create($data);
 

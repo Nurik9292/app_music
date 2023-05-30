@@ -1,18 +1,18 @@
 <template>
-        <div class="content-wrapper">
+       <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Запросы от модератора</h1>
+            <h1 class="m-0">Ваши запросы</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
                     <a href="/">Главная</a>
                 </li>
-              <li class="breadcrumb-item active">Запросы от модератора</li>
+              <li class="breadcrumb-item active">Ваши запросы</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -29,30 +29,36 @@
                     <template #header>
                         <span>Треки</span>
                         <i class="pi pi-volume-up ml-2"></i>
-                    </template>
-                    <DataTable :value="tracks" paginator :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
+                        </template>
+                        <DataTable :value="tracks" paginator :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
                      selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
                         <Column field="id" header="№" sortable style="width: 10%"></Column>
-                        <Column field="title" header="Название тркеа" sortable style="width: 35%"></Column>
-                        <Column header="Действие" style="width: 35%">
+                        <Column field="title" header="Название тркеа" sortable style="width: 30%"></Column>
+                        <Column header="Действие" style="width: 30%">
                             <template #body="{data}">
-						<div class="danger">
-                            <Tag :value="data.actions" severity="danger" style="width: 100px; height: 50px;"/>
-                        </div>
-
-					</template>
+						        <div class="danger">
+                                    <Tag :value="data.actions" severity="danger" style="width: 100px; height: 50px;"/>
+                                </div>
+					        </template>
                         </Column>
                          <Column header="Ответ" style="width: 20%">
-                        <template #body="{ data }">
-                            <div class="flex align-items-center gap-2">
-                                     <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.actions, data.id)">Ok</a>
-                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.request)">No</a>
+                            <template #body="{data}">
+						        <div class="danger">
+                                    <Tag :value="data.response" :severity="responseColor(data.response)" style="width: 100px; height: 50px;"/>
+                                </div>
+					        </template>
+                        </Column>
+                        <Column header="Delete" style="width: 20%">
+                            <template #body="{data}">
+                                <div class="flex align-items-center gap-2">
+                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="deleteRequest(data.request)">Delete</a>
                             </div>
-                        </template>
+					        </template>
                         </Column>
 
             <template #empty> No customers found. </template>
         </DataTable>
+
                 </TabPanel>
                 <TabPanel>
                     <template #header>
@@ -96,10 +102,11 @@
                 </TabPanel>
             </TabView>
         </div>
+
+
     </div>
 </section>
 </div>
-
 </template>
 
 <script>
@@ -107,7 +114,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 
     export default {
-        name: "ModeratorBase",
+        name: "ModeratorRequest",
 
         data(){
             return {
@@ -121,25 +128,30 @@ import { RouterLink, RouterView } from 'vue-router'
 
         methods:{
             getTracks(){
-            axios.get('/api/moderators/tracks/show').then(res => {
+            axios.get('/api/moderators/tracks/showRequest').then(res => {
                 if(res.data.length != 0)
                 this.tracks.push(res.data.data);
                 else this.tracks = null
             })
             },
 
-            yes(actions, id){
-                if(actions == 'delete')
-                axios.delete(`/api/tracks/${id}`).then(res => {
-                    this.getTracks()
-                })
+            responseColor(response){
+                switch(response){
+                    case 'ожидает': {
+                        return 'warning'
+                    }
+                    case 'одобрено': {
+                        return 'success'
+                    }
+                    case 'отказано': {
+                        return 'danger'
+                    }
+                }
             },
 
-            no(id){
-                axios.post(`/api/moderators/tracks/request/${id}`).then(res => {
-                    this.getTracks()
-                })
-            },
+            deleteRequest(id){
+                axios.delete(`/api/moderators/tracks/delete/${id}`).then( this.getTracks());
+            }
         }
     }
 </script>
