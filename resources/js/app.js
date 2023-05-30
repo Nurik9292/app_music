@@ -128,6 +128,8 @@ artist.component('InputSwitch', InputSwitch);
 artist.component('MultiSelect', MultiSelect);
 artist.component('SelectButton', SelectButton);
 artist.component('Editor', Editor);
+artist.component('Tag', Tag);
+artist.component('Toast', Toast);
 
 album.component('DataTable', DataTable);
 album.component('Column', Column);
@@ -167,6 +169,7 @@ track.use(ToastService);
 
 artist.use(router);
 artist.use(PrimeVue, { ripple: true });
+artist.use(ToastService);
 
 album.use(router);
 album.use(PrimeVue, { ripple: true });

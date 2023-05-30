@@ -7,7 +7,7 @@ use App\Http\Resources\Admin\TrackResource;
 use App\Models\RequestTrack;
 use App\Models\Track;
 
-class ShowController extends Controller
+class ShowTrackController extends Controller
 {
     public function __invoke()
     {

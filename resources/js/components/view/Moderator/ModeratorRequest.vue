@@ -57,18 +57,41 @@
                         </Column>
 
             <template #empty> No customers found. </template>
-        </DataTable>
-
+                             </DataTable>
                 </TabPanel>
                 <TabPanel>
                     <template #header>
                         <span>Артисты</span>
                         <i class="pi pi-user ml-2"></i>
                     </template>
-                    <p>
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
-                        ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                    </p>
+                    <DataTable :value="artists" paginator :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
+                     selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
+                        <Column field="id" header="№" sortable style="width: 10%"></Column>
+                        <Column field="name" header="Имя артиста" sortable style="width: 30%"></Column>
+                        <Column header="Действие" style="width: 30%">
+                            <template #body="{data}">
+						        <div class="danger">
+                                    <Tag :value="data.actions" :severity="actions(data.actions)" style="width: 100px; height: 50px;"/>
+                                </div>
+					        </template>
+                        </Column>
+                         <Column header="Ответ" style="width: 20%">
+                            <template #body="{data}">
+						        <div class="danger">
+                                    <Tag :value="data.response" :severity="responseColor(data.response)" style="width: 100px; height: 50px;"/>
+                                </div>
+					        </template>
+                        </Column>
+                        <Column header="Delete" style="width: 20%">
+                            <template #body="{data}">
+                                <div class="flex align-items-center gap-2">
+                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="deleteRequest(data.request)">Delete</a>
+                            </div>
+					        </template>
+                        </Column>
+
+            <template #empty> No customers found. </template>
+                             </DataTable>
                 </TabPanel>
                 <TabPanel>
                     <template #header>
@@ -118,20 +141,31 @@ import { RouterLink, RouterView } from 'vue-router'
 
         data(){
             return {
-                tracks: []
+                tracks: [],
+                artists: []
             }
         },
 
         mounted(){
             this.getTracks();
+            this.getArtists();
         },
 
         methods:{
             getTracks(){
-            axios.get('/api/moderators/tracks/showRequest').then(res => {
+            axios.get('/api/moderators/tracks/show/request').then(res => {
                 if(res.data.length != 0)
                 this.tracks.push(res.data.data);
                 else this.tracks = null
+            })
+            },
+
+            getArtists(){
+            axios.get('/api/moderators/artists/show/request').then(res => {
+                console.log(res);
+                if(res.data.length != 0)
+                this.artists.push(res.data.data);
+                else this.artists = null
             })
             },
 

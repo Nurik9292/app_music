@@ -45,8 +45,8 @@
                          <Column header="Ответ" style="width: 20%">
                         <template #body="{ data }">
                             <div class="flex align-items-center gap-2">
-                                     <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.actions, data.id)">Ok</a>
-                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.response)">No</a>
+                                     <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.actions, data.id, 'track')">Ok</a>
+                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.response, 'track')">No</a>
                             </div>
                         </template>
                         </Column>
@@ -59,20 +59,36 @@
                         <span>Артисты</span>
                         <i class="pi pi-user ml-2"></i>
                     </template>
-                    <p>
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
-                        ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                    </p>
+                    <DataTable :value="artists" paginator :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
+                     selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
+                        <Column field="id" header="№" sortable style="width: 10%"></Column>
+                        <Column field="name" header="Имя артиста" sortable style="width: 35%"></Column>
+                        <Column header="Действие" style="width: 35%">
+                            <template #body="{data}">
+						<div class="danger">
+                            <Tag :value="data.actions" :severity="actions(data.actions)" style="width: 100px; height: 50px;"/>
+                        </div>
+
+					</template>
+                        </Column>
+                         <Column header="Ответ" style="width: 20%">
+                        <template #body="{ data }">
+                            <div class="flex align-items-center gap-2">
+                                     <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.actions, data.id, 'artist')">Ok</a>
+                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.response, 'artist')">No</a>
+                            </div>
+                        </template>
+                        </Column>
+
+            <template #empty> No customers found. </template>
+        </DataTable>
                 </TabPanel>
                 <TabPanel>
                     <template #header>
                         <span>Альбомы</span>
                         <i class="pi pi-align-justify ml-2"></i>
                     </template>
-                    <p>
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
-                        officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
-                    </p>
+
                 </TabPanel>
                 <TabPanel>
                     <template #header>
@@ -111,37 +127,54 @@ import { RouterLink, RouterView } from 'vue-router'
 
         data(){
             return {
-                tracks: []
+                tracks: [],
+                artists: []
             }
         },
 
         mounted(){
             this.getTracks();
+            this.getArtists();
         },
 
         methods:{
             getTracks(){
             axios.get('/api/moderators/tracks/show').then(res => {
-                console.log(res);
                 if(res.data.length != 0)
                 this.tracks.push(res.data);
                 else this.tracks = null
             })
             },
 
-            yes(actions, id){
+            getArtists(){
+            axios.get('/api/moderators/artists/show').then(res => {
+                console.log(res);
+                if(res.data.length != 0)
+                this.artists.push(res.data);
+                else this.artists = null
+            })
+            },
 
-                console.log(this.tracks[0].data);
-
+            yes(actions, id, item){
+               if(item == 'track') {
                 if(actions == 'delete')
                 axios.delete(`/api/tracks/${id}`).then(res => {this.getTracks()})
 
                 if(actions == 'update')
                 axios.patch(`/api/tracks/${id}`, this.tracks[0].data).then(res => { this.getTracks()})
+
+               }else if(item == 'artist'){
+                if(actions == 'delete')
+                axios.delete(`/api/artists/${id}`).then(res => {this.getArtists()})
+
+                if(actions == 'update')
+                axios.patch(`/api/artists/${id}`, this.artists[0].data).then(res => { this.getArtists()})
+               }
+
             },
 
             no(id){
-                axios.post(`/api/moderators/tracks/request/${id}`).then(res => {
+                axios.post(`/api/moderators/tracks/response/${id}`).then(res => {
                     this.getTracks()
                 })
             },

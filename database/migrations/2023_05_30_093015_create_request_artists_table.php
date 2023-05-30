@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('request_tracks', function (Blueprint $table) {
+        Schema::create('request_artists', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('track_id');
+            $table->unsignedBigInteger('artist_id');
             $table->string('actions');
             $table->string('response')->default('ожидает');
             $table->string('data', 500)->nullable();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('request_tracks');
+        Schema::dropIfExists('request_artists');
     }
 };

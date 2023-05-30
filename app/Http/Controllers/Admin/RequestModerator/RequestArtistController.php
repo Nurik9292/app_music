@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Admin\RequestModerator;
 
 use App\Http\Controllers\Controller;
-use App\Models\RequestTrack;
-use App\Models\Track;
+use App\Models\Artist;
+use App\Models\RequestArtist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class RequestTrackController extends Controller
+class RequestArtistController extends Controller
 {
-    public function __invoke(Request $request, Track $track)
+    public function __invoke(Request $request, Artist $artist)
     {
         $data = $request->all();
 
@@ -29,13 +29,13 @@ class RequestTrackController extends Controller
             $data['actions'] = $actions;
         }
 
-        $data['track_id'] = $track->id;
+        $data['artist_id'] = $artist->id;
         $data['response'] = 'ожидает';
 
-        if (count($requsetTrack = RequestTrack::where('track_id', $track->id)->get()) > 0)
-            $requsetTrack->update($data);
+        if (count($requsetArtist = RequestArtist::where('artist_id', $artist->id)->get()) > 0)
+            $requsetArtist->update($data);
         else
-            RequestTrack::create($data);
+            RequestArtist::create($data);
 
         return response([]);
     }

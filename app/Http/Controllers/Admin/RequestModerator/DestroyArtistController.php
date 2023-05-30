@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin\RequestModerator;
 
 use App\Http\Controllers\Controller;
-use App\Models\RequestTrack;
+use App\Models\RequestArtist;
 
-class DestroyController extends Controller
+class DestroyArtistController extends Controller
 {
-    public function __invoke(RequestTrack $request)
+    public function __invoke(RequestArtist $request)
     {
         $request->delete();
 

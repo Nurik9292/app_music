@@ -11,12 +11,14 @@ class IndexController extends BaseController
         if (auth()->user()->role !== 2 && auth()->user()->role !== 3)
             return redirect()->route('main');
 
+        $auth = auth()->user()->role;
+
         $artists = Artist::all();
 
         $this->service->statusChangetoString($artists);
 
         $dates = $this->service->dateFormate($artists);
 
-        return view('artist.index', compact('artists', 'dates'));
+        return view('artist.index', compact('artists', 'dates', 'auth'));
     }
 }

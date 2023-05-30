@@ -5,7 +5,7 @@
 @section('content')
 
     <div id="artist">
-        <artist-base></artist-base>
+        <artist-base :data='@json($auth)'></artist-base>
     </div>
 
 @endsection

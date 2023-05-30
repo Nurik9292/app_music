@@ -168,9 +168,14 @@ Route::prefix('playlists')->namespace('App\Http\Controllers\Admin\Playlist\Api')
 
 Route::prefix('moderators')->namespace('App\Http\Controllers\Admin\RequestModerator')->name('api.request.')->group(function () {
     Route::post('/tracks/{track}', RequestTrackController::class)->name('track');
-    Route::get('/tracks/show', ShowController::class)->name('show');
-    Route::get('/tracks/showRequest', ShowRequestController::class)->name('show.request');
-    Route::post('/tracks/request/{request}', ResponseController::class)->name('request.track');
-    Route::delete('/tracks/delete/{request}', DestroyController::class)->name('request.delete.track');
+    Route::post('/artists/{artist}', RequestArtistController::class)->name('artist');
+    Route::get('/tracks/show', ShowTrackController::class)->name('show.track');
+    Route::get('/artists/show', ShowArtistController::class)->name('show.artist');
+    Route::get('/tracks/show/request', ShowTrackRequestController::class)->name('show.request.track');
+    Route::get('/artists/show/request', ShowArtistRequestController::class)->name('show.request.artist');
+    Route::post('/tracks/response/{request}', ResponseTrackController::class)->name('response.track');
+    Route::post('/artists/response/{request}', ResponseTrackController::class)->name('response.artist');
+    Route::delete('/tracks/delete/{request}', DestroyTrackController::class)->name('request.delete.track');
+    Route::delete('/tracks/delete/{request}', DestroyArtistController::class)->name('request.delete.artist');
 });
 // });

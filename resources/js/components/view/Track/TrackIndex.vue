@@ -30,7 +30,7 @@
                 </div>
 
             <div class="card">
-
+                <Toast />
             <DataTable  v-model:selection="selectedTracks" v-model:filters="filters" :value="tracks" paginator :rows="10"
                 stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"  selectionMode="multiple"
                 dataKey="id" tableStyle="min-width: 50rem">
@@ -96,7 +96,6 @@
             <Column header="Delete" style="width: 15%">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
-                                <Toast />
                         <a href="#" class="btn btn-outline-danger" @click.prevent="deleteTracks(data.id)" >Delete</a>
                     </div>
                 </template>

@@ -30,6 +30,7 @@
             </div>
 
             <div class="card">
+                <Toast />
             <DataTable v-model:filters="filters" :value="artists" paginator :rows="10"
                 stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"  selectionMode="multiple"
                 dataKey="id" tableStyle="min-width: 50rem">
@@ -85,15 +86,19 @@
 
 <script>
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { useToast } from "primevue/usetoast";
 
 export default {
     name: "ArtistIndex",
+
+    props: ['data'],
 
     data(){
         return {
             countries:null,
             artists: null,
             selectedArtist: null,
+            toast: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
@@ -104,6 +109,7 @@ export default {
     mounted() {
         this.getArtists();
         this.getCountries();
+        this.toast = useToast();
     },
 
     methods: {
@@ -128,6 +134,10 @@ export default {
         },
 
         deleteArtists(id){
+            if(this.data === 3){
+                this.toast.add({ severity: 'info', summary: 'Info', detail: 'Ваш запрос отправлен администратору', life: 3000 });
+                axios.post(`/api/moderators/artists/${id}`, {artist_id: this.data, actions: 'delete'}).then(res => { this.getArtists() })
+            }else
                 axios.delete(`/api/artists/${id}`).then(res => { this.getArtists() })
         },
 
