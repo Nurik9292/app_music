@@ -174,7 +174,7 @@ Route::prefix('moderators')->namespace('App\Http\Controllers\Admin\RequestModera
     Route::get('/tracks/show/request', ShowTrackRequestController::class)->name('show.request.track');
     Route::get('/artists/show/request', ShowArtistRequestController::class)->name('show.request.artist');
     Route::post('/tracks/response/{request}', ResponseTrackController::class)->name('response.track');
-    Route::post('/artists/response/{request}', ResponseTrackController::class)->name('response.artist');
+    Route::post('/artists/response/{request}', ResponseArtistController::class)->name('response.artist');
     Route::delete('/tracks/delete/{request}', DestroyTrackController::class)->name('request.delete.track');
     Route::delete('/tracks/delete/{request}', DestroyArtistController::class)->name('request.delete.artist');
 });

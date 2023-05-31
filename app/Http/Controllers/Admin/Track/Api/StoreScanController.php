@@ -10,6 +10,7 @@ class StoreScanController extends BaseController
 {
     public function __invoke(Request $request)
     {
+
         $data = $request->validate(['path' => ['required'], 'local' => ['required']]);
         $timestamp = $this->service->startScanDir($data['path'], $data['local']);
 

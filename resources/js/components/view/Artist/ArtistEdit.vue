@@ -34,6 +34,7 @@
       <div class="card">
 
         <br>
+        <Toast />
         <div class="row ml-3">
             <div class="block_two">
                 <label>Имя</label>
@@ -100,9 +101,12 @@
 <script>
 import Dropzone from 'dropzone'
 import { RouterLink, RouterView } from 'vue-router'
+import { useToast } from "primevue/usetoast"
 
     export default {
         name: "ArtistEdit",
+
+        props: ['data'],
 
         data(){
                 return {
@@ -113,6 +117,7 @@ import { RouterLink, RouterView } from 'vue-router'
                     countries: null,
                     selectedCountry: [],
                     errors: null,
+                    toast: null,
 
              }
         },
@@ -121,6 +126,7 @@ import { RouterLink, RouterView } from 'vue-router'
             this.dropzone = new Dropzone(this.$refs.dropzone, {url: 'none', autoProcessQueue: false, acceptedFiles: 'image/*'});
             this.getCountries();
             this.getArtist();
+            this.toast = useToast();
         },
 
         methods: {
@@ -151,13 +157,21 @@ import { RouterLink, RouterView } from 'vue-router'
             data.append('bio_tk', this.bio_tk);
             data.append('bio_ru', this.bio_ru);
             data.append('country_id', this.selectedCountry ? this.selectedCountry[0].id : '');
-            data.append('_method', 'PATCH');
 
-            axios.post(`/api/artists/${this.$route.params.id}`, data).then(res =>{
+
+            if(this.data === 3){
+                this.toast.add({ severity: 'info', summary: 'Info', detail: 'Ваш запрос отправлен администратору', life: 3000 });
+                data.append('artist_id', this.$route.params.id);
+                data.append('actions', 'update');
+                axios.post(`/api/moderators/artists/${this.$route.params.id}`, data).then(res => { this.getArtist() })
+            }else{
+                data.append('_method', 'PATCH');
+                axios.post(`/api/artists/${this.$route.params.id}`, data).then(res =>{
                 this.$router.push({name: 'artist.index'});
             }).catch(error => {
                 this.errors = error.response.data.errors
             });
+            }
           },
 
           isErrorName(){

@@ -18,12 +18,13 @@ class ShowArtistController extends Controller
         foreach ($artists as $idx => $item) {
             if ($item->response != 'отказано' && $item->response != 'одобрено') {
                 $arist = Artist::where('id', $item->artist_id)->get()[0];
-                $data['id'] = $arist->id;
-                $data['name'] = $arist->name;
-                $data['actions'] = $item->actions;
-                $data['request'] = $item->id;
-                $data['response'] = $item->response;
-                $data['data'] = unserialize($item->data);
+                $data[$item->id]['id'] = $arist->id;
+                $data[$item->id]['name'] = $arist->name;
+                $data[$item->id]['actions'] = $item->actions;
+                $data[$item->id]['request'] = $item->id;
+                $data[$item->id]['response'] = $item->response;
+                $data[$item->id]['what'] = $item->what;
+                $data[$item->id]['data'] = unserialize($item->data);
             }
         }
 

@@ -55,7 +55,7 @@
         <div class="row ml-3">
             <div class="block_two">
                 <label>Треки</label>
-                <MultiSelect v-model="selectedTracks" :options="tracks" optionLabel="title"  filter placeholder="Выберите трек" :maxSelectedLabels="2" :class="isErrorTracks() ? 'p-invalid' : '', 'w-full md:w-14rem'"  />
+                <MultiSelect v-model="selectedTracks" :options="tracks" optionLabel="title"  filter placeholder="Выберите трек" :maxSelectedLabels="2" :virtualScrollerOptions="{ itemSize: 44 }" :class="isErrorTracks() ? 'p-invalid' : '', 'w-full md:w-14rem'"  />
                 <div v-if="isErrorTracks()">
                     <p class="text-danger">{{ errorMessageTracks() }}</p>
                     </div>

@@ -276,7 +276,7 @@ import { useToast } from "primevue/usetoast"
 
             if(this.data === 3){
                 this.toast.add({ severity: 'info', summary: 'Info', detail: 'Ваш запрос отправлен администратору', life: 3000 });
-                image.append('track_id', this.data);
+                image.append('track_id', this.$route.params.id);
                 image.append('actions', 'update');
                 axios.post(`/api/moderators/tracks/${this.$route.params.id}`, image).then(res => { this.getTrack() })
             }else{

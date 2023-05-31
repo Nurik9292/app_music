@@ -128,18 +128,6 @@
               @endif
               @endcan
 
-              @if(auth()->user()->role === 3)
-              <li class="nav-item">
-                  <a href="{{route('moder.index', 'your/request')}}" class="nav-link">
-                    <i class="nav-icon fab fa-galactic-republic"></i>
-                    <p>
-                        Ваши запросы
-                    </p>
-                </a>
-            </li>
-            @endif
-
-
               @cannot('view', auth()->user())
               <li class="nav-item">
                   <a href="{{route('user.index')}}" class="nav-link">

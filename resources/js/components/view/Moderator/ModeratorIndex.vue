@@ -46,7 +46,7 @@
                         <template #body="{ data }">
                             <div class="flex align-items-center gap-2">
                                      <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.actions, data.id, 'track')">Ok</a>
-                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.response, 'track')">No</a>
+                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.request, 'track')">No</a>
                             </div>
                         </template>
                         </Column>
@@ -59,11 +59,16 @@
                         <span>Артисты</span>
                         <i class="pi pi-user ml-2"></i>
                     </template>
-                    <DataTable :value="artists" paginator :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
-                     selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
-                        <Column field="id" header="№" sortable style="width: 10%"></Column>
-                        <Column field="name" header="Имя артиста" sortable style="width: 35%"></Column>
-                        <Column header="Действие" style="width: 35%">
+                    <DataTable :value="artists" paginator :rows="10" stateStorage="session"
+                     filterDisplay="menu" selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
+                        <Column header="№" sortable style="width: 10%">
+                            <template #body="{data, index}">
+                                {{ index + 1 }}
+					        </template>
+                        </Column>
+                        <Column field="name" header="Имя артиста" sortable style="width: 25%"></Column>
+                        <Column field="what" header="Что" style="width: 25%"></Column>
+                        <Column header="Действие" style="width: 20%">
                             <template #body="{data}">
 						<div class="danger">
                             <Tag :value="data.actions" :severity="actions(data.actions)" style="width: 100px; height: 50px;"/>
@@ -75,7 +80,7 @@
                         <template #body="{ data }">
                             <div class="flex align-items-center gap-2">
                                      <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.actions, data.id, 'artist')">Ok</a>
-                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.response, 'artist')">No</a>
+                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.request, 'artist')">No</a>
                             </div>
                         </template>
                         </Column>
@@ -127,8 +132,9 @@ import { RouterLink, RouterView } from 'vue-router'
 
         data(){
             return {
-                tracks: [],
-                artists: []
+                tracks: null,
+                artists: null,
+                expandedRows: null
             }
         },
 
@@ -141,7 +147,7 @@ import { RouterLink, RouterView } from 'vue-router'
             getTracks(){
             axios.get('/api/moderators/tracks/show').then(res => {
                 if(res.data.length != 0)
-                this.tracks.push(res.data);
+                this.tracks = res.data.data;
                 else this.tracks = null
             })
             },
@@ -150,7 +156,7 @@ import { RouterLink, RouterView } from 'vue-router'
             axios.get('/api/moderators/artists/show').then(res => {
                 console.log(res);
                 if(res.data.length != 0)
-                this.artists.push(res.data);
+                this.artists = res.data.data;
                 else this.artists = null
             })
             },
@@ -173,10 +179,14 @@ import { RouterLink, RouterView } from 'vue-router'
 
             },
 
-            no(id){
-                axios.post(`/api/moderators/tracks/response/${id}`).then(res => {
-                    this.getTracks()
-                })
+            no(id, item){
+                console.log(id);
+                if(item == 'track')
+                axios.post(`/api/moderators/tracks/response/${id}`).then(res => { this.getTracks() })
+
+                if(item == 'artist')
+                axios.post(`/api/moderators/artists/response/${id}`).then(res => { this.getArtists() })
+
             },
 
             actions(actions){
