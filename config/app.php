@@ -184,6 +184,8 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Owenoj\LaravelGetId3\GetId3ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        OwenIt\Auditing\AuditingServiceProvider::class,
+
 
         /*
          * Package Service Providers...

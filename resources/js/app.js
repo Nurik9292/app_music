@@ -29,6 +29,7 @@ import Editor from 'primevue/editor';
 import Calendar from 'primevue/calendar';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import VirtualScroller from 'primevue/virtualscroller';
 
 import "primevue/resources/themes/lara-light-indigo/theme.css"
 import "primevue/resources/primevue.min.css";
@@ -152,6 +153,7 @@ playlist.component('InputText', InputText);
 playlist.component('Paginator', Paginator);
 playlist.component('InputSwitch', InputSwitch);
 playlist.component('MultiSelect', MultiSelect);
+playlist.component('VirtualScroller', VirtualScroller);
 
 
 ovr.use(router);

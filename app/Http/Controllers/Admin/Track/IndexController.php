@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Admin\Track;
 
-use App\Models\RequestTrack;
+use App\Models\Artist;
 use App\Models\Track;
 
 class IndexController extends BaseController
 {
+
     public function __invoke()
     {
+        $artist = Artist::first();
+        dd($artist->audits()->first());
         if (auth()->user()->role !== 2 && auth()->user()->role !== 3)
             return redirect()->route('main');
 

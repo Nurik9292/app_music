@@ -55,7 +55,7 @@
         <div class="row ml-3">
             <div class="block_two">
                 <label>Треки</label>
-                <MultiSelect v-model="selectedTracks" :options="tracks" optionLabel="title"  filter placeholder="Выберите трек" :maxSelectedLabels="2" :virtualScrollerOptions="{ itemSize: 44 }" :class="isErrorTracks() ? 'p-invalid' : '', 'w-full md:w-14rem'"  />
+                <MultiSelect v-model="selectedTracks" :options="tracks" optionLabel="title"  filter placeholder="Выберите трек" :maxSelectedLabels="2" :virtualScrollerOptions="{ itemSize: 10 }" :class="isErrorTracks() ? 'p-invalid' : '', 'w-full md:w-14rem'"  />
                 <div v-if="isErrorTracks()">
                     <p class="text-danger">{{ errorMessageTracks() }}</p>
                     </div>
@@ -63,7 +63,7 @@
 
             <div class="block_two">
                 <label>Жанры</label>
-                <MultiSelect v-model="selectedGenres" :options="genres" optionLabel="name_ru" filter placeholder="Выберите жанр плейлиста" :maxSelectedLabels="3" :class="isErrorGenres() ? 'p-invalid' : '', 'w-full md:w-14rem'" />
+                <MultiSelect v-model="selectedGenres" :options="genres" optionLabel="name_ru" filter placeholder="Выберите жанр плейлиста" :maxSelectedLabels="3" :virtualScrollerOptions="{ itemSize: 10 }" :class="isErrorGenres() ? 'p-invalid' : '', 'w-full md:w-14rem'" />
                 <div v-if="isErrorGenres()">
                     <p class="text-danger">{{ errorMessageGenres() }}</p>
                     </div>
