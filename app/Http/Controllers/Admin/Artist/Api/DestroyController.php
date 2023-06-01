@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Admin\Artist\Api;
 
 use App\Http\Controllers\Admin\Artist\BaseController;
 use App\Models\Artist;
-use App\Models\RequestArtist;
 
 class DestroyController extends BaseController
 {
     public function __invoke(Artist $artist)
     {
-        if (count($requestArtist = RequestArtist::where('artist_id', $artist->id)->get()) > 0)
-            $requestArtist[0]->update(['response' => 'одобрено']);
+        dd(auth()->user());
 
         $path = $artist->artwork_url;
         $path = substr($path, 0, strpos($path, basename($path)));

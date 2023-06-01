@@ -30,6 +30,9 @@ import Calendar from 'primevue/calendar';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import VirtualScroller from 'primevue/virtualscroller';
+import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
+import Tag from 'primevue/tag';
 
 import "primevue/resources/themes/lara-light-indigo/theme.css"
 import "primevue/resources/primevue.min.css";
@@ -60,11 +63,9 @@ import PlaylistCreate from './components/view/Playlist/PlaylistCreate.vue';
 import PlaylistEdit from './components/view/Playlist/PlaylistEdit.vue';
 import ModeratorIndex from './components/view/Moderator/ModeratorIndex.vue';
 import ModeratorBase from './components/view/Moderator/ModeratorBase.vue';
-import Toast from 'primevue/toast';
-import ToastService from 'primevue/toastservice';
-import Tag from 'primevue/tag';
 
-const app = createApp({components:{UserIndex, OverviewBase}});
+
+const app = createApp({components:{UserIndex}});
 const ovr = createApp({components:{OverviewIndex, OverviewCreate, OverviewEdit, OverviewBase}});
 const genre = createApp({components:{GenreIndex, GenreBase}});
 const track = createApp({components:{TrackIndex, TrackBase, TrackScan, TrackCreate}});
@@ -155,7 +156,6 @@ playlist.component('InputSwitch', InputSwitch);
 playlist.component('MultiSelect', MultiSelect);
 playlist.component('VirtualScroller', VirtualScroller);
 
-
 ovr.use(router);
 ovr.use(PrimeVue, { ripple: true });
 
@@ -179,6 +179,7 @@ album.use(PrimeVue, { ripple: true });
 
 playlist.use(router);
 playlist.use(PrimeVue, { ripple: true });
+
 
 album.mount('#album');
 artist.mount('#artist');

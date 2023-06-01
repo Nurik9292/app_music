@@ -23,7 +23,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('admin', 'auth')->group(function () {
-    Route::get('/', MainController::class)->name('main');
+    Route::get('/', MainController::class)->name('main')->where('page', ".*");
+
     Route::namespace('App\Http\Controllers\Admin')->group(function () {
 
 
@@ -96,13 +97,11 @@ Route::middleware('admin', 'auth')->group(function () {
         // ========== END MODERATOR =====================
     });
 });
-Route::get('/login', [LoginController::class, 'index'])->name('login.index')->where('page', ".*");
+
+Route::get('/login', [LoginController::class, 'index'])->name('login.index');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 Route::get('/logout', function () {
     Auth::logout();
     return redirect()->route('login');
 })->name('logout');
-
-
-// Auth::routes();

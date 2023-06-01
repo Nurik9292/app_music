@@ -30,7 +30,6 @@
                 </div>
 
             <div class="card">
-                <Toast />
             <DataTable  v-model:selection="selectedTracks" v-model:filters="filters" :value="tracks" paginator :rows="10"
                 stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"  selectionMode="multiple"
                 dataKey="id" tableStyle="min-width: 50rem">
@@ -131,7 +130,6 @@ export default {
             selectedTracks: null,
             artists: null,
             selectedArtist: null,
-            toast: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 title: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] }
@@ -159,15 +157,17 @@ export default {
         this.getTracks();
         this.getAlbumts();
         this.getPlaylists();
-        this.toast = useToast();
     },
 
     methods: {
         getTracks() {
             if(this.selectedArtist != null)
             axios.post('/api/tracks/filter', {artist: this.selectedArtist.id}).then(res => { this.tracks = res.data.data.tracks; this.artists =res.data.data.artists });
-            else
-            axios.get('/api/tracks').then(res => { this.tracks = res.data.data.tracks; this.artists =res.data.data.artists });
+            else{
+                axios.get('/api/tracks').then(res => { this.tracks = res.data.data.tracks; this.artists =res.data.data.artists })
+                .catch(error => { console.log(res);});
+            }
+
         },
 
         getAlbumts() {
@@ -207,7 +207,6 @@ export default {
 
         deleteTracks(id){
             if(this.data === 3){
-                this.toast.add({ severity: 'info', summary: 'Info', detail: 'Ваш запрос отправлен администратору', life: 3000 });
                 axios.post(`/api/moderators/tracks/${id}`, {track_id: this.data, actions: 'delete'}).then(res => { this.getTracks() })
             }else{
                 axios.delete(`/api/tracks/${id}`).then(res => { this.getTracks() })

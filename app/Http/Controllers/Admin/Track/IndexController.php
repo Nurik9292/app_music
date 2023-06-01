@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Track;
 
-use App\Models\Artist;
 use App\Models\Track;
 
 class IndexController extends BaseController
 {
-
     public function __invoke()
     {
         if (auth()->user()->role !== 2 && auth()->user()->role !== 3)

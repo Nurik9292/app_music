@@ -19,9 +19,6 @@
 
 <body class="hold-transition login-page">
 
-      {{-- <div class="row" id="auth">
-        <login-base></login-base>
-      </div> --}}
 
 
 <div class="login-box">
@@ -62,7 +59,8 @@
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <input type="submit" class="btn btn-primary btn-block" value="Sign In">
+            <button class="btn btn-primary btn-block">Sign In</button>
+            {{-- <input type="submit" class="btn btn-primary btn-block" value="Sign In"> --}}
           </div>
           <!-- /.col -->
         </div>
@@ -72,12 +70,22 @@
   </div>
   <!-- /.card -->
 </div>
+</div>
 <!-- /.login-box -->
 
 
 <!-- jQuery -->
 
 </body>
+<script>
+      axios.get('/sanctum/csrf-cookie').then(response => {
+                    axios.post('/login', {email: this.email, password: this.password}).then(res => {
+                        localStorage.setItem('x_xsrf_token', res.config.headers['X-XSRF-TOKEN']);
+                        this.$router.push({name: 'user.personal'})
+                    })
+                });
+</script>
+
 <script src="{{asset('admins/plugins/jquery/jquery.min.js')}}"></script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
