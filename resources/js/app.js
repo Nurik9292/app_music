@@ -90,6 +90,7 @@ ovr.component('Button', Button);
 ovr.component('InputText', InputText);
 ovr.component('Checkbox', Checkbox);
 ovr.component('RadioButton', RadioButton);
+ovr.component('VirtualScroller', VirtualScroller);
 
 genre.component('DataTable', DataTable);
 genre.component('Column', Column);

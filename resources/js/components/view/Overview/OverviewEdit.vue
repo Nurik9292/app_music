@@ -52,7 +52,7 @@
 
                       <div :class="isTrack() ? 'mb-3' : 'd-none'">
                           <label for="track">Треки</label>
-                        <MultiSelect v-model="selectTracks" :options="tracks" filter optionLabel="title" placeholder="Выбирите Трек" :maxSelectedLabels="20" :selectionLimit="20" class="w-full md:w-40rem" id="track" />
+                        <MultiSelect v-model="selectTracks" :options="tracks" filter optionLabel="title" placeholder="Выбирите Трек" :virtualScrollerOptions="{ itemSize: 10 }" :maxSelectedLabels="20" :selectionLimit="20" class="w-full md:w-40rem" id="track" />
                       </div>
                       <div :class="isArtist() ? 'mb-3' : 'd-none'">
                           <label for="genre">Артисты</label>
