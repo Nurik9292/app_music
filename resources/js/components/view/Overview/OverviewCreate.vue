@@ -64,7 +64,7 @@
             <label for="status">Нумерация</label>
             <InputNumber v-model="order_number" min="1"/>
     </div>
-     <div class="block_one">
+     <div :class="isModer() ? 'd-none' : 'block_one'">
             <label for="status">Статус</label>
             <InputSwitch v-model="status" />
     </div>
@@ -90,6 +90,7 @@
     export default{
         name: "OverviewCreate",
 
+        props: ['data'],
 
         data(){
            return {
@@ -107,10 +108,6 @@
                order_number: null,
                body: null
            }
-        },
-
-        computed: {
-
         },
 
         mounted() {
@@ -151,8 +148,10 @@
                 albums: this.selectAlbums,
                 playlists: this.selectPlaylists,
                 tracks: this.selectTracks,
-                artists: this.selectArtists,}).then(res =>{
-                this.$router.back();
+                artists: this.selectArtists,
+                user_id: this.data['id']
+                }).then(res =>{
+                this.$router.push('overview.index');
             });
           },
 
@@ -167,6 +166,10 @@
              isArtist(){
                 return "artist" == this.body;
              },
+
+             isModer(){
+                return this.data['role'] === 3;
+             }
         }
     }
 </script>

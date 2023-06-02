@@ -14,6 +14,8 @@ class IndexController extends Controller
         if (auth()->user()->role !== 2 && auth()->user()->role !== 3)
             return redirect()->route('main');
 
-        return view('block.overview.index');
+        $auth = auth()->user();
+
+        return view('block.overview.index', compact('auth'));
     }
 }

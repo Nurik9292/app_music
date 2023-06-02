@@ -76,7 +76,7 @@
             <Column selectionMode="multiple" headerStyle="width: 3rem" @click="isTracks()"></Column>
             <Column field="id" header="№" sortable style="width: 10%"></Column>
             <Column field="title" header="Название" sortable style="width: 45%"></Column>
-            <Column  header="Status" style="width: 15%">
+            <Column  header="Status" style="width: 15%" :class="isModer() ? 'd-none' : ''">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
                         <InputSwitch v-model="data.status" @change.prevent="updateStatus(data.id)"/>
@@ -165,7 +165,7 @@ export default {
             axios.post('/api/tracks/filter', {artist: this.selectedArtist.id}).then(res => { this.tracks = res.data.data.tracks; this.artists =res.data.data.artists });
             else{
                 axios.get('/api/tracks').then(res => { this.tracks = res.data.data.tracks; this.artists =res.data.data.artists })
-                .catch(error => { console.log(res);});
+                .catch(error => {  });
             }
 
         },
@@ -206,11 +206,7 @@ export default {
         },
 
         deleteTracks(id){
-            if(this.data === 3){
-                axios.post(`/api/moderators/tracks/${id}`, {track_id: this.data, actions: 'delete'}).then(res => { this.getTracks() })
-            }else{
-                axios.delete(`/api/tracks/${id}`).then(res => { this.getTracks() })
-            }
+                axios.delete(`/api/tracks/${id}/${this.data['id']}`).then(res => { this.getTracks() })
         },
 
         isAlbum(){
@@ -225,7 +221,9 @@ export default {
             return this.selectedTracks != null && this.selectedTracks.length > 0;
         },
 
-
+        isModer(){
+            return this.data['role'] === 3;
+        }
 
     }
 }

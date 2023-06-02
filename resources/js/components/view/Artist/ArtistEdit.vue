@@ -78,7 +78,7 @@
         </div>
 
         <div class="row ml-3">
-            <div class="block_one">
+            <div :class="isModer() ? 'd-none' : 'block_one'">
                 <label for="status">Статуc</label>
                 <InputSwitch v-model="status" />
               </div>
@@ -157,22 +157,15 @@ import { useToast } from "primevue/usetoast"
             data.append('bio_tk', this.bio_tk);
             data.append('bio_ru', this.bio_ru);
             data.append('country_id', this.selectedCountry ? this.selectedCountry[0].id : '');
-            data.append('user_id', this.data);
+            data.append('user_id', this.data['id']);
+            data.append('_method', 'PATCH');
 
-
-            if(this.data === 3){
-                this.toast.add({ severity: 'info', summary: 'Info', detail: 'Ваш запрос отправлен администратору', life: 3000 });
-                data.append('artist_id', this.$route.params.id);
-                data.append('actions', 'update');
-                axios.post(`/api/moderators/artists/${this.$route.params.id}`, data).then(res => { this.getArtist() })
-            }else{
-                data.append('_method', 'PATCH');
                 axios.post(`/api/artists/${this.$route.params.id}`, data).then(res =>{
                 this.$router.push({name: 'artist.index'});
             }).catch(error => {
                 this.errors = error.response.data.errors
             });
-            }
+
           },
 
           isErrorName(){
@@ -206,8 +199,11 @@ import { useToast } from "primevue/usetoast"
                 if(this.isErrorCountry()) return this.errors.country_id[0];
           },
 
-        },
-    }
+          isModer(){
+            return this.data['role'] === 3;
+          }
+        }
+        }
 </script>
 
 

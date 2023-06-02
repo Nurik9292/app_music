@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BlockShema;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use OwenIt\Auditing\Models\Audit;
 
 class UpdateController extends Controller
 {
@@ -29,6 +30,10 @@ class UpdateController extends Controller
         foreach ($blocks as $block) $block->increment('oreder_number');
 
         $block->update($data);
+
+        $audit = Audit::latest()->first();
+
+        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

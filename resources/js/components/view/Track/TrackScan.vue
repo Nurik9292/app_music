@@ -98,7 +98,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
         methods: {
             scan(){
-                axios.post('/api/tracks/scan', {path: this.path, local: this.local, user_id: this.data}).then(res => {  this.$router.back();});
+                axios.post('/api/tracks/scan', {path: this.path, local: this.local, user_id: this.data['id']}).then(res => {  this.$router.back();});
             }
         }
     }

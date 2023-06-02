@@ -114,8 +114,8 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
             updateGenre(event) {
                 let { newData, data } = event;
                 axios.patch(`/api/genres/${newData.id}`, {name_tm: newData.name_tm, name_ru: newData.name_ru, user_id: this.data}).then(res => {this.getGenres()});
-
         },
+
 
         }
     }

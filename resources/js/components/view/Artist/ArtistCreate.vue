@@ -77,7 +77,7 @@
         </div>
 
         <div class="row ml-3">
-            <div class="block_one">
+            <div :class="isModer() ? 'd-none' : 'block_one'">
                 <label for="status">Статуc</label>
                 <InputSwitch v-model="status" />
               </div>
@@ -142,7 +142,7 @@ import { RouterLink, RouterView } from 'vue-router'
             data.append('bio_ru', this.bio_ru);
             data.append('status', this.status);
             data.append('country_id', this.selectedCountry ? this.selectedCountry[0].id : '');
-            data.append('user_id', this.data);
+            data.append('user_id', this.data['id']);
 
             axios.post('/api/artists/', data).then(res =>{
                 this.$router.push({name: 'artist.index'});
@@ -181,6 +181,10 @@ import { RouterLink, RouterView } from 'vue-router'
           errorMessageContry(){
                 if(this.isErrorCountry()) return this.errors.country_id[0];
           },
+
+          isModer(){
+            return this.data['role'] === 3;
+        }
 
         },
     }

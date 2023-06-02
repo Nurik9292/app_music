@@ -6,7 +6,7 @@
 
         <!-- Main row -->
         <div class="row" id="ovr">
-            <overview-base></overview-base>
+            <overview-base :data='@json($auth)'></overview-base>
         </div>
 
   </div>

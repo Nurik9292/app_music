@@ -28,7 +28,7 @@
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Название</th>
-                        <th scope="col">Статус</th>
+                        <th :class="isModer() ? 'd-none' : ''" scope="col">Статус</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                       </tr>
@@ -39,7 +39,7 @@
                             <tr v-if="element != null">
                                 <th scope="row">{{ element.order_number }}</th>
                                 <td>{{element.name}}</td>
-                                <td ><InputSwitch  v-model="status[element.id]" @change.prevent="update(element.id)"/></td>
+                                <td  :class="isModer() ? 'd-none' : ''"><InputSwitch  v-model="status[element.id]" @change.prevent="update(element.id)"/></td>
                                 <td>
                                     <a href="#" class="btn btn-outline-success" @click.prevent="edit(element.id)" >Edit</a>
                                 </td>
@@ -70,6 +70,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
     export default {
         name: "OverviewIndex",
+
+        props: ['data'],
 
         components: {
                 draggable
@@ -118,11 +120,15 @@ import { RouterLink, RouterView } from 'vue-router'
         },
 
             deleteBlock(id){
-                axios.delete(`/api/overviews/${id}`).then(res => { this.getBlocks() })
+                axios.delete(`/api/overviews/${id}/${this.data['id']}`).then(res => { this.getBlocks() })
             },
 
             edit(id){
                 this.$router.push({name: 'overview.edit', params:{id: id}});
+            },
+
+            isModer(){
+                return this.data['role'] === 3;
             }
 
         },

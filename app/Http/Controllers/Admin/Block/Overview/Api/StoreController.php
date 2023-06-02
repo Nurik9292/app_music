@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Block\Overview\Api;
 use App\Http\Controllers\Controller;
 use App\Models\BlockShema;
 use Illuminate\Http\Request;
+use OwenIt\Auditing\Models\Audit;
 
 class StoreController extends Controller
 {
@@ -30,6 +31,10 @@ class StoreController extends Controller
 
 
         BlockShema::create($data);
+
+        $audit = Audit::latest()->first();
+
+        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

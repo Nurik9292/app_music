@@ -47,7 +47,7 @@
             <Column field="id" header="#" sortable style="width: 10%"></Column>
             <Column field="title" header="Название" sortable style="width: 20%"></Column>
             <Column field="type" header="Тип" sortable style="width: 10%"></Column>
-            <Column  header="Статус" style="width: 10%">
+            <Column  header="Статус" style="width: 10%" :class="isModer() ? 'd-none' : ''">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
                         <InputSwitch v-model="data.status" @change.prevent="updateStatus(data.id)"/>
@@ -148,7 +148,7 @@ export default {
         },
 
         deleteAlbums(id){
-                axios.delete(`/api/albums/${id}/${this.data}`).then(res => { this.getAlbums() })
+                axios.delete(`/api/albums/${id}/${this.data['id']}`).then(res => { this.getAlbums() })
         },
 
         added_date(id){
@@ -159,9 +159,11 @@ export default {
         release_date(id){
             for(let idx in this.release_dates)
             if(id  == this.release_dates[idx].id) return this.release_dates[idx].time;
+        },
+
+        isModer(){
+            return this.data['role'] === 3;
         }
-
-
     }
 }
 </script>

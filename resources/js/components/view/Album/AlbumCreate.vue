@@ -102,7 +102,7 @@
                 </div>
             </div>
 
-            <div class="block_one">
+            <div :class="isModer() ? 'd-none' : 'block_one'">
                 <label for="status">Статуc</label>
                 <InputSwitch v-model="status" />
               </div>
@@ -195,7 +195,7 @@ import { RouterLink, RouterView } from 'vue-router'
             data.append('is_national', this.is_national);
             for (var i = 0; i < artistsId.length; i++)
             data.append('artists[]',artistsId[i]);
-            data.append('user_id', this.data);
+            data.append('user_id', this.data['id']);
 
 
             axios.post('/api/albums/', data).then(res =>{
@@ -265,6 +265,10 @@ import { RouterLink, RouterView } from 'vue-router'
           errorMessageType(){
                 if(this.isErrorType()) return this.errors.type[0];
           },
+
+          isModer(){
+            return this.data['role'] === 3;
+          }
 
         },
     }

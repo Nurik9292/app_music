@@ -68,7 +68,7 @@
             <label for="status">Нумерация</label>
             <InputNumber v-model="order_number" min="1"/>
     </div>
-     <div class="block_one">
+     <div :class="isModer() ? 'd-none' : 'block_one'">
             <label for="status">Статус</label>
             <InputSwitch v-model="status" />
     </div>
@@ -94,6 +94,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
     export default {
         name: "OverviewEdit",
+
+        props: ['data'],
 
         data(){
            return {
@@ -208,7 +210,9 @@ import { RouterLink, RouterView } from 'vue-router'
                 albums: this.selectAlbums,
                 playlists: this.selectPlaylists,
                 tracks: this.selectTracks,
-                artists: this.selectArtists, }).then(res =>{
+                artists: this.selectArtists,
+                user_id: this.data['id']
+            }).then(res =>{
                 this.$router.push({name: 'overview.index'});
             });
           },
@@ -225,6 +229,10 @@ import { RouterLink, RouterView } from 'vue-router'
              isArtist(){
                 return "artist" == this.body;
              },
+
+             isModer(){
+                return this.data['role'] === 3;
+             }
         }
 
 

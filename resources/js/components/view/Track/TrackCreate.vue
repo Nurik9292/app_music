@@ -72,7 +72,7 @@
         </div>
 
         <div class="row ml-3">
-            <div class="block_one">
+            <div :class="isModer() ? 'd-none' : 'block_one'">
                 <label for="status">Статуc</label>
                 <InputSwitch v-model="status" />
 
@@ -107,6 +107,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
     export default {
         name: "TrackCreate",
+
+        props: ['data'],
 
         data(){
                 return {
@@ -169,8 +171,10 @@ import { RouterLink, RouterView } from 'vue-router'
                 album: this.selectedAlbum != null ? this.selectedAlbum.id : '',
                 artists: this.selectedArtists,
                 track_number: this.track_number,
-                genres: this.selectedGenres,}).then(res =>{
-                this.$router.back();
+                genres: this.selectedGenres,
+                user_id: this.data['id']
+                }).then(res =>{
+                this.$router.push('track.index');
             }).catch(error => {
                 console.log(error.response);
                 this.errors = error.response.data.errors
@@ -185,7 +189,11 @@ import { RouterLink, RouterView } from 'vue-router'
 
           errorMessageUrl(){
             if(this.isErrorUrl()) return this.errors.audio_url[0];
-          }
+          },
+
+          isModer(){
+            return this.data['role'] === 3;
+        }
 
         },
     }

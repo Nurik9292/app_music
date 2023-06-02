@@ -48,7 +48,7 @@ Route::prefix('overviews')->namespace('App\Http\Controllers\Admin\Block\Overview
     Route::get('/show/{block}', ShowController::class)->name('show');
     Route::patch('/{block}', UpdateController::class)->name('update');
     Route::put('sort', SortController::class)->name('sort');
-    Route::delete('/{block}', DestroyController::class)->name('destroy');
+    Route::delete('/{block}/{user}', DestroyController::class)->name('destroy');
 
     Route::get('/tracks', function () {
         $tracks = Track::orderBy('title')->get();

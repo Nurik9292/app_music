@@ -53,7 +53,7 @@
                     </div>
                 </template>
             </Column>
-            <Column  header="Status" style="width: 15%">
+            <Column  header="Status" style="width: 15%" :class="isModer() ? 'd-none' : ''">
                 <template #body="{ data }">
                     <div class="flex align-items-center gap-2">
                         <InputSwitch v-model="data.status" @change.prevent="updateStatus(data.id)"/>
@@ -134,16 +134,18 @@ export default {
         },
 
         deleteArtists(id){
-                axios.delete(`/api/artists/${id}/${this.data}`).then(res => { this.getArtists() })
+                axios.delete(`/api/artists/${id}/${this.data['id']}`).then(res => { this.getArtists() })
         },
 
         countryName(id){
 
             for(let idx in this.countries)
                 if(id == this.countries[idx].id) return this.countries[idx].name;
+        },
 
+        isModer(){
+            return this.data['role'] === 3;
         }
-
 
     }
 }

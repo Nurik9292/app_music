@@ -12,7 +12,7 @@ class IndexController extends BaseController
         if (auth()->user()->role !== 2 && auth()->user()->role !== 3)
             return redirect()->route('main');
 
-        $auth = auth()->user()->role;
+        $auth = auth()->user();
 
         $tracks = Track::orderBy('title')->paginate(10);
 

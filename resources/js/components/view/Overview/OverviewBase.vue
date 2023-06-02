@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-view></router-view>
+        <router-view :data="data"></router-view>
 </div>
 
 </template>
@@ -11,6 +11,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
     export default {
         name: "OverviewBase",
+
+        props: ['data']
     }
 </script>
 

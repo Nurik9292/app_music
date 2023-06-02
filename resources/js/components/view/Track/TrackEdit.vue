@@ -118,7 +118,7 @@
         </div>
 
         <div class="row ml-3">
-            <div class="block_one">
+            <div :class="isModer() ? 'd-none' : 'block_one'">
                 <label for="status">Статуc</label>
                 <InputSwitch v-model="status" />
 
@@ -153,7 +153,6 @@
 <script>
 import Dropzone from 'dropzone'
 import { RouterLink, RouterView } from 'vue-router'
-import { useToast } from "primevue/usetoast"
 
     export default {
         name: "TrackEdit",
@@ -199,25 +198,17 @@ import { useToast } from "primevue/usetoast"
              }
         },
 
-        computed: {
-
-        },
-
         mounted() {
             this.dropzone = new Dropzone(this.$refs.dropzone, {url: 'none', autoProcessQueue: false, acceptedFiles: 'image/*'});
             this.getTrack();
             this.getAlbumts();
             this.getArtists();
             this.getGenres();
-            this.toast = useToast();
         },
 
         methods: {
             getTrack() {
                 axios.get(`/api/tracks/show/${this.$route.params.id}`).then(res => {
-                    console.log(res);
-
-
                     this.title = res.data.data.title;
                     this.status = res.data.data.status;
                     // this.artwork_url = res.data.data.artwork_url;
@@ -247,7 +238,7 @@ import { useToast } from "primevue/usetoast"
 
           update() {
 
-            const image = new FormData();
+            const data = new FormData();
             let files = this.dropzone.getAcceptedFiles();
 
             let album = this.selectedAlbum.length === 0 ? null : this.selectedAlbum[0].id ;
@@ -262,31 +253,25 @@ import { useToast } from "primevue/usetoast"
                 genres.push(this.selectedGenres[idx].id)
 
 
-            image.append('artwork_url', files.length > 0 ? files[0] : '');
-            image.append('title', this.title);
-            image.append('audio_url', this.audio_url);
-            image.append('status', this.status);
-            image.append('lyrics', this.lyrics);
-            image.append('is_national', this.is_national);
-            image.append('genres', genres);
-            image.append('album', album ? album : '');
-            image.append('artists', artists);
-            image.append('is_national', this.is_national);
+            data.append('artwork_url', files.length > 0 ? files[0] : '');
+            data.append('title', this.title);
+            data.append('audio_url', this.audio_url);
+            data.append('status', this.status);
+            data.append('lyrics', this.lyrics);
+            data.append('is_national', this.is_national);
+            data.append('genres', genres);
+            data.append('album', album ? album : '');
+            data.append('artists', artists);
+            data.append('is_national', this.is_national);
+            data.append('user_id', this.data['id']);
+            data.append('_method', 'PATCH');
 
-
-            if(this.data === 3){
-                this.toast.add({ severity: 'info', summary: 'Info', detail: 'Ваш запрос отправлен администратору', life: 3000 });
-                image.append('track_id', this.$route.params.id);
-                image.append('actions', 'update');
-                axios.post(`/api/moderators/tracks/${this.$route.params.id}`, image).then(res => { this.getTrack() })
-            }else{
-                image.append('_method', 'PATCH');
-                axios.post(`/api/tracks/${this.$route.params.id}`, image).then(res =>{
+            axios.post(`/api/tracks/${this.$route.params.id}`, data).then(res =>{
                     this.$router.push({name: 'track.index'});
             }).catch(error => {
                 this.errors = error.response.data.errors
             })
-            }
+
 
           },
 
@@ -313,9 +298,15 @@ import { useToast } from "primevue/usetoast"
 
           errorMessageImage(){
             if(this.isErrorImage()) return this.errors.artwork_url[0];
-          }
+          },
+
+          isModer(){
+            return this.data['role'] === 3;
+        }
     }
-    }
+}
+
+
 </script>
 
 

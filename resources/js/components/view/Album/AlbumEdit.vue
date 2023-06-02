@@ -99,7 +99,7 @@
                 </div>
             </div>
 
-            <div class="block_one">
+            <div :class="isModer() ? 'd-none' : 'block_one'">
                 <label for="status">Статуc</label>
                 <InputSwitch v-model="status" />
               </div>
@@ -250,7 +250,7 @@ import { RouterLink, RouterView } from 'vue-router'
             data.append('is_national', this.is_national);
             for (var i = 0; i < artistsId.length; i++)
             data.append('artists[]',artistsId[i]);
-            data.append('user_id', this.data);
+            data.append('user_id', this.data['id']);
             data.append('_method', 'PATCH');
 
             axios.post(`/api/albums/${this.$route.params.id}`, data).then(res =>{
@@ -324,6 +324,10 @@ import { RouterLink, RouterView } from 'vue-router'
           deleteTracks(id){
             axios.post(`/api/albums/tracks/delete/${this.$route.params.id}`,{track: id}).then(res => { this.getTracks() });
           },
+
+          isModer(){
+            return this.data['role']  === 3;
+          }
 
         },
     }
