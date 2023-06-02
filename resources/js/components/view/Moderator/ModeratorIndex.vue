@@ -33,6 +33,7 @@
                     <DataTable :value="tracks" paginator :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
                      selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
                         <Column field="id" header="№" sortable style="width: 10%"></Column>
+                        <Column field="user_name" header="Имя" sortable style="width: 10%"></Column>
                         <Column field="title" header="Название тркеа" sortable style="width: 35%"></Column>
                         <Column header="Действие" style="width: 35%">
                             <template #body="{data}">
@@ -59,19 +60,24 @@
                         <span>Артисты</span>
                         <i class="pi pi-user ml-2"></i>
                     </template>
-                    <DataTable :value="artists" paginator :rows="10" stateStorage="session"
+                    <DataTable v-model:expandedRows="expandedRows" :value="artists" paginator :rows="10" stateStorage="session"
                      filterDisplay="menu" selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
+                     <Column expander style="width: 5rem" />
                         <Column header="№" sortable style="width: 10%">
                             <template #body="{data, index}">
                                 {{ index + 1 }}
 					        </template>
                         </Column>
-                        <Column field="name" header="Имя артиста" sortable style="width: 25%"></Column>
-                        <Column field="what" header="Что" style="width: 25%"></Column>
+                        <Column field="user_name" header="Имя" sortable style="width: 20%">
+                            <template #body="{data}">
+                                {{ getUserName(data.user_id)}}
+					        </template>
+                        </Column>
+                        <Column field="old_values.name" header="Имя артиста" sortable style="width: 20%"></Column>
                         <Column header="Действие" style="width: 20%">
                             <template #body="{data}">
 						<div class="danger">
-                            <Tag :value="data.actions" :severity="actions(data.actions)" style="width: 100px; height: 50px;"/>
+                            <Tag :value="data.event" :severity="actions(data.event)" style="width: 100px; height: 50px;"/>
                         </div>
 
 					</template>
@@ -86,6 +92,11 @@
                         </Column>
 
             <template #empty> No customers found. </template>
+            <template #expansion="slotProps">
+                <div class="p-3">
+                    <h2>{{ values(slotProps.data) }}</h2>
+                 </div>
+            </template>
         </DataTable>
                 </TabPanel>
                 <TabPanel>
@@ -134,6 +145,7 @@ import { RouterLink, RouterView } from 'vue-router'
             return {
                 tracks: null,
                 artists: null,
+                users: null,
                 expandedRows: null
             }
         },
@@ -141,6 +153,7 @@ import { RouterLink, RouterView } from 'vue-router'
         mounted(){
             this.getTracks();
             this.getArtists();
+            this.getUsers();
         },
 
         methods:{
@@ -152,47 +165,47 @@ import { RouterLink, RouterView } from 'vue-router'
             })
             },
 
+            getUsers(){
+                axios.get('/api/moderators/users/').then( res => {
+                    console.log(res);
+                    this.users = res.data.data;
+                });
+            },
+
             getArtists(){
             axios.get('/api/moderators/artists/show').then(res => {
                 console.log(res);
-                if(res.data.length != 0)
                 this.artists = res.data.data;
-                else this.artists = null
             })
             },
 
             yes(actions, id, item){
-               if(item == 'track') {
-                if(actions == 'delete')
-                axios.delete(`/api/tracks/${id}`).then(res => {this.getTracks()})
 
-                if(actions == 'update')
-                axios.patch(`/api/tracks/${id}`, this.tracks[0].data).then(res => { this.getTracks()})
-
-               }else if(item == 'artist'){
-                if(actions == 'delete')
-                axios.delete(`/api/artists/${id}`).then(res => {this.getArtists()})
-
-                if(actions == 'update')
-                axios.patch(`/api/artists/${id}`, this.artists[0].data).then(res => { this.getArtists()})
-               }
 
             },
 
             no(id, item){
-                console.log(id);
-                if(item == 'track')
-                axios.post(`/api/moderators/tracks/response/${id}`).then(res => { this.getTracks() })
 
-                if(item == 'artist')
-                axios.post(`/api/moderators/artists/response/${id}`).then(res => { this.getArtists() })
 
+            },
+
+            getUserName(user_id){
+                for(let idx in this.users){
+                    if(this.users[idx].id === user_id)
+                        return this.users[idx].name;
+                }
             },
 
             actions(actions){
                 switch(actions){
-                    case 'update': return 'primary';
-                    case 'delete': return 'danger';
+                    case 'updated': return 'primary';
+                    case 'deleted': return 'danger';
+                }
+            },
+
+            values(item){
+                if(item.event == 'deleted'){
+                    return "нет изменений";
                 }
             }
         }

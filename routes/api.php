@@ -5,14 +5,17 @@ use App\Http\Resources\Admin\AlbumResource;
 use App\Http\Resources\Admin\ArtistResource;
 use App\Http\Resources\Admin\CountryResource;
 use App\Http\Resources\Admin\GenreResource;
+use App\Http\Resources\Admin\ModerResource;
 use App\Http\Resources\Admin\PlaylistResource;
 use App\Http\Resources\Admin\TrackResource;
+use App\Http\Resources\Admin\UserResource;
 use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Country;
 use App\Models\Genre;
 use App\Models\Playlist;
 use App\Models\Track;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -170,8 +173,11 @@ Route::prefix('moderators')->namespace('App\Http\Controllers\Admin\RequestModera
     Route::post('/artists/{artist}', RequestArtistController::class)->name('artist');
     Route::get('/tracks/show', ShowTrackController::class)->name('show.track');
     Route::get('/artists/show', ShowArtistController::class)->name('show.artist');
-    Route::post('/tracks/response/{request}', ResponseTrackController::class)->name('response.track');
-    Route::post('/artists/response/{request}', ResponseArtistController::class)->name('response.artist');
     Route::delete('/tracks/delete/{request}', DestroyTrackController::class)->name('request.delete.track');
     Route::delete('/tracks/delete/{request}', DestroyArtistController::class)->name('request.delete.artist');
+
+    Route::get('/users', function () {
+        $users =  User::all();
+        return new ModerResource($users);
+    });
 });
