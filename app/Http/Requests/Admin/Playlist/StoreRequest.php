@@ -25,7 +25,7 @@ class StoreRequest extends FormRequest
             'title_tm' => ['required', 'string'],
             'title_ru' => ['required', 'string'],
             'status' => ['nullable'],
-            'artwork_url' => ['required', 'image'],
+            'artwork_url' => ['required'],
             'tracks' => ['required'],
             'genres' => ['required'],
         ];

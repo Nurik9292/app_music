@@ -69,6 +69,9 @@ import { RouterLink, RouterView } from 'vue-router'
 
     export default {
         name: "TrackScan",
+
+        props: ['data'],
+
         data(){
             return {
                 path: null,
@@ -95,7 +98,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
         methods: {
             scan(){
-                axios.post('/api/tracks/scan', {path: this.path, local: this.local}).then(res => {  this.$router.back();});
+                axios.post('/api/tracks/scan', {path: this.path, local: this.local, user_id: this.data}).then(res => {  this.$router.back();});
             }
         }
     }

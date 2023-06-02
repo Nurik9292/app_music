@@ -108,7 +108,9 @@ import Dropzone from 'dropzone'
 import { RouterLink, RouterView } from 'vue-router'
 
     export default {
-        name: "AlbumCreate",
+        name: "PlaylistCreate",
+
+        props: ['data'],
 
         data(){
                 return {
@@ -163,12 +165,16 @@ import { RouterLink, RouterView } from 'vue-router'
             for (var i = 0; i < genresId.length; i++){
                 data.append('genres[]',genresId[i]);
             }
+            data.append('user_id', this.data);
 
-            axios.post('/api/playlists/', data).then(res =>{
+            axios.post('/api/playlists', data).then(res => {
+                if(res)
                 this.$router.push({name: 'playlist.index'});
             }).catch(error => {
                 this.errors = error.response.data.errors
-            });
+            })
+
+
           },
 
           isErrorTitleTm(){

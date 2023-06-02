@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Playlist\Api;
 use App\Http\Controllers\Admin\Playlist\BaseController;
 use App\Http\Requests\Admin\Playlist\UpdateRequest;
 use App\Models\Playlist;
+use OwenIt\Auditing\Models\Audit;
 
 class UpdateController extends BaseController
 {
@@ -13,6 +14,10 @@ class UpdateController extends BaseController
         $data = $request->all();
 
         $this->service->update($data, $playlist);
+
+        $audit = Audit::latest()->first();
+
+        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

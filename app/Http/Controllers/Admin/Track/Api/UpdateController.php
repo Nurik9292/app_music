@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Track\BaseController;
 use App\Http\Requests\Admin\Track\UpdateRequest;
 use App\Models\RequestTrack;
 use App\Models\Track;
+use OwenIt\Auditing\Models\Audit;
 
 class UpdateController extends BaseController
 {
@@ -13,11 +14,12 @@ class UpdateController extends BaseController
     {
         $data = $request->validated();
 
-        if (count($requestTrack = RequestTrack::where('track_id', $track->id)->get()) > 0) {
-            $requestTrack[0]->update(['response' => 'одобрено']);
-        }
-
         $this->service->updata($data, $track);
+
+        $audit = Audit::latest()->first();
+
+        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
+
 
         return response([]);
     }

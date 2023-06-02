@@ -106,6 +106,8 @@ import { RouterLink, RouterView } from 'vue-router'
     export default {
         name: "ArtistCreate",
 
+        props: ['data'],
+
         data(){
                 return {
                     bio_tk: null,
@@ -140,6 +142,7 @@ import { RouterLink, RouterView } from 'vue-router'
             data.append('bio_ru', this.bio_ru);
             data.append('status', this.status);
             data.append('country_id', this.selectedCountry ? this.selectedCountry[0].id : '');
+            data.append('user_id', this.data);
 
             axios.post('/api/artists/', data).then(res =>{
                 this.$router.push({name: 'artist.index'});

@@ -13,6 +13,10 @@
     <ul class="navbar-nav ml-auto mr-3" >
 
         <li class="nav-item d-none d-sm-inline-block">
+            {{-- <form action="{{route('logout')}}" method="POST">
+                @csrf
+                <input type="submit"  rel="logout" class="nav-link" value="Выход">
+            </form> --}}
             <a href="{{route('logout')}}" rel="logout" class="nav-link">Выход</a>
           </li>
 

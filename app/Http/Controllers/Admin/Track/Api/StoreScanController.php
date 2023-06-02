@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Track\Api;
 use App\Http\Controllers\Admin\Track\BaseController;
 use App\Models\File;
 use Illuminate\Http\Request;
+use OwenIt\Auditing\Models\Audit;
 
 class StoreScanController extends BaseController
 {
@@ -28,6 +29,10 @@ class StoreScanController extends BaseController
             $file = File::where('local', 'en')->get();
             $file[0]->update(['path' => $data['path'], 'local' => $data['local'], 'scanTime' => $timestamp]);
         }
+
+        $audit = Audit::latest()->first();
+
+        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

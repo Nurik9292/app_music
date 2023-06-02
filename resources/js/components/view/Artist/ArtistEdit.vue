@@ -157,6 +157,7 @@ import { useToast } from "primevue/usetoast"
             data.append('bio_tk', this.bio_tk);
             data.append('bio_ru', this.bio_ru);
             data.append('country_id', this.selectedCountry ? this.selectedCountry[0].id : '');
+            data.append('user_id', this.data);
 
 
             if(this.data === 3){

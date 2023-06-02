@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Genre\StoreRequest;
 use App\Models\Genre;
 use Illuminate\Support\Facades\Log;
+use OwenIt\Auditing\Models\Audit;
 
 class StoreController extends Controller
 {
@@ -16,6 +17,10 @@ class StoreController extends Controller
         Log::debug($data);
 
         Genre::create($data);
+
+        $audit = Audit::latest()->first();
+
+        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

@@ -106,6 +106,8 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 export default {
     name: "PlaylistIndex",
 
+    props: ['data'],
+
     data(){
         return {
             genres:null,
@@ -146,7 +148,7 @@ export default {
         },
 
         deletePlaylists(id){
-                axios.delete(`/api/playlists/${id}`).then(res => { this.getPlaylists() })
+                axios.delete(`/api/playlists/${id}/${this.data}`).then(res => { this.getPlaylists() })
         },
 
 

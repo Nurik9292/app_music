@@ -124,6 +124,8 @@ import { RouterLink, RouterView } from 'vue-router'
     export default {
         name: "AlbumCreate",
 
+        props: ['data'],
+
         data(){
                 return {
                     title_tm: null,
@@ -193,6 +195,7 @@ import { RouterLink, RouterView } from 'vue-router'
             for (var i = 0; i < genresId.length; i++){
                 data.append('genres[]',genresId[i]);
             }
+            data.append('user_id', this.data);
             data.append('_method', 'PATCH');
 
             axios.post(`/api/playlists/${this.$route.params.id}`, data).then(res =>{

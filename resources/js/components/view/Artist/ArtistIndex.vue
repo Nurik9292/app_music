@@ -134,11 +134,7 @@ export default {
         },
 
         deleteArtists(id){
-            if(this.data === 3){
-                this.toast.add({ severity: 'info', summary: 'Info', detail: 'Ваш запрос отправлен администратору', life: 3000 });
-                axios.post(`/api/moderators/artists/${id}`, {artist_id: this.data, actions: 'delete'}).then(res => { this.getArtists() })
-            }else
-                axios.delete(`/api/artists/${id}`).then(res => { this.getArtists() })
+                axios.delete(`/api/artists/${id}/${this.data}`).then(res => { this.getArtists() })
         },
 
         countryName(id){

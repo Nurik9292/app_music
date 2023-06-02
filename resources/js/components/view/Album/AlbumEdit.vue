@@ -161,6 +161,8 @@ import { RouterLink, RouterView } from 'vue-router'
     export default {
         name: "AlbumEdit",
 
+        props: ['data'],
+
         data(){
                 return {
                     tracks: null,
@@ -248,6 +250,7 @@ import { RouterLink, RouterView } from 'vue-router'
             data.append('is_national', this.is_national);
             for (var i = 0; i < artistsId.length; i++)
             data.append('artists[]',artistsId[i]);
+            data.append('user_id', this.data);
             data.append('_method', 'PATCH');
 
             axios.post(`/api/albums/${this.$route.params.id}`, data).then(res =>{

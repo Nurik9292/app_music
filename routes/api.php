@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthApi\AuthController;
 use App\Http\Resources\Admin\AlbumResource;
 use App\Http\Resources\Admin\ArtistResource;
 use App\Http\Resources\Admin\CountryResource;
@@ -12,7 +13,6 @@ use App\Models\Country;
 use App\Models\Genre;
 use App\Models\Playlist;
 use App\Models\Track;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-// Route::middleware('auth:sanctum')->group(function () {
 Route::prefix('users')->namespace('App\Http\Controllers\Admin\User\Api')->name('api.user.')->group(function () {
     Route::get('/', IndexController::class)->name('index');
     Route::patch('/{user}', UpdateController::class)->name('update');
@@ -40,7 +39,7 @@ Route::prefix('genres')->namespace('App\Http\Controllers\Admin\Genre\Api')->name
     Route::get('/', IndexController::class)->name('index');
     Route::post('/', StoreController::class)->name('store');
     Route::patch('/{genre}', UpdateController::class)->name('update');
-    Route::delete('/{genre}', DestroyController::class)->name('destroy');
+    Route::delete('/{genre}/{user}', DestroyController::class)->name('destroy');
 });
 
 Route::prefix('overviews')->namespace('App\Http\Controllers\Admin\Block\Overview\Api')->name('api.overview.')->group(function () {
@@ -83,7 +82,7 @@ Route::prefix('tracks')->namespace('App\Http\Controllers\Admin\Track\Api')->name
     Route::post('/filter', FilterController::class)->name('filter');
     Route::patch('/{track}', UpdateController::class)->name('update');
     Route::patch('/status/{track}', UpdateStatusController::class)->name('update.statuss');
-    Route::delete('/{track}', DestroyController::class)->name('destroy');
+    Route::delete('/{track}/{user}', DestroyController::class)->name('destroy');
 
     Route::get('/albums', function () {
         $albums = Album::orderBy('title')->get();
@@ -112,7 +111,7 @@ Route::prefix('artists')->namespace('App\Http\Controllers\Admin\Artist\Api')->na
     Route::get('/show/{artist}', ShowController::class)->name('show');
     Route::patch('/{artist}', UpdateController::class)->name('update');
     Route::patch('/status/{artist}', UpdateStatusController::class)->name('update.statuss');
-    Route::delete('/{artist}', DestroyController::class)->name('destroy');
+    Route::delete('/{artist}/{user}', DestroyController::class)->name('destroy');
 
 
     Route::get('/countries', function () {
@@ -127,7 +126,7 @@ Route::prefix('albums')->namespace('App\Http\Controllers\Admin\Album\Api')->name
     Route::get('/show/{album}', ShowController::class)->name('show');
     Route::patch('/{album}', UpdateController::class)->name('update');
     Route::patch('/status/{album}', UpdateStatusController::class)->name('update.statuss');
-    Route::delete('/{album}', DestroyController::class)->name('destroy');
+    Route::delete('/{album}/{user}', DestroyController::class)->name('destroy');
     Route::get('/tracks/{album}', ShowTrackController::class)->name('show.track');
     Route::post('/tracks/delete/{album}', DeleteTrackController::class)->name('delete.track');
 
@@ -151,7 +150,7 @@ Route::prefix('playlists')->namespace('App\Http\Controllers\Admin\Playlist\Api')
     Route::get('/show/{playlist}', ShowController::class)->name('show');
     Route::patch('/{playlist}', UpdateController::class)->name('update');
     Route::patch('/status/{playlist}', UpdateStatusController::class)->name('update.statuss');
-    Route::delete('/{playlist}', DestroyController::class)->name('destroy');
+    Route::delete('/{playlist}/{user}', DestroyController::class)->name('destroy');
     Route::post('/tracks/delete/{playlist}', DeleteTrackController::class)->name('delete.track');
 
 
@@ -176,4 +175,3 @@ Route::prefix('moderators')->namespace('App\Http\Controllers\Admin\RequestModera
     Route::delete('/tracks/delete/{request}', DestroyTrackController::class)->name('request.delete.track');
     Route::delete('/tracks/delete/{request}', DestroyArtistController::class)->name('request.delete.artist');
 });
-// });

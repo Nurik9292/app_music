@@ -60,6 +60,8 @@ import { RouterLink, RouterView } from 'vue-router'
     export default {
         name: "GenreCreate",
 
+        props: ['data'],
+
         data(){
             return {
                 name_tm: null,
@@ -70,10 +72,9 @@ import { RouterLink, RouterView } from 'vue-router'
 
         methods: {
             store(){
-                axios.post('/api/genres', {name_tm: this.name_tm, name_ru: this.name_ru}).then(res => {
+                axios.post('/api/genres', {name_tm: this.name_tm, name_ru: this.name_ru, user_id: this.data}).then(res => {
                     this.$router.push({name: 'genre.index'});
                 }).catch(error => {
-                    console.log(error.response);
                    this.errors = error.response.data.errors
                 })
             },

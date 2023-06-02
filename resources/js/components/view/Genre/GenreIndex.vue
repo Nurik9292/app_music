@@ -59,36 +59,6 @@
         </DataTable>
     </div>
 
-        <!-- <table class="table table-hover">
-                    <thead class="table-dark">
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Название Tm</th>
-                        <th scope="col">Название Ru</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                        <template v-for="(genre, index) in genres">
-                        <tr :class="isEdit(genre.id) ? 'd-none' : ''">
-                            <th scope="row">{{ index + 1 }}</th>
-                            <td>{{ genre.name_tm }}</td>
-                            <td>{{ genre.name_ru }}</td>
-                            <td><a href="#" @click.prevent="changeEditPersonId(genre.id, genre.name_tm, genre.name_ru)" class="btn btn-outline-success">Edit</a></td>
-                            <td><a href="#" @click.prevent="deleteGenre(genre.id)" class="btn btn-outline-danger">Delete</a></td>
-                        </tr>
-                        <tr :class="isEdit(genre.id) ? '' : 'd-none'">
-                        <th scope="row">{{index + 1}}</th>
-                        <td> <input type="text" v-model="name_tm" class="form-control"></td>
-                        <td> <input type="text" v-model="name_ru" class="form-control"></td>
-                        <td><a href="#" @click.prevent="updateGenre(genre.id)" class="btn btn-outline-success">Update</a></td>
-                    </tr>
-                    </template>
-
-                    </tbody>
-                  </table> -->
         </div>
 
   </section>
@@ -103,6 +73,8 @@ import { RouterLink, RouterView } from 'vue-router'
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
     export default {
         name: 'GenreIndex',
+
+        props: ['data'],
 
         data(){
            return {
@@ -126,7 +98,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
             },
 
             deleteGenre(id){
-                axios.delete(`/api/genres/${id}`).then(res => { this.getGenres()});
+                axios.delete(`/api/genres/${id}/${this.data}`).then(res => { this.getGenres()});
             },
 
             changeEditPersonId(id, name_tm, name_ru){
@@ -141,7 +113,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
             updateGenre(event) {
                 let { newData, data } = event;
-                axios.patch(`/api/genres/${newData.id}`, {name_tm: newData.name_tm, name_ru: newData.name_ru}).then(res => {this.getGenres()});
+                axios.patch(`/api/genres/${newData.id}`, {name_tm: newData.name_tm, name_ru: newData.name_ru, user_id: this.data}).then(res => {this.getGenres()});
 
         },
 

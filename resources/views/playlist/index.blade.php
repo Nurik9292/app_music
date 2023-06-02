@@ -4,7 +4,7 @@
 
 @section('content')
   <div id="playlist">
-        <playlist-base></playlist-base>
+        <playlist-base :data='@json($auth)'></playlist-base>
   </div>
 @endsection
 

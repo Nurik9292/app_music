@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\Admin\Track\Api;
 
 use App\Http\Controllers\Admin\Track\BaseController;
-use App\Models\RequestTrack;
 use App\Models\Track;
+use App\Models\User;
+use OwenIt\Auditing\Models\Audit;
 
 class DestroyController extends BaseController
 {
-    public function __invoke(Track $track)
+    public function __invoke(Track $track, User $user)
     {
-        if (count($requestTrack = RequestTrack::where('track_id', $track->id)->get()) > 0)
-            $requestTrack[0]->update(['response' => 'одобрено']);
-
         $path = $track->artwork_url;
         $path = substr($path, 0, strpos($path, basename($path)));
         $path = pathToServer() . substr($path, strpos($path, "images"));
@@ -26,6 +24,10 @@ class DestroyController extends BaseController
         $track->album()->detach();
 
         $track->delete();
+
+        $audit =  Audit::latest()->first();
+
+        $audit->update(['user_type' => 'App\Model\User', 'user_id' => $user->id]);
 
         return response([]);
     }

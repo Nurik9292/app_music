@@ -17,13 +17,13 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        // dd($request->only('email', 'password'));
+
         if (Auth::check()) return redirect()->route('main');
 
         $data = $request->only(['email', 'password']);
 
-        if (Auth::attempt($data)) {
-            return redirect()->intended(route('main'));
-        }
+        if (Auth::attempt($data)) return redirect()->intended(route('main'));
 
         return redirect()->route('login.index')->withErrors([
             'email' => 'Не удалось авторизоваться'

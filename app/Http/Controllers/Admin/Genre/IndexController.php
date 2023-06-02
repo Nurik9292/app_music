@@ -12,8 +12,10 @@ class IndexController extends Controller
         if (auth()->user()->role !== 2 && auth()->user()->role !== 3)
             return redirect()->route('main');
 
+        $auth = auth()->user()->id;
+
         $genres =  Genre::all();
 
-        return view('genre.index', compact('genres'));
+        return view('genre.index', compact('genres', 'auth'));
     }
 }

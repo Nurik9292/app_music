@@ -103,6 +103,8 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 export default {
     name: "AlbumIndex",
 
+    props: ['data'],
+
     data(){
         return {
             countries: null,
@@ -146,7 +148,7 @@ export default {
         },
 
         deleteAlbums(id){
-                axios.delete(`/api/albums/${id}`).then(res => { this.getAlbums() })
+                axios.delete(`/api/albums/${id}/${this.data}`).then(res => { this.getAlbums() })
         },
 
         added_date(id){

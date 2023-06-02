@@ -135,6 +135,8 @@ import { RouterLink, RouterView } from 'vue-router'
     export default {
         name: "AlbumCreate",
 
+        props: ['data'],
+
         data(){
                 return {
                     title: null,
@@ -193,6 +195,8 @@ import { RouterLink, RouterView } from 'vue-router'
             data.append('is_national', this.is_national);
             for (var i = 0; i < artistsId.length; i++)
             data.append('artists[]',artistsId[i]);
+            data.append('user_id', this.data);
+
 
             axios.post('/api/albums/', data).then(res =>{
                 this.$router.push({name: 'album.index'});

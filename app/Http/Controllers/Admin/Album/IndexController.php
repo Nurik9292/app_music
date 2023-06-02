@@ -11,12 +11,14 @@ class IndexController extends BaseController
         if (auth()->user()->role !== 2 && auth()->user()->role !== 3)
             return redirect()->route('main');
 
+        $auth = auth()->user()->id;
+
         $albums = Album::orderBy('title')->get();
 
         $this->service->statusChangetoString($albums);
 
         [$added_dates, $release_dates] = array_values($this->service->dateFormateForIndex($albums));
 
-        return view('album.index', compact('albums', 'added_dates', 'release_dates'));
+        return view('album.index', compact('albums', 'added_dates', 'release_dates', 'auth'));
     }
 }

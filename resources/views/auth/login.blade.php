@@ -33,7 +33,7 @@
       <form action="{{route('login')}}" method="POST">
         @csrf
         <div class="input-group mb-3">
-          <input type="email" class="form-control" placeholder="Email" name="email">
+          <input type="email" class="form-control" placeholder="Email" name="email" id="email">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -41,7 +41,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Password" name="password">
+          <input type="password" class="form-control" placeholder="Password" name="password" id="password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -59,8 +59,7 @@
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <button class="btn btn-primary btn-block">Sign In</button>
-            {{-- <input type="submit" class="btn btn-primary btn-block" value="Sign In"> --}}
+            <input type="submit" class="btn btn-primary btn-block" value="Sign In">
           </div>
           <!-- /.col -->
         </div>
@@ -77,18 +76,14 @@
 <!-- jQuery -->
 
 </body>
-<script>
-      axios.get('/sanctum/csrf-cookie').then(response => {
-                    axios.post('/login', {email: this.email, password: this.password}).then(res => {
-                        localStorage.setItem('x_xsrf_token', res.config.headers['X-XSRF-TOKEN']);
-                        this.$router.push({name: 'user.personal'})
-                    })
-                });
-</script>
 
 <script src="{{asset('admins/plugins/jquery/jquery.min.js')}}"></script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('admins/dist/js/adminlte.min.js')}}"></script>
+
+
+
 </html>
+

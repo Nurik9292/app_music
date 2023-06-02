@@ -4,7 +4,7 @@
 
 @section('content')
   <div class="row" id="genre">
-        <genre-base></genre-base>
+        <genre-base :data='@json($auth)'></genre-base>
   </div>
 
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Track;
 
 use App\Models\Track;
+use OwenIt\Auditing\Models\Audit;
 
 class IndexController extends BaseController
 {
