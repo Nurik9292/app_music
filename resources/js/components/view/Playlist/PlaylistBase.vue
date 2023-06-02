@@ -1,7 +1,6 @@
 <template>
     <div>
-        dfsdffd
-        <router-view></router-view>
+        <router-view :data="data"></router-view>
     </div>
 </template>
 
@@ -11,6 +10,8 @@ import { RouterLink, RouterView } from 'vue-router'
 
     export default {
         name: "PlaylistBase",
+
+        props: ['data'],
     }
 </script>
 

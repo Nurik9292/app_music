@@ -67,7 +67,7 @@
                     </div>
             </div>
 
-            <div class="block_one">
+            <div :class="isModer() ? 'd-none' : 'block_one'">
                 <label for="status">Статуc</label>
                 <InputSwitch v-model="status" />
             </div>
@@ -195,7 +195,7 @@ import { RouterLink, RouterView } from 'vue-router'
             for (var i = 0; i < genresId.length; i++){
                 data.append('genres[]',genresId[i]);
             }
-            data.append('user_id', this.data);
+            data.append('user_id', this.data['id']);
             data.append('_method', 'PATCH');
 
             axios.post(`/api/playlists/${this.$route.params.id}`, data).then(res =>{
@@ -208,6 +208,11 @@ import { RouterLink, RouterView } from 'vue-router'
                 this.getPlaylist()
               });
           },
+
+
+          isModer(){
+            return this.data['role'] === 3;
+        }
 
         },
     }
