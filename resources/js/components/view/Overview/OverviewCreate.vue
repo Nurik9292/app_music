@@ -151,7 +151,7 @@
                 artists: this.selectArtists,
                 user_id: this.data['id']
                 }).then(res =>{
-                this.$router.push('overview.index');
+                this.$router.push({name: 'overview.index'});
             });
           },
 
