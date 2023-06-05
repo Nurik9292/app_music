@@ -86,6 +86,35 @@
 
 
         </div>
+
+        <div class="card">
+
+<DataTable  v-model:selection="selectedTracks" v-model:filters="filters" :value="tracks" paginator :rows="10"
+    stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"  selectionMode="multiple"
+    dataKey="id" tableStyle="min-width: 50rem">
+<template #header>
+    <div class="d-flex justify-content-between">
+        <div class="d-flex flex-wrap gap-3">
+            <div class="d-flex align-items-between p-input-icon-left">
+                <i class="pi pi-search" />
+                <InputText v-model="filters['global'].value" placeholder="Search" />
+            </div>
+        </div>
+  </div>
+</template>
+<Column field="id" header="№" sortable style="width: 10%"></Column>
+<Column field="title" header="Название" sortable style="width: 45%"></Column>
+<Column header="Delete" style="width: 15%">
+    <template #body="{ data }">
+        <div class="flex align-items-center gap-2">
+            <a href="#" class="btn btn-outline-danger" @click.prevent="deleteTracks(data.id)" >Delete</a>
+        </div>
+    </template>
+</Column>
+<template #empty> No customers found. </template>
+</DataTable>
+</div>
+
       <!-- /.card-body -->
 
       <router-link class="btn btn-primary btn-lg mb-3" :to="{name: 'artist.index'}">Отмена</router-link>
@@ -116,6 +145,8 @@ import { useToast } from "primevue/usetoast"
                     status: false,
                     countries: null,
                     selectedCountry: [],
+                    tracks: null,
+                    selectedTracks: [],
                     errors: null,
                     toast: null,
 
@@ -142,6 +173,12 @@ import { useToast } from "primevue/usetoast"
 
             getCountries() {
             axios.get("/api/artists/countries").then(res => { this.countries = res.data.data });
+          },
+
+          getTracks(){
+            axios.get('/api/artists/tracks').then(res => {
+                this.tracks = res.data.data
+            })
           },
 
 

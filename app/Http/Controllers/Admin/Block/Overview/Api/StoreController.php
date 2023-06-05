@@ -13,6 +13,8 @@ class StoreController extends Controller
     {
         $data = $request->all();
 
+        $userId = $data['user_id'];
+        unset($data['user_id']);
 
         $data['body'] = json_encode([
             "name_status" => $data['name_status'] ?? '',
@@ -32,9 +34,9 @@ class StoreController extends Controller
 
         BlockShema::create($data);
 
-        $audit = Audit::latest()->first();
+        // $audit = Audit::latest()->first();
 
-        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
+        // $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

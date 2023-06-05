@@ -12,11 +12,13 @@ class StoreController extends BaseController
     {
         $data = $request->validated();
 
+        $userId = $data['user_id'];
+        unset($data['user_id']);
+
         $this->service->store($data);
 
-        $audit = Audit::latest()->first();
-
-        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
+        // $audit = Audit::latest()->first();
+        // $audit->update(['user_type' => 'App\Model\User',  'user_id' =>  $userId]);
 
         return response([]);
     }

@@ -8,7 +8,6 @@ use App\Http\Resources\Admin\GenreResource;
 use App\Http\Resources\Admin\ModerResource;
 use App\Http\Resources\Admin\PlaylistResource;
 use App\Http\Resources\Admin\TrackResource;
-use App\Http\Resources\Admin\UserResource;
 use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Country;
@@ -81,6 +80,7 @@ Route::prefix('tracks')->namespace('App\Http\Controllers\Admin\Track\Api')->name
     Route::post('/scan', StoreScanController::class)->name('store.scan');
     Route::post('/albums/{album}', StoreAlbumController::class)->name('store.album');
     Route::post('/playlists/{playlist}', StorePlaylistController::class)->name('store.playlist');
+    Route::post('/artists/{artist}', StoreArtistController::class)->name('store.artist');
     Route::get('/show/{track}', ShowController::class)->name('show');
     Route::post('/filter', FilterController::class)->name('filter');
     Route::patch('/{track}', UpdateController::class)->name('update');
@@ -173,8 +173,8 @@ Route::prefix('moderators')->namespace('App\Http\Controllers\Admin\RequestModera
     Route::post('/artists/{artist}', RequestArtistController::class)->name('artist');
     Route::get('/tracks/show', ShowTrackController::class)->name('show.track');
     Route::get('/artists/show', ShowArtistController::class)->name('show.artist');
-    Route::delete('/tracks/delete/{request}', DestroyTrackController::class)->name('request.delete.track');
-    Route::delete('/tracks/delete/{request}', DestroyArtistController::class)->name('request.delete.artist');
+    Route::delete('/{audit}', DestroyController::class)->name('request.delete.track');
+    Route::post('/restore/{audit}', RestoreController::class)->name('restore');
 
     Route::get('/users', function () {
         $users =  User::all();

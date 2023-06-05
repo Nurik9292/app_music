@@ -27,7 +27,9 @@ class UpdateRequest extends FormRequest
             'bio_ru' => ['nullable', 'string'],
             'artwork_url' => ['nullable', 'image'],
             'country_id' => ['required', 'numeric'],
-            'status' => ['nullable']
+            'status' => ['nullable'],
+            'user_id' => ['nullable']
+
         ];
     }
 

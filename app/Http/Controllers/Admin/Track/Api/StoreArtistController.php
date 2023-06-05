@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Admin\Track\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Album;
+use App\Models\Artist;
 use Illuminate\Http\Request;
 
-class StoreAlbumController extends Controller
+class StoreArtistController extends Controller
 {
-    public function __invoke(Request $request, Album $album)
+    public function __invoke(Request $request, Artist $artist)
     {
         $data = $request->all();
 
         foreach ($data['tracks'] as $track)
             $tracks[] = $track['id'];
 
-        $album->tracks()->detach($tracks);
-        $album->tracks()->attach($tracks);
+        $artist->tracks()->detach($tracks);
+        $artist->tracks()->attach($tracks);
 
         return response([]);
     }

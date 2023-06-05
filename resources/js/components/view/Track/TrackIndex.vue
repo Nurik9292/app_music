@@ -56,8 +56,10 @@
                             <MultiSelect v-model="selectedAlbum" :options="albums" filter optionLabel="title" optionValue="id"  placeholder="Выбирите альбом" :maxSelectedLabels="1" :selectionLimit="1" class="w-full md:w-40rem" id="album" />
                         </div>
                         <div :class="isPlaylist() ? '' : 'd-none'">
-                            <MultiSelect v-model="selectedPlaylist" :options="playlists" filter optionLabel="title_ru" optionValue="id" placeholder="Выбирите плейлист" :maxSelectedLabels="1" :selectionLimit="1" class="w-full md:w-40rem" id="album" />
-
+                            <MultiSelect v-model="selectedPlaylist" :options="playlists" filter optionLabel="title_ru" optionValue="id" placeholder="Выбирите плейлист" :maxSelectedLabels="1" :selectionLimit="1" class="w-full md:w-40rem" id="playlist" />
+                        </div>
+                        <div :class="isArtist() ? '' : 'd-none'">
+                            <MultiSelect v-model="selectedUpdateArtist" :options="artists" filter optionLabel="name" optionValue="id" placeholder="Выбирите артиста" :maxSelectedLabels="1" :selectionLimit="1" class="w-full md:w-40rem" id="artist" />
                         </div>
                         <template #footer >
                         <div :class="isAlbum() ? '' : 'd-none'">
@@ -65,6 +67,9 @@
                         </div>
                         <div :class="isPlaylist() ? '' : 'd-none'">
                              <Button label="Добавить" icon="pi pi-check" @click="dialogVisible = false, storePlaylist()" />
+                        </div>
+                        <div :class="isArtist() ? '' : 'd-none'">
+                             <Button label="Добавить" icon="pi pi-check" @click="dialogVisible = false, storeArtist()" />
                         </div>
                         </template>
 
@@ -120,7 +125,7 @@ export default {
     data(){
         return {
             value:'Альбомы',
-            options: ['Альбомы', 'Плейлисты'],
+            options: ['Альбомы', 'Плейлисты', 'Артисты'],
             dialogVisible: false,
             selectedAlbum: null,
             albums: null,
@@ -130,6 +135,7 @@ export default {
             selectedTracks: null,
             artists: null,
             selectedArtist: null,
+            selectedUpdateArtist: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
                 title: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] }
@@ -197,6 +203,11 @@ export default {
             axios.post(`/api/tracks/playlists/${this.selectedPlaylist[0]}`, {tracks: this.selectedTracks}).then(res => {this.getTracks()});
         },
 
+        storeArtist() {
+            console.log(this.selectedUpdateArtist);
+            axios.post(`/api/tracks/artists/${this.selectedUpdateArtist[0]}`, {tracks: this.selectedTracks}).then(res => {this.getTracks()});
+        },
+
         changeTracks() {
             this.getTracks()
         },
@@ -215,6 +226,10 @@ export default {
 
         isPlaylist(){
             return this.value == 'Плейлисты';
+        },
+
+        isArtist(){
+            return this.value == 'Артисты';
         },
 
         isTracks(){

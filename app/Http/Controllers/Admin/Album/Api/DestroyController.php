@@ -26,7 +26,7 @@ class DestroyController extends BaseController
 
         $audit =  Audit::latest()->first();
 
-        $audit->update(['user_type' => 'App\Model\User', 'user_id' => $user->id]);
+        // $audit->update(['user_type' => 'App\Model\User', 'user_id' => $user->id]);
 
         return response([]);
     }

@@ -13,11 +13,13 @@ class UpdateController extends Controller
     {
         $data = $request->validated();
 
+        $userId = $data['user_id'];
+        unset($data['user_id']);
+
         $genre->update($data);
 
-        $audit = Audit::latest()->first();
-
-        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
+        // $audit = Audit::latest()->first();
+        // $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

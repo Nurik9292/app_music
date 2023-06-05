@@ -132,7 +132,6 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
           store() {
-
             const data = new FormData();
             let image = this.dropzone.getAcceptedFiles();
 
@@ -142,7 +141,7 @@ import { RouterLink, RouterView } from 'vue-router'
             data.append('bio_ru', this.bio_ru);
             data.append('status', this.status);
             data.append('country_id', this.selectedCountry ? this.selectedCountry[0].id : '');
-            data.append('user_id', this.data['id']);
+            data.append('user_id', this.data.id);
 
             axios.post('/api/artists/', data).then(res =>{
                 this.$router.push({name: 'artist.index'});

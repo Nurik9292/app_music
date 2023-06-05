@@ -13,11 +13,14 @@ class UpdateController extends BaseController
     {
         $data = $request->validated();
 
+        $userId = $data['user_id'];
+        unset($data['user_id']);
+
         $this->service->update($data, $artist);
 
-        $audit = Audit::latest()->first();
+        // $audit = Audit::latest()->first();
 
-        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
+        // $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

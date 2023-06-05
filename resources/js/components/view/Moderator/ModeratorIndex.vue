@@ -60,7 +60,7 @@
                         <span>Артисты</span>
                         <i class="pi pi-user ml-2"></i>
                     </template>
-                    <DataTable v-model:expandedRows="expandedRows" :value="artists" paginator :rows="10" stateStorage="session"
+                    <DataTable v-model:expandedRows="expandedRows" :value="auditArtists" paginator :rows="10" stateStorage="session"
                      filterDisplay="menu" selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
                      <Column expander style="width: 5rem" />
                         <Column header="№" sortable style="width: 10%">
@@ -73,7 +73,11 @@
                                 {{ getUserName(data.user_id)}}
 					        </template>
                         </Column>
-                        <Column field="old_values.name" header="Имя артиста" sortable style="width: 20%"></Column>
+                        <Column field="name" header="Имя артиста" sortable style="width: 20%">
+                            <template #body="{data}">
+                                {{ getArtistName(data.new_values.id)}}
+					        </template>
+                        </Column>
                         <Column header="Действие" style="width: 20%">
                             <template #body="{data}">
 						<div class="danger">
@@ -85,8 +89,8 @@
                          <Column header="Ответ" style="width: 20%">
                         <template #body="{ data }">
                             <div class="flex align-items-center gap-2">
-                                     <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.actions, data.id, 'artist')">Ok</a>
-                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.request, 'artist')">No</a>
+                                     <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.event, data.id, 'artist')">Ok</a>
+                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.event, data.id, 'artist')">No</a>
                             </div>
                         </template>
                         </Column>
@@ -94,7 +98,14 @@
             <template #empty> No customers found. </template>
             <template #expansion="slotProps">
                 <div class="p-3">
-                    <h2>{{ values(slotProps.data) }}</h2>
+                    <DataTable :value="getChange(slotProps.data)" :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
+                     selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
+                        <Column field="columName" header="Название поля" sortable style="width: 20%">
+
+                        </Column>
+                        <Column field="old" header="Старое значение" sortable style="width: 40%"></Column>
+                        <Column field="new" header="Новое значение" sortable style="width: 40%"></Column>
+                    </DataTable>
                  </div>
             </template>
         </DataTable>
@@ -130,6 +141,7 @@
         </div>
     </div>
 </section>
+<span>></span>
 </div>
 
 </template>
@@ -145,6 +157,7 @@ import { RouterLink, RouterView } from 'vue-router'
             return {
                 tracks: null,
                 artists: null,
+                auditArtists: null,
                 users: null,
                 expandedRows: null
             }
@@ -152,8 +165,9 @@ import { RouterLink, RouterView } from 'vue-router'
 
         mounted(){
             this.getTracks();
-            this.getArtists();
+            this.getAuditArtists();
             this.getUsers();
+            this.getArtists()
         },
 
         methods:{
@@ -167,26 +181,57 @@ import { RouterLink, RouterView } from 'vue-router'
 
             getUsers(){
                 axios.get('/api/moderators/users/').then( res => {
-                    console.log(res);
                     this.users = res.data.data;
                 });
             },
 
-            getArtists(){
+            getAuditArtists(){
             axios.get('/api/moderators/artists/show').then(res => {
-                console.log(res);
+                this.auditArtists = res.data.data;
+            })
+            },
+
+            getArtists(){
+            axios.get('/api/artists').then(res => {
                 this.artists = res.data.data;
             })
             },
 
+
             yes(actions, id, item){
-
-
+                if(actions == 'deleted'){
+                  if(item == 'artist'){
+                        axios.delete(`/api/moderators/${id}`).then(res => {
+                            this.getAuditArtists()
+                        })
+                  }
+                }
+                if(actions == 'created'){
+                    if(item == 'artist'){
+                        axios.delete(`/api/moderators/${id}`).then(res => {
+                            this.getAuditArtists()
+                        })
+                  }
+                }
             },
 
-            no(id, item){
+            no(actions, id, item){
 
+                if(actions == 'deleted'){
+                  if(item == 'artist'){
+                        axios.post(`/api/moderators/restore/${id}`).then(res => {
+                            this.getAuditArtists()
+                        })
+                  }
+                }
 
+                if(actions == 'created'){
+                  if(item == 'artist'){
+                        axios.post(`/api/moderators/restore/${id}`).then(res => {
+                            this.getAuditArtists()
+                        })
+                  }
+                }
             },
 
             getUserName(user_id){
@@ -203,9 +248,36 @@ import { RouterLink, RouterView } from 'vue-router'
                 }
             },
 
-            values(item){
-                if(item.event == 'deleted'){
-                    return "нет изменений";
+
+
+            getChange(data){
+                let oldValues = data.old_values;
+                let newValues = data.new_values;
+                let values = [];
+
+                if(this.expend){
+
+                }
+                for(let key in newValues){
+                    let count = 0;
+                    if(newValues[key] != oldValues[key])
+
+                       values[count++] = [{
+                        columName: key,
+                        new: newValues[key],
+                        old: oldValues[key],
+                       }];
+                }
+
+                return values;
+            },
+
+            getArtistName(id){
+                console.log(id);
+                for(let idx in this.artists){
+                    console.log(this.artists[idx].name);
+                    if(this.artists[idx].id === id)
+                        return this.artists[idx].name
                 }
             }
         }

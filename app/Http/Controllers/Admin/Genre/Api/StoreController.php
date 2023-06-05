@@ -14,13 +14,13 @@ class StoreController extends Controller
     {
         $data = $request->validated();
 
-        Log::debug($data);
+        $userId = $data['user_id'];
+        unset($data['user_id']);
 
         Genre::create($data);
 
-        $audit = Audit::latest()->first();
-
-        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
+        // $audit = Audit::latest()->first();
+        // $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

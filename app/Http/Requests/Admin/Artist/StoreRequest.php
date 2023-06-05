@@ -27,7 +27,8 @@ class StoreRequest extends FormRequest
             'bio_ru' => ['nullable', 'string'],
             'artwork_url' => ['required', 'image'],
             'country_id' => ['required', 'numeric'],
-            'status' => ['nullable']
+            'status' => ['nullable'],
+            'user_id' => ['nullable']
         ];
     }
 
