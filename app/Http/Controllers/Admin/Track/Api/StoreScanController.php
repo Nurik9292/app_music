@@ -30,9 +30,9 @@ class StoreScanController extends BaseController
             $file[0]->update(['path' => $data['path'], 'local' => $data['local'], 'scanTime' => $timestamp]);
         }
 
-        $audit = Audit::latest()->first();
+        // $audit = Audit::latest()->first();
 
-        $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
+        // $audit->update(['user_type' => 'App\Model\User', $data['user_id']]);
 
         return response([]);
     }

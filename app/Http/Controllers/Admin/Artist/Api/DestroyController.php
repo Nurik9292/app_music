@@ -16,14 +16,12 @@ class DestroyController extends BaseController
         $albums_id = null;
         $moderator = 3;
 
-
-        $path = $artist->artwork_url;
-        $path = substr($path, 0, strpos($path, basename($path)));
-        $path = pathToServer() . substr($path, strpos($path, "images"));
-
-        $path = preg_replace('/artist_artWork\//', '', $path);
-
-        $this->service->delete($path);
+        if (($path = $artist->artwork_url) != '') {
+            $path = substr($path, 0, strpos($path, basename($path)));
+            $path = pathToServer() . substr($path, strpos($path, "images"));
+            $path = preg_replace('/artist_artWork\//', '', $path);
+            $this->service->delete($path);
+        }
 
         $albums = $artist->albums;
         $artist->albums()->detach();

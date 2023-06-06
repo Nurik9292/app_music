@@ -132,6 +132,7 @@ class Service
 
     public function delete($path)
     {
+
         if (is_dir($path) === true) {
             $files = array_diff(scandir($path), array('.', '..'));
 
