@@ -169,10 +169,9 @@ Route::prefix('playlists')->namespace('App\Http\Controllers\Admin\Playlist\Api')
 });
 
 Route::prefix('moderators')->namespace('App\Http\Controllers\Admin\RequestModerator')->name('api.request.')->group(function () {
-    Route::post('/tracks/{track}', RequestTrackController::class)->name('track');
-    Route::post('/artists/{artist}', RequestArtistController::class)->name('artist');
     Route::get('/tracks/show', ShowTrackController::class)->name('show.track');
     Route::get('/artists/show', ShowArtistController::class)->name('show.artist');
+    Route::post('/allows/{audit}', AllowController::class)->name('allow');
     Route::delete('/{audit}', DestroyController::class)->name('request.delete.track');
     Route::post('/restore/{audit}', RestoreController::class)->name('restore');
 

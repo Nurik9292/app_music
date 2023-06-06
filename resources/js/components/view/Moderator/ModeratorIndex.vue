@@ -75,7 +75,7 @@
                         </Column>
                         <Column field="name" header="Имя артиста" sortable style="width: 20%">
                             <template #body="{data}">
-                                {{ getArtistName(data.new_values.id)}}
+                                {{ getArtistName(data)}}
 					        </template>
                         </Column>
                         <Column header="Действие" style="width: 20%">
@@ -187,6 +187,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
             getAuditArtists(){
             axios.get('/api/moderators/artists/show').then(res => {
+                console.log(res);
                 this.auditArtists = res.data.data;
             })
             },
@@ -208,7 +209,15 @@ import { RouterLink, RouterView } from 'vue-router'
                 }
                 if(actions == 'created'){
                     if(item == 'artist'){
-                        axios.delete(`/api/moderators/${id}`).then(res => {
+                        axios.post(`/api/moderators/allows/${id}`).then(res => {
+                            this.getAuditArtists()
+                        })
+                  }
+                }
+
+                if(actions == 'updated'){
+                    if(item == 'artist'){
+                        axios.post(`/api/moderators/allows/${id}`).then(res => {
                             this.getAuditArtists()
                         })
                   }
@@ -232,6 +241,14 @@ import { RouterLink, RouterView } from 'vue-router'
                         })
                   }
                 }
+
+                if(actions == 'updated'){
+                  if(item == 'artist'){
+                        axios.post(`/api/moderators/restore/${id}`).then(res => {
+                            this.getAuditArtists()
+                        })
+                  }
+                }
             },
 
             getUserName(user_id){
@@ -244,6 +261,7 @@ import { RouterLink, RouterView } from 'vue-router'
             actions(actions){
                 switch(actions){
                     case 'updated': return 'primary';
+                    case 'created': return 'success';
                     case 'deleted': return 'danger';
                 }
             },
@@ -251,34 +269,29 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
             getChange(data){
-                let oldValues = data.old_values;
-                let newValues = data.new_values;
+
                 let values = [];
 
-                if(this.expend){
-
-                }
-                for(let key in newValues){
-                    let count = 0;
-                    if(newValues[key] != oldValues[key])
-
-                       values[count++] = [{
-                        columName: key,
-                        new: newValues[key],
-                        old: oldValues[key],
-                       }];
+                for(let idx in data.new_values){
+                    values.push({
+                        columName: idx,
+                        old:  data.old_values[idx],
+                        new:  data.new_values[idx],
+                    });
                 }
 
                 return values;
             },
 
-            getArtistName(id){
-                console.log(id);
-                for(let idx in this.artists){
-                    console.log(this.artists[idx].name);
-                    if(this.artists[idx].id === id)
-                        return this.artists[idx].name
+            getArtistName(data){
+
+                if(data.event == 'deleted' || data.event == 'updated'){
+                    return data.old_values.name
+                } else {
+                    return data.new_values.name
                 }
+
+
             }
         }
     }

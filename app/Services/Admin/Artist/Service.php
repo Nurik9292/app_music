@@ -4,6 +4,7 @@ namespace App\Services\Admin\Artist;
 
 use App\Models\Artist;
 use App\Models\Country;
+use App\Models\User;
 use App\Services\Admin\HelperService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,7 @@ class Service
     {
         $data = $this->resize($data);
 
-        $data['status'] = $this->status($data);
+        // $data['status'] = $this->status($data);
 
         Artist::firstOrCreate(['name' => $data['name']], $data);
     }

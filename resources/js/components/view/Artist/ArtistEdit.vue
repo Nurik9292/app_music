@@ -58,7 +58,7 @@
         </div>
 
         <div class="row ml-3">
-            <div class="block_one" style="width: 420px;">
+            <div :class="isModer() ? 'd-none' : 'block_one'" style="width: 420px;">
                 <label>Выберите изображение</label>
                     <div ref="dropzone"  class="btn d-block p-5 bg-dark text-center text-light">
                         Upload

@@ -114,11 +114,11 @@ export default {
 
     methods: {
         getArtists() {
-            axios.get('/api/artists').then(res => { this.artists =res.data.data });
+            axios.get('/api/artists').then(res => { this.artists = res.data.data });
         },
 
         getCountries() {
-            axios.get('/api/artists/countries').then(res => { this.countries =res.data.data });
+            axios.get('/api/artists/countries').then(res => { this.countries = res.data.data });
         },
 
 
