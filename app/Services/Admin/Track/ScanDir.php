@@ -40,10 +40,10 @@ class ScanDir
 
                 if ($item->isFile()) {
 
-                    // if ($file[0]->scanTime < $item->getATime()) {
-                    if ($item->getSize() != 0)
-                        str_ends_with($item->getBasename(), '.mp3') ? $this->mp3[] = $item->getRealPath() : '';
-                    // }
+                    if ($file[0]->scanTime < $item->getATime()) {
+                        if ($item->getSize() != 0)
+                            str_ends_with($item->getBasename(), '.mp3') ? $this->mp3[] = $item->getRealPath() : '';
+                    }
 
                     $this->timestamp = $item->getATime();
                 }
