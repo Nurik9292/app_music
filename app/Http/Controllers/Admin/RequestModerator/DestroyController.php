@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Admin\RequestModerator;
 
-use App\Http\Controllers\Controller;
-use App\Models\ArtistAudit;
 use OwenIt\Auditing\Models\Audit;
 
-class DestroyController extends Controller
+class DestroyController extends BaseController
 {
     public function __invoke(Audit $audit)
     {
 
-        if (count($auditArtist = ArtistAudit::where('audit_id', $audit->id)->get()) > 0)
-            $auditArtist->delete();
+        if (preg_match('/(Artist)/', $audit->auditable_type))
+            $this->service->delete($audit);
+
+        if (preg_match('/(Track)/', $audit->auditable_type))
+            $this->service->delete($audit);
+
+
+
         $audit->delete();
 
         return response([]);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Playlist;
 
 use App\Models\Playlist;
+use OwenIt\Auditing\Models\Audit;
 
 class IndexController extends BaseController
 {

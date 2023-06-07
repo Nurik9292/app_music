@@ -39,7 +39,7 @@
 
         <br>
         <Toast />
-        <div class="row ml-3">
+        <div :class="isModer() ? 'd-none' : 'row ml-3'">
             <div class="block_two">
                 <label for="audio_url">Трека</label>
                 <InputText type="text" v-model="audio_url" id="audio_url" placeholder="Введите url трека" :class="isErrorUrl() ? 'p-invalid' : ''" style="width: 500px;"/>
@@ -62,7 +62,7 @@
         </div>
 
         <div class="row ml-3">
-            <div class="block_two">
+            <div :class="isModer() ? 'd-none' : 'block_two'">
                 <label>Изменить изображение</label>
                 <SelectButton v-model="value" :options="options" aria-labelledby="basic"/>
               </div>

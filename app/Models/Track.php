@@ -6,12 +6,15 @@ use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Track extends Model
+class Track extends Model implements Auditable
 {
     use HasFactory;
     use Filterable;
     use SoftDeletes;
+    use AuditingAuditable;
 
     protected $connection = 'pgsql_prod';
 

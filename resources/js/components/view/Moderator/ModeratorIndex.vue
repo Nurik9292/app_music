@@ -30,29 +30,53 @@
                         <span>Треки</span>
                         <i class="pi pi-volume-up ml-2"></i>
                     </template>
-                    <DataTable :value="tracks" paginator :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
+                    <DataTable v-model:expandedRows="expandedRows" :value="auditTracks" paginator :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
                      selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
-                        <Column field="id" header="№" sortable style="width: 10%"></Column>
-                        <Column field="user_name" header="Имя" sortable style="width: 10%"></Column>
-                        <Column field="title" header="Название тркеа" sortable style="width: 35%"></Column>
-                        <Column header="Действие" style="width: 35%">
+                     <Column expander style="width: 5rem" />
+                        <Column header="№" sortable style="width: 10%">
+                            <template #body="{data, index}">
+                                {{ index + 1 }}
+					        </template></Column>
+                        <Column field="user_name" header="Имя" sortable style="width: 20%">
+                            <template #body="{data}">
+                                {{ getUserName(data.user_id)}}
+					        </template>
+                        </Column>
+                        <Column header="Название тркеа" sortable style="width: 20%">
+                            <template #body="{data}">
+                                {{ getATrackTitle(data)}}
+					        </template>
+                        </Column>
+                        <Column header="Действие" style="width: 20%">
                             <template #body="{data}">
 						<div class="danger">
-                            <Tag :value="data.actions" :severity="actions(data.actions)" style="width: 100px; height: 50px;"/>
+                            <Tag :value="data.event" :severity="actions(data.event)" style="width: 100px; height: 50px;"/>
                         </div>
 
 					</template>
                         </Column>
                          <Column header="Ответ" style="width: 20%">
-                        <template #body="{ data }">
+                            <template #body="{ data }">
                             <div class="flex align-items-center gap-2">
-                                     <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.actions, data.id, 'track')">Ok</a>
-                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.request, 'track')">No</a>
+                                     <a href="#" class="btn btn-outline-success mr-3" @click.prevent="yes(data.event, data.id, 'track')">Ok</a>
+                                     <a href="#" class="btn btn-outline-danger ml-3" @click.prevent="no(data.event, data.id, 'track')">No</a>
                             </div>
                         </template>
                         </Column>
 
             <template #empty> No customers found. </template>
+            <template #expansion="slotProps">
+                <div class="p-3">
+                    <DataTable :value="getChange(slotProps.data)" :rows="10" stateStorage="session" stateKey="dt-state-demo-session"  filterDisplay="menu"
+                     selectionMode="multiple" dataKey="id" tableStyle="min-width: 50rem">
+                        <Column field="columName" header="Название поля" sortable style="width: 20%">
+
+                        </Column>
+                        <Column field="old" header="Старое значение" sortable style="width: 40%"></Column>
+                        <Column field="new" header="Новое значение" sortable style="width: 40%"></Column>
+                    </DataTable>
+                 </div>
+            </template>
         </DataTable>
                 </TabPanel>
                 <TabPanel>
@@ -155,7 +179,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
         data(){
             return {
-                tracks: null,
+                auditTracks: null,
                 artists: null,
                 auditArtists: null,
                 users: null,
@@ -164,18 +188,17 @@ import { RouterLink, RouterView } from 'vue-router'
         },
 
         mounted(){
-            this.getTracks();
+            this.getAuditTracks();
             this.getAuditArtists();
             this.getUsers();
             this.getArtists()
+            this.getTracks()
         },
 
         methods:{
-            getTracks(){
+            getAuditTracks(){
             axios.get('/api/moderators/tracks/show').then(res => {
-                if(res.data.length != 0)
-                this.tracks = res.data.data;
-                else this.tracks = null
+                this.auditTracks = res.data.data;
             })
             },
 
@@ -187,7 +210,6 @@ import { RouterLink, RouterView } from 'vue-router'
 
             getAuditArtists(){
             axios.get('/api/moderators/artists/show').then(res => {
-                console.log(res);
                 this.auditArtists = res.data.data;
             })
             },
@@ -198,48 +220,57 @@ import { RouterLink, RouterView } from 'vue-router'
             })
             },
 
+            getTracks(){
+            axios.get('/api/tracks').then(res => {
+                this.tracks = res.data.data;
+            })
+            },
+
 
             yes(actions, id, item){
                 if(actions == 'deleted'){
-                  if(item == 'artist'){
-                        axios.delete(`/api/moderators/${id}`).then(res => {
-                            this.getAuditArtists()
-                        })
-                  }
+                  if(item == 'artist')
+                        axios.delete(`/api/moderators/${id}`).then(res => { this.getAuditArtists() })
+
+                  if(item == 'track')
+                        axios.delete(`/api/moderators/${id}`).then(res => { this.getAuditTracks() })
+
                 }
                 if(actions == 'created'){
-                    if(item == 'artist'){
-                        axios.post(`/api/moderators/allows/${id}`).then(res => {
-                            this.getAuditArtists()
-                        })
-                  }
+                    if(item == 'artist')
+                        axios.post(`/api/moderators/allows/${id}`).then(res => { this.getAuditArtists() })
+
+                    if(item == 'track')
+                        axios.post(`/api/moderators/allows/${id}`).then(res => { this.getAuditTracks() })
+
                 }
 
                 if(actions == 'updated'){
-                    if(item == 'artist'){
-                        axios.post(`/api/moderators/allows/${id}`).then(res => {
-                            this.getAuditArtists()
-                        })
-                  }
+                    if(item == 'artist')
+                        axios.post(`/api/moderators/allows/${id}`).then(res => { this.getAuditArtists() })
+
+                    if(item == 'artist')
+                        axios.post(`/api/moderators/allows/${id}`).then(res => { this.getAuditTracks() })
+
                 }
             },
 
             no(actions, id, item){
 
                 if(actions == 'deleted'){
-                  if(item == 'artist'){
-                        axios.post(`/api/moderators/restore/${id}`).then(res => {
-                            this.getAuditArtists()
-                        })
-                  }
+                  if(item == 'artist')
+                        axios.post(`/api/moderators/restore/${id}`).then(res => { this.getAuditArtists()})
+
+                if(item == 'track')
+                        axios.post(`/api/moderators/restore/${id}`).then(res => { this.getAuditTracks()})
                 }
 
                 if(actions == 'created'){
-                  if(item == 'artist'){
-                        axios.post(`/api/moderators/restore/${id}`).then(res => {
-                            this.getAuditArtists()
-                        })
-                  }
+                  if(item == 'artist')
+                        axios.post(`/api/moderators/restore/${id}`).then(res => { this.getAuditArtists()})
+                  if(item == 'track')
+                        axios.post(`/api/moderators/restore/${id}`).then(res => { this.getAuditTracks()})
+
                 }
 
                 if(actions == 'updated'){
@@ -272,6 +303,15 @@ import { RouterLink, RouterView } from 'vue-router'
 
                 let values = [];
 
+                if(data.event == 'deleted'){
+                    for(let idx in data.old_values){
+                    values.push({
+                        columName: idx,
+                        old:  data.old_values[idx],
+                    });
+                }
+                }else{
+
                 for(let idx in data.new_values){
                     values.push({
                         columName: idx,
@@ -279,20 +319,30 @@ import { RouterLink, RouterView } from 'vue-router'
                         new:  data.new_values[idx],
                     });
                 }
+                }
+
 
                 return values;
             },
 
             getArtistName(data){
-
                 if(data.event == 'deleted' || data.event == 'updated'){
                     return data.old_values.name
                 } else {
                     return data.new_values.name
                 }
+            },
 
-
+            getATrackTitle(data){
+                console.log(data);
+                if(data.event == 'deleted' || data.event == 'updated'){
+                    return data.old_values.title
+                } else {
+                    return data.new_values.title
+                }
             }
+
+
         }
     }
 </script>
