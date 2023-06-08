@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\MainController;
+use App\Http\Controllers\Admin\Track\ResetScanController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Auth;
@@ -96,7 +97,9 @@ Route::middleware('admin', 'auth')->group(function () {
         });
         // ========== END MODERATOR =====================
     });
+    Route::get('/reset', ResetScanController::class)->name('reset.scan');
 });
+
 
 Route::get('/login', [LoginController::class, 'index'])->name('login.index');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
