@@ -11,7 +11,6 @@ class AllowController extends BaseController
 {
     public function __invoke(Audit $audit)
     {
-        dd($audit);
         if ($audit->event == 'updated') {
 
             if (preg_match('/(Artist)/', $audit->auditable_type)) {
@@ -19,8 +18,9 @@ class AllowController extends BaseController
                 $item = Artist::where('name', $artist_name)->get()[0];
             }
             if (preg_match('/(Track)/', $audit->auditable_type)) {
-                $track_title = $audit->new_values['title'];
-                $item = Track::where('title', $track_title)->get()[0];
+                preg_match('/\d+$/', $audit->url, $id);
+                $this->service->delete($audit);
+                $item = Track::where('id', $id[0])->get()[0];
             }
         } else {
             $id = $audit->new_values['id'];

@@ -26,11 +26,9 @@ class DestroyController extends BaseController
             $track->genres()->detach();
             $track->album()->detach();
         }
-
         $track->delete();
 
-        $audit =  Audit::latest()->first();
-
+        $audit = Audit::latest()->first();
         $audit->update(['user_type' => 'App\Model\User', 'user_id' => $user->id]);
 
         return response([]);

@@ -3,6 +3,7 @@
 namespace App\Services\Admin\Track;
 
 use App\Models\Track;
+use App\Services\Admin\HelperService;
 use Illuminate\Http\UploadedFile;
 
 class Service
@@ -10,10 +11,12 @@ class Service
 
     private $track;
     private $managerTrack;
+    private $helper;
 
     public function __construct()
     {
         $this->track = new ScanCreateTrack();
+        $this->helper = new HelperService();
         $this->managerTrack = new ManagerTrack();
     }
 
@@ -56,25 +59,22 @@ class Service
         $album = $data['album'] == 'null' ? null : $data['album'];
 
 
-        if ($data['artwork_url'] instanceof UploadedFile) {
-            $this->managerTrack->deleteForUpdated($track);
-            $data['artwork_url'] = $this->managerTrack->resize($data['artwork_url'], $track);
-        }
-        if (is_string($data['artwork_url'])) {
-            $this->managerTrack->deleteForUpdated($track);
-            $data['artwork_url'] = $this->managerTrack->resize(storage_path('app/public/' . $data['artwork_url']), $track);
-        }
-
         if ($artists != $track->artists[0]->id || ($album != null && $album != $albumId) || $data['title'] != $track->title)
-            $data = $this->managerTrack->saveTrack($data, $track);
+            $data = $this->managerTrack->movingImage($data, $track);
+
+        if ($data['artwork_url'] instanceof UploadedFile) {
+            $data['artwork_url'] = $this->managerTrack->resize($data['artwork_url'], $track, $data);
+        }
 
 
         unset($data['artists']);
         unset($data['album']);
+        unset($data['user_id']);
 
         if (isset($data['genres']) && $data['genres'] != null)
             $genres = $data['genres'];
         unset($data['genres']);
+
 
         $track->update($data);
 
@@ -98,19 +98,7 @@ class Service
 
     public function delete($path)
     {
-        if (is_dir($path) === true) {
-            $files = array_diff(scandir($path), ['.', '..']);
-
-            foreach ($files as $file) {
-                $this->delete(realpath($path) . '/' . $file);
-            }
-
-            return rmdir($path);
-        } else if (is_file($path) === true) {
-            return unlink($path);
-        }
-
-        return false;
+        $this->helper->delete($path);
     }
 
 

@@ -39,7 +39,7 @@
 
         <br>
         <Toast />
-        <div :class="isModer() ? 'd-none' : 'row ml-3'">
+        <!-- <div :class="isModer() ? 'd-none' : 'row ml-3'">
             <div class="block_two">
                 <label for="audio_url">Трека</label>
                 <InputText type="text" v-model="audio_url" id="audio_url" placeholder="Введите url трека" :class="isErrorUrl() ? 'p-invalid' : ''" style="width: 500px;"/>
@@ -47,7 +47,7 @@
                     <p class="text-danger">{{ errorMessageUrl() }}</p>
                 </div>
               </div>
-        </div>
+        </div> -->
 
         <div class="row ml-3">
             <div class="block_one">
@@ -62,7 +62,7 @@
         </div>
 
         <div class="row ml-3">
-            <div :class="isModer() ? 'd-none' : 'block_two'">
+            <div class="block_two">
                 <label>Изменить изображение</label>
                 <SelectButton v-model="value" :options="options" aria-labelledby="basic"/>
               </div>
@@ -255,13 +255,14 @@ import { RouterLink, RouterView } from 'vue-router'
 
             data.append('artwork_url', files.length > 0 ? files[0] : '');
             data.append('title', this.title);
-            data.append('audio_url', this.audio_url);
+            // data.append('audio_url', this.audio_url);
             data.append('status', this.status);
-            data.append('lyrics', this.lyrics);
+            data.append('lyrics', this.lyrics ? this.lyrics : '');
             data.append('is_national', this.is_national);
             data.append('genres', genres);
             data.append('album', album ? album : '');
-            data.append('artists', artists);
+            for(let id in artists)
+            data.append('artists[]', artists[id]);
             data.append('is_national', this.is_national);
             data.append('user_id', this.data['id']);
             data.append('_method', 'PATCH');

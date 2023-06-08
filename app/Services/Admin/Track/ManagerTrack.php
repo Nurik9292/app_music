@@ -4,10 +4,9 @@ namespace App\Services\Admin\Track;
 
 use App\Models\Album;
 use App\Models\Artist;
+use App\Models\User;
 use Owenoj\LaravelGetId3\GetId3;
 use App\Services\Admin\HelperService;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 class ManagerTrack
@@ -42,11 +41,7 @@ class ManagerTrack
         if (!isset($data['track_number']) && $item->getTrackNumber() != null)
             $data['track_number'] = $item->getTrackNumber();
 
-        // if ($item->getArtwork() != null)
-        //     $data['artwork_url'] = $item->getArtwork();
-
         $data['audio_url'] = preg_replace('/:1000\/files/', '', $data['audio_url']);
-
 
         if (isset($data['artists']) && $data['artists'] != null) {
             $artist = Artist::where('id', $data['artists'][0])->get();
@@ -58,32 +53,29 @@ class ManagerTrack
         if (isset($data['album']) && $data['album'] != null)
             [$type_album, $name_album] = $this->albumPath($data);
 
-        $data['title'] = preg_replace('/(.mp3)/', '', basename($data['audio_url']));
-
         $this->pathForSecond($data['is_national'], $name_artist, $type_album, $name_album, $data['title']);
 
-        if (isset($data['artwork_url']) && $data['artwork_url'] != null) {
-            $this->deleteForUpdated($track);
-            $data['artwork_url'] = $this->resize($item->getArtwork(true));
-        } elseif (!isset($data['artwork_url'])) {
-            $this->deleteForUpdated($track);
-            $data['artwork_url'] = $this->resize($item->getArtwork(true));
-        } else {
-            $this->move($track->artwork_url);
-        }
+        $data['title'] = preg_replace('/(.mp3)/', '', basename($data['audio_url']));
+        $data['artwork_url'] = $this->resize($item->getArtwork(true));
 
 
         return $data;
     }
 
 
-    public function resize($image, $track = null, $data = null)
+    public function resize($image, $track = null,  $data = null)
     {
+        $user = User::where('id', $data['user_id'])->get()[0];
+        $moderator = 3;
+
         $image_name = $image->getClientOriginalName();
         $image_name_base = substr($image_name, 0, strpos($image_name, '.'));
 
+
         if (isset($track)) {
-            $this->deleteForUpdated($track);
+            if ($user->role !== $moderator) {
+                $this->deleteForUpdated($track);
+            }
 
 
             $this->pathForSecond(
@@ -91,7 +83,7 @@ class ManagerTrack
                 count($track->artists) > 0 ? $track->artists[0]->name : '',
                 count($track->album) > 0 ? $track->album[0]->type : '',
                 count($track->album) > 0 ? $track->album[0]->title : '',
-                $track->title
+                $user->role !== $moderator ? $track->title : $track->title . '_2/'
             );
         }
 
@@ -104,11 +96,16 @@ class ManagerTrack
         $path_artwork = $this->path_first . $this->path_second . "artwork/";
         $path_thumb = $this->path_first . $this->path_second . "thumb/";
 
-        if (!file_exists($path_thumb))
+        if (!file_exists($path_artwork))
             mkdir($path_artwork, 0777, true);
+        else
+            mkdir(preg_replace('/(_2\/)/', '', $path_artwork), 0777, true);
 
         if (!file_exists($path_thumb))
             mkdir($path_thumb, 0777, true);
+        else
+            mkdir(preg_replace('/(_2    \/)/', '', $path_artwork), 0777, true);
+
 
 
         $thumb->fit(142, 166)->save($path_thumb . $image_name);
@@ -126,7 +123,6 @@ class ManagerTrack
 
     public function move($path)
     {
-        Log::debug("move");
         $image = $this->helper->pathImageForDb . $this->path_second . basename($path);
 
         $path = substr($path, 0, strpos($path, basename($path)));
@@ -143,6 +139,45 @@ class ManagerTrack
         }
 
         return $image;
+    }
+
+    public function movingImage($data, $track)
+    {
+        $path = $track->artwork_url;
+        $user = User::where('id', $data['user_id'])->get()[0];
+        $moderator = 3;
+
+        $artist = Artist::where('id', $data['artists'][0])->get();
+        $album = Album::where('id', $data['album'])->get();
+
+        $this->pathForSecond(
+            $track->is_national,
+            count($artist) > 0 ? $artist[0]->name : '',
+            count($album) > 0 ? $album[0]->type : '',
+            count($album) > 0 ? $album[0]->title : '',
+            $track->title
+        );
+
+        $data['artwork_url'] = $this->helper->pathImageForDb . $this->path_second . basename($track->artwork_url);
+        $data['thumb_url'] = $this->helper->pathImageForDb . $this->path_second . basename($track->thumb_url);
+
+        $path = substr($path, 0, strpos($path, basename($path)));
+
+        if (is_dir($path) === true) {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            if (!file_exists($this->path_first . $this->path_second))
+                mkdir($this->path_first . $this->path_second, 0777, true);
+
+            foreach ($files as $file) {
+                if ($user->role !== $moderator)
+                    rename($path . $file, $this->path_first . $this->path_second . $file);
+                else
+                    copy($path . $file, $this->path_first . $this->path_second . $file);
+            };
+        }
+
+        return $data;
     }
 
 

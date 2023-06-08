@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin\RequestModerator;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\TrackResource;
+use App\Models\Track;
 use App\Models\User;
 use OwenIt\Auditing\Models\Audit;
 
-class ShowTrackController extends Controller
+class ShowTrackController extends BaseController
 {
     public function __invoke()
     {
@@ -19,6 +19,10 @@ class ShowTrackController extends Controller
             $user = User::where('id', $audit->user_id)->get();
             if ($user[0]->role !== $moderator) unset($audits[$key]);
         }
+
+        // Удаление если есть события на один ID
+        $audits = $this->service->deleteEvents($audits);
+
 
         return new TrackResource($audits);
     }

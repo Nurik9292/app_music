@@ -44,7 +44,7 @@
                         </Column>
                         <Column header="Название тркеа" sortable style="width: 20%">
                             <template #body="{data}">
-                                {{ getATrackTitle(data)}}
+                                {{ getTrackTitle(data)}}
 					        </template>
                         </Column>
                         <Column header="Действие" style="width: 20%">
@@ -179,6 +179,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
         data(){
             return {
+                tracks: null,
                 auditTracks: null,
                 artists: null,
                 auditArtists: null,
@@ -222,7 +223,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
             getTracks(){
             axios.get('/api/tracks').then(res => {
-                this.tracks = res.data.data;
+                this.tracks = res.data.data.tracks;
             })
             },
 
@@ -236,7 +237,7 @@ import { RouterLink, RouterView } from 'vue-router'
                         axios.delete(`/api/moderators/${id}`).then(res => { this.getAuditTracks() })
 
                 }
-                if(actions == 'created'){
+                if(actions == 'created' || actions == 'updated'){
                     if(item == 'artist')
                         axios.post(`/api/moderators/allows/${id}`).then(res => { this.getAuditArtists() })
 
@@ -244,42 +245,18 @@ import { RouterLink, RouterView } from 'vue-router'
                         axios.post(`/api/moderators/allows/${id}`).then(res => { this.getAuditTracks() })
 
                 }
-
-                if(actions == 'updated'){
-                    if(item == 'artist')
-                        axios.post(`/api/moderators/allows/${id}`).then(res => { this.getAuditArtists() })
-
-                    if(item == 'artist')
-                        axios.post(`/api/moderators/allows/${id}`).then(res => { this.getAuditTracks() })
-
-                }
             },
 
             no(actions, id, item){
 
-                if(actions == 'deleted'){
                   if(item == 'artist')
                         axios.post(`/api/moderators/restore/${id}`).then(res => { this.getAuditArtists()})
 
                 if(item == 'track')
                         axios.post(`/api/moderators/restore/${id}`).then(res => { this.getAuditTracks()})
-                }
 
-                if(actions == 'created'){
-                  if(item == 'artist')
-                        axios.post(`/api/moderators/restore/${id}`).then(res => { this.getAuditArtists()})
-                  if(item == 'track')
-                        axios.post(`/api/moderators/restore/${id}`).then(res => { this.getAuditTracks()})
 
-                }
 
-                if(actions == 'updated'){
-                  if(item == 'artist'){
-                        axios.post(`/api/moderators/restore/${id}`).then(res => {
-                            this.getAuditArtists()
-                        })
-                  }
-                }
             },
 
             getUserName(user_id){
@@ -333,10 +310,18 @@ import { RouterLink, RouterView } from 'vue-router'
                 }
             },
 
-            getATrackTitle(data){
-                console.log(data);
-                if(data.event == 'deleted' || data.event == 'updated'){
+            getTrackTitle(data){
+                if(data.event == 'deleted'){
                     return data.old_values.title
+                }if (data.event == 'updated') {
+
+                    let id = data.url.match(/\d+$/);
+                    for(let idx in this.tracks){
+                        console.log();
+                        if(this.tracks[idx].id == id)
+                            return this.tracks[idx].title;
+                    }
+
                 } else {
                     return data.new_values.title
                 }

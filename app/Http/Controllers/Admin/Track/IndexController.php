@@ -9,6 +9,10 @@ class IndexController extends BaseController
 {
     public function __invoke()
     {
+        preg_match('/\d+$/', Audit::latest()->first()->url, $id);
+
+        dd(Track::where('id', $id[0])->get()[0]->audits()->latest()->get()->pop());
+
         if (auth()->user()->role !== 2 && auth()->user()->role !== 3)
             return redirect()->route('main');
 

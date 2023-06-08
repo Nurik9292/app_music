@@ -28,10 +28,11 @@ class UpdateRequest extends FormRequest
             'genres' => ['nullable'],
             'album' => ['nullable', 'numeric'],
             'artwork_url' => ['nullable',],
-            'audio_url' => ['nullable', 'url'],
+            'audio_url' => ['nullable'],
             'status' => ['nullable'],
             'is_national' => ['nullable'],
             'track_number' => ['nullable', 'numeric'],
+            'user_id' => ['nullable ']
         ];
     }
 
