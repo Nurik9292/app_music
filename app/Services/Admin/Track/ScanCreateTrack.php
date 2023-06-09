@@ -7,7 +7,6 @@ use App\Models\Track;
 use App\Models\Artist;
 use App\Models\Country;
 use App\Services\Admin\HelperService;
-use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
 class ScanCreateTrack
@@ -41,9 +40,9 @@ class ScanCreateTrack
     public function create($data)
     {
         foreach ($data as $item) {
+
             $artists = null;
             $album = null;
-
 
             $artists = $this->createArtist($item['artists'], $item['is_national']);
 
@@ -67,7 +66,6 @@ class ScanCreateTrack
             $item['audio_url'] =  "https://storage2.ma.st.com.tm/" . preg_replace('/(\/nfs\/storage2\/)/', '', $item['audio_url']);;
             $item['audio_url'] = preg_replace('/(\/)(?=\1)/', '', $item['audio_url']);
 
-            Log::debug($item['audio_url']);
 
             if (!isset($artist)) $artist = preg_replace('/(.webp)/', '', basename($item['artwork_url']));
 
@@ -84,17 +82,21 @@ class ScanCreateTrack
                 mkdir($path_artWork, 0777, true);
 
 
-            if ($item['artwork_url'] != null)
-                [$image_artWork, $image_thumb] = $this->pathForDatabase($item['artwork_url'], $path_artWork, $path_thumb, $image_name, $path_second_artwork, $path_second_thumb);
-
-            $item['thumb_url'] = $image_thumb ?? '';
-            $item['artwork_url'] = $image_artWork ?? '';
+            if ($item['artwork_url'] != null) {
+                [$item['thumb_url'], $item['artwork_url']] = $this->pathForDatabase($item['artwork_url'], $path_artWork, $path_thumb, $image_name, $path_second_artwork, $path_second_thumb);
+            }
 
             unset($item['artists']);
             unset($item['album']);
 
-            $track = Track::firstOrCreate(['title' => $item['title']], $item);
-
+            if ($artist instanceof Artist) {
+                foreach ($artist->tracks as $track)
+                    if ($track->title != $item['title']) {
+                        $track = Track::create($item);
+                    } else {
+                        $track = Track::firstOrCreate(['title' => $item['title']], $item);
+                    }
+            }
 
             if (isset($artists)) {
                 $track->artists()->detach($artists->id);

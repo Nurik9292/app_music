@@ -63,7 +63,7 @@ class Service
             $data = $this->managerTrack->movingImage($data, $track);
 
         if ($data['artwork_url'] instanceof UploadedFile) {
-            $data['artwork_url'] = $this->managerTrack->resize($data['artwork_url'], $track, $data);
+            $data = $this->managerTrack->resize($data['artwork_url'], $track, $data);
         }
 
 

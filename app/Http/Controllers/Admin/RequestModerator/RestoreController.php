@@ -21,7 +21,7 @@ class RestoreController extends BaseController
             $this->service->returnOldData($audit);
         }
 
-        Audit::latest()->first()->delete();
+        // Audit::latest()->first()->delete();
 
         return response([]);
     }

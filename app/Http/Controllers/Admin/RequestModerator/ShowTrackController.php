@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin\RequestModerator;
 
 use App\Http\Resources\Admin\TrackResource;
-use App\Models\Track;
 use App\Models\User;
 use OwenIt\Auditing\Models\Audit;
 
@@ -21,8 +20,7 @@ class ShowTrackController extends BaseController
         }
 
         // Удаление если есть события на один ID
-        $audits = $this->service->deleteEvents($audits);
-
+        $audits = $this->service->deletingMultipleEventsByOneId($audits);
 
         return new TrackResource($audits);
     }

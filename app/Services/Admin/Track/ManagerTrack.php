@@ -114,8 +114,11 @@ class ManagerTrack
         $artwork->fit(142, 166)->save($path_artwork . $image_name);
         $artwork_webp->fit(142, 166)->save($path_artwork . $image_name_base . '.webp')->encode('webp');
 
-
-        $image = $this->helper->pathImageForDb . $this->path_second . $image_name;
+        if (isset($track)) {
+            $data['artwork_url'] = $this->helper->pathImageForDb . $this->path_second . 'artwork/' . $image_name;
+            $data['thumb_url'] = $this->helper->pathImageForDb . $this->path_second . 'thumb/' . $image_name;
+            return $data;
+        }
 
         return $image;
     }
@@ -158,8 +161,8 @@ class ManagerTrack
             $track->title
         );
 
-        $data['artwork_url'] = $this->helper->pathImageForDb . $this->path_second . basename($track->artwork_url);
-        $data['thumb_url'] = $this->helper->pathImageForDb . $this->path_second . basename($track->thumb_url);
+        $data['artwork_url'] = $this->helper->pathImageForDb . $this->path_second . 'artwork/' . basename($track->artwork_url);
+        $data['thumb_url'] = $this->helper->pathImageForDb . $this->path_second . 'thumb/' . basename($track->thumb_url);
 
         $path = substr($path, 0, strpos($path, basename($path)));
 

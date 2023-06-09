@@ -7,9 +7,7 @@ use App\Models\Artist;
 use App\Models\ArtistAudit;
 use App\Models\Track;
 use App\Services\Admin\HelperService;
-use OwenIt\Auditing\Models\Audit;
-use PhpParser\Node\Stmt\Break_;
-use PhpParser\Node\Stmt\Continue_;
+
 
 class Service
 {
@@ -105,7 +103,8 @@ class Service
         if ($audit->event == 'updated')
             $artwork_url = $audit->old_values['artwork_url'];
 
-        if (($path = $track->artwork_url ?? $artwork_url)) {
+
+        if (($path = $track->artwork_url ?? ($artwork_url ?? false))) {
             $path = substr($path, 0, strpos($path, basename($path)));
             $path = pathToServer() . substr($path, strpos($path, "images"));
             $path = preg_replace('/artwork\//', '', $path);
@@ -152,47 +151,28 @@ class Service
         $data = $audit->old_values;
 
         preg_match('/\d+$/', $audit->url, $id);
-
         $data['status'] = true;
 
         $track = Track::where('id', $id[0])->get()[0];
 
-        if ($audit->old_values != $audit->new_values)
-            $this->helper->delete($track->artwork_url);
+        if ($audit->old_values['artwork_url'] != $audit->new_values['artwork_url'])
+            $this->deletingAnImage($track->artwork_url);
 
         $track->update($data);
     }
 
-    public function deleteEvents($audits)
+    public function deletingMultipleEventsByOneId($audits)
     {
-        // preg_match('/\d+$/', Audit::latest()->first()->url, $id);
+        $results = null;
 
         // Проеряем на совпадение на моделей
-        while ($audits = $this->similarAudit($audits)) {
-            // последние изменение трека
+        while (count($audits) > 0) {
+            $processed = $this->similarAudit($audits);
 
-            // if (count($audits) === 1) continue;
-
-            $recentСhanges = $audits->latest()->first();
-            // все изменние трека кроме послденего
-            $allChanges = $audits->latest()->get()->pop();
-
-            // если нет измение возращаем false
-            if (count($allChanges) < 0) return false;
-
-            // если есть измение кроме последнего отменяем действие
-            foreach ($allChanges as $audit) {
-                // если это удаленный трек востанавливаем \
-                if ($audit->event == 'deleted')
-                    $this->create($audit);
-                // если трек изменен возращаем прежние данные  \
-                if ($audit->event == 'updated')
-                    $this->returnOldData($audit);
-            }
+            $results[] = $this->removingTheEventOfOneId($processed);
         }
 
-        dd($audits);
-        return $audits;
+        return $results;
     }
 
 
@@ -204,24 +184,75 @@ class Service
      */
     private function similarAudit(&$audits)
     {
-        $firstId = null;
-        $secondId = null;
+
+        $firstUrl = null;
+        $secondUrl = null;
         $similar = [];
 
-        foreach ($audits as $audit)
-            if (preg_match('/(\d+)$/', $audit->url, $firstId))
-                break;
-
-        foreach ($audits as $audit) {
-            if (preg_match('/(\d+)$/', $audit->url, $secondId)) {
-
-                if ($firstId[0] === $secondId[0]) {
-                    $similar[] = $audit;
-                    unset($audit);
-                }
+        // Берет первый любой элемент
+        if ($audits->first()->event == 'deleted') {
+            $firstUrl = preg_replace('/(\/\d+)$/', '', $audits->first()->url);
+        } else {
+            $firstUrl = $audits->first()->url;
+        }
+        // Сравниваем первый элемент с остальными
+        foreach ($audits as $key => $audit) {
+            if ($audit->event == 'deleted') {
+                $secondUrl = preg_replace('/(\/\d+)$/', '', $audit->url);
+            } else {
+                $secondUrl = $audit->url;
+            }
+            // если они похожи сохраняем
+            if ($firstUrl == $secondUrl) {
+                $similar[] = $audit;
+                unset($audits[$key]);
             }
         }
 
         return $similar;
+    }
+
+
+    private function removingTheEventOfOneId($processed)
+    {
+        $idResult = null;
+
+        // если обрабатываемый элемент один то передаем в конечный результат иначе убираем обрабатываем
+        if (count($processed) === 1) {
+            $lastModifaction = $processed[0];
+        } else {
+            $lastModifaction = $processed[0];
+
+            foreach ($processed as $key => $item) {
+                if ($lastModifaction->created_at < $item->created_at) {
+                    $lastModifaction = $item;
+                    $idResult = $key;
+                }
+            }
+            // удалеям последний элемент из общего
+            unset($processed[$idResult]);
+
+            foreach ($processed as $item) {
+
+                if ($item->event == 'deleted')
+                    $this->create($item);
+                if ($item->event == 'updated')
+                    $lastModifaction->event != 'deleted' ? $this->returnOldData($item) : $item->delete();
+            }
+
+            // передаем в конечный результат послдний элемент
+        }
+        return $lastModifaction;
+    }
+
+
+    private function deletingAnImage($path)
+    {
+        $path = substr($path, 0, strpos($path, basename($path)));
+        $path = pathToServer() . substr($path, strpos($path, "images"));
+
+        $path = preg_replace('/artwork\//', '', $path);
+
+        $this->helper->delete($path);
     }
 }

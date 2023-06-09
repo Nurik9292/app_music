@@ -199,6 +199,7 @@ import { RouterLink, RouterView } from 'vue-router'
         methods:{
             getAuditTracks(){
             axios.get('/api/moderators/tracks/show').then(res => {
+                console.log(res);
                 this.auditTracks = res.data.data;
             })
             },

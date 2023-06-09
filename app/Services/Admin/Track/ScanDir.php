@@ -5,7 +5,6 @@ namespace App\Services\Admin\Track;
 use App\Models\File;
 use App\Services\Admin\HelperService;
 use DirectoryIterator;
-use Illuminate\Support\Facades\Log;
 use Owenoj\LaravelGetId3\GetId3;
 
 class ScanDir
@@ -26,7 +25,6 @@ class ScanDir
         if (str_starts_with($path, "https://storage2.ma.st.com.tm:1000/files/"))
             $path = $this->helper->pathTrackForServer . preg_replace('/(https:\/\/storage2.ma.st.com.tm:1000\/files\/)/', '', $path);
 
-        Log::debug($path);
         if (!str_ends_with($path, '/'))
             $path = $path . '/';
 
@@ -59,8 +57,7 @@ class ScanDir
 
     private function addMp3($local)
     {
-        foreach ($this->mp3 as $audio_url) {
-
+        foreach ($this->mp3 as $key => $audio_url) {
             $track = new GetId3($audio_url);
 
             $artist = $track->getArtist() ?? null;
@@ -85,7 +82,12 @@ class ScanDir
                 'artwork_url' => $image,
                 'status' =>  true
             ];
+
+
+            unset($this->mp3[$key]);
+            // dd($this->mp3);
         }
+        unset($audio_url);
     }
 
 
