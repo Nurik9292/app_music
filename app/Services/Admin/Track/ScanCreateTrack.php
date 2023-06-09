@@ -86,17 +86,23 @@ class ScanCreateTrack
                 [$item['thumb_url'], $item['artwork_url']] = $this->pathForDatabase($item['artwork_url'], $path_artWork, $path_thumb, $image_name, $path_second_artwork, $path_second_thumb);
             }
 
+
             unset($item['artists']);
             unset($item['album']);
 
-            if ($artist instanceof Artist) {
-                foreach ($artist->tracks as $track)
-                    if ($track->title != $item['title']) {
+
+            if (isset($artists)) {
+
+                foreach ($artists->tracks as $mp3) {
+                    if ($mp3->title != $item['title']) {
                         $track = Track::create($item);
-                    } else {
-                        $track = Track::firstOrCreate(['title' => $item['title']], $item);
                     }
+                }
+
+                if (count($artists->tracks) === 0)
+                    $track = Track::firstOrCreate(['title' => $item['title']], $item);
             }
+
 
             if (isset($artists)) {
                 $track->artists()->detach($artists->id);
